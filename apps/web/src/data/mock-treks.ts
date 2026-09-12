@@ -1,0 +1,708 @@
+export interface AltitudePoint {
+  distanceKm: number;
+  altitudeM: number;
+  label?: string;
+}
+
+export interface ItineraryDay {
+  day: number;
+  title: string;
+  altitudeM: number;
+  distanceKm: number;
+  description: string;
+}
+
+export interface Batch {
+  id: string;
+  startDate: string;
+  endDate: string;
+  seatsTotal: number;
+  seatsBooked: number;
+  pricePerPersonINR: number;
+  status: 'open' | 'full' | 'cancelled';
+}
+
+export interface PackageTier {
+  id: string;
+  name: string;
+  priceINR: number;
+  description: string;
+  features: string[];
+  isPopular?: boolean;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface Trek {
+  name: string;
+  slug: string;
+  difficulty: 'easy' | 'moderate' | 'difficult';
+  durationDays: number;
+  maxAltitudeM: number;
+  trekDistanceKm: number;
+  summary: string;
+  description: string;
+  coordinates: [number, number]; // [lng, lat]
+  region: 'Garhwal' | 'Kumaon' | 'Himachal';
+  regionSlug: 'garhwal' | 'kumaon' | 'himachal';
+  startPoint: string;
+  bestSeasons: string[];
+  fromPrice: number;
+  heroImage: string;
+  gallery: string[];
+  altitudeProfile: AltitudePoint[];
+  itinerary: ItineraryDay[];
+  inclusions: string[];
+  exclusions: string[];
+  howToReach: {
+    baseTown: string;
+    nearestAirport: string;
+    nearestRailway: string;
+    commuteDetails: string;
+    mapEmbedUrl?: string;
+  };
+  faqs: FAQItem[];
+  batches: Batch[];
+  packages: PackageTier[];
+  isFeatured?: boolean;
+}
+
+export const mockTreks: Trek[] = [
+  {
+    name: "Kuari Pass Trek",
+    slug: "kuari-pass",
+    difficulty: "moderate",
+    durationDays: 6,
+    maxAltitudeM: 3876,
+    trekDistanceKm: 33,
+    summary: "A legendary Himalayan ridge trek offering breathtaking 360° views of Nanda Devi, Trishul, and Kamet.",
+    description: "Kuari Pass (the 'Lord Curzon Trail') is renowned as one of India's finest winter ridge treks. Walking through ancient oak forests and high alpine meadows (bugyals), you are constantly escorted by India's highest summits.",
+    coordinates: [79.5700, 30.4200],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Joshimath, Uttarakhand",
+    bestSeasons: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
+    fromPrice: 9500,
+    heroImage: "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 1900, label: "Rishikesh" },
+      { distanceKm: 8, altitudeM: 2050, label: "Dhak Village" },
+      { distanceKm: 14, altitudeM: 2750, label: "Gulling Top" },
+      { distanceKm: 21, altitudeM: 3350, label: "Tali Forest Camp" },
+      { distanceKm: 27, altitudeM: 3876, label: "Kuari Pass Summit" },
+      { distanceKm: 33, altitudeM: 2550, label: "Auli Skislope" }
+    ],
+    itinerary: [
+      { day: 1, title: "Drive from Rishikesh to Joshimath", altitudeM: 1900, distanceKm: 0, description: "Scenic 8-hour drive along Alaknanda river passing Panch Prayag (Devprayag, Rudraprayag, Karnaprayag)." },
+      { day: 2, title: "Drive to Dhak & Trek to Gulling Top", altitudeM: 2750, distanceKm: 6, description: "Trek through terraced villages into hemlock & oak forests." },
+      { day: 3, title: "Gulling Top to Tali Forest Camp", altitudeM: 3350, distanceKm: 5, description: "Ascend past Khullara meadows with towering views of Dronagiri peak." },
+      { day: 4, title: "Tali to Kuari Pass Summit & back to Khullara", altitudeM: 3876, distanceKm: 12, description: "Summit day along the ridge with Nanda Devi (7,816m) standing right in front." },
+      { day: 5, title: "Khullara to Auli via Tali Lake & drive to Joshimath", altitudeM: 2550, distanceKm: 10, description: "Descent through snow slopes ending at Auli ski resort." },
+      { day: 6, title: "Drive from Joshimath back to Rishikesh", altitudeM: 340, distanceKm: 0, description: "Departure day after breakfast." }
+    ],
+    inclusions: [
+      "All meals during the trek (Nutritious vegetarian food & hot drinks)",
+      "High-altitude tents, sub-zero sleeping bags, and insulated mattresses",
+      "Certified Wilderness First Responder trek leader & experienced local guides",
+      "Forest permits, camping charges & safety gear (microspikes, gaiters, oxygen cylinder)",
+      "Transport from Rishikesh to Joshimath and back"
+    ],
+    exclusions: [
+      "Personal backpack offloading charges (available @ ₹350/day)",
+      "Personal trekking gear (shoes, jackets, gloves)",
+      "Buffer day expenses if weather delays trek",
+      "GST (5%)"
+    ],
+    howToReach: {
+      baseTown: "Joshimath / Dhak",
+      nearestAirport: "Jolly Grant Airport, Dehradun (268 km)",
+      nearestRailway: "Yog Nagari Rishikesh Railway Station (250 km)",
+      commuteDetails: "Shared taxis available daily at 6:00 AM from Rishikesh bus stand to Joshimath (₹800/seat).",
+      mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d110190.589886474!2d79.500000!3d30.550000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a79c9489569b93%3A0xa64684948a436214!2sJoshimath%2C%20Uttarakhand!5e0!3m2!1sen!2sin!4v1700000000000"
+    },
+    faqs: [
+      { question: "Is Kuari Pass suitable for beginners?", answer: "Yes! Kuari Pass is ideal for fit beginners. The trails are well-marked with gradual ascents." },
+      { question: "How cold does it get in winter?", answer: "Night temperatures drop to -5°C to -10°C in December and January. We provide 4-season high-altitude sleeping bags rated for -15°C." }
+    ],
+    batches: [
+      { id: "kp-b1", startDate: "2027-10-10", endDate: "2027-10-15", seatsTotal: 18, seatsBooked: 6, pricePerPersonINR: 9500, status: "open" },
+      { id: "kp-b2", startDate: "2027-10-24", endDate: "2027-10-29", seatsTotal: 18, seatsBooked: 12, pricePerPersonINR: 9500, status: "open" },
+      { id: "kp-b3", startDate: "2027-11-05", endDate: "2027-11-10", seatsTotal: 18, seatsBooked: 18, pricePerPersonINR: 9500, status: "full" },
+      { id: "kp-b4", startDate: "2027-12-20", endDate: "2027-12-25", seatsTotal: 20, seatsBooked: 8, pricePerPersonINR: 10500, status: "open" }
+    ],
+    packages: [
+      { id: "pkg-std", name: "Standard Base", priceINR: 9500, description: "Includes trek, meals, stay, and permits from Joshimath base town.", features: ["Joshimath to Joshimath", "High altitude tents & gear", "Guide & safety team", "All meals on trek"] },
+      { id: "pkg-tpt", name: "With Transport", priceINR: 11800, description: "Includes seamless pickup & drop from Rishikesh Railway station.", features: ["Rishikesh to Rishikesh transport", "Joshimath hotel stay (Day 1 & 5)", "High altitude tents & gear", "Guide & safety team"], isPopular: true }
+    ],
+    isFeatured: true
+  },
+  {
+    name: "Kedarkantha Trek",
+    slug: "kedarkantha",
+    difficulty: "easy",
+    durationDays: 5,
+    maxAltitudeM: 3800,
+    trekDistanceKm: 24,
+    summary: "The undisputed king of winter snow treks with a rewarding 360-degree summit peak climb.",
+    description: "Kedarkantha stands proudly at 12,500 ft inside Govind Pashu Vihar National Park. Famous for its pine forest trails, clear alpine lakes, and dramatic summit ridge.",
+    coordinates: [78.1700, 31.0200],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Sankri, Uttarakhand",
+    bestSeasons: ["Dec", "Jan", "Feb", "Mar", "Apr"],
+    fromPrice: 8500,
+    heroImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 1950, label: "Sankri Base" },
+      { distanceKm: 4, altitudeM: 2780, label: "Juda Ka Talab" },
+      { distanceKm: 8, altitudeM: 3400, label: "KK Base Camp" },
+      { distanceKm: 14, altitudeM: 3800, label: "Kedarkantha Peak" },
+      { distanceKm: 24, altitudeM: 1950, label: "Sankri Return" }
+    ],
+    itinerary: [
+      { day: 1, title: "Drive from Dehradun to Sankri", altitudeM: 1950, distanceKm: 0, description: "Scenic drive along Yamuna and Tons rivers through Mussoorie." },
+      { day: 2, title: "Trek from Sankri to Juda Ka Talab", altitudeM: 2780, distanceKm: 4, description: "Walk through dense pine forests opening up into a frozen alpine lake." },
+      { day: 3, title: "Juda Ka Talab to Kedarkantha Base Camp", altitudeM: 3400, distanceKm: 4, description: "Ascend past snow meadows with Swargarohini peak dominating the skyline." },
+      { day: 4, title: "Base Camp to Summit & descend to Price", altitudeM: 3800, distanceKm: 10, description: "Early 4:00 AM push for sunrise from the 360-degree peak." },
+      { day: 5, title: "Price to Sankri & drive to Dehradun", altitudeM: 1950, distanceKm: 6, description: "Return drive to Dehradun arriving by evening." }
+    ],
+    inclusions: [
+      "Meals & accommodation in Sankri guest house + dome tents",
+      "Professional guide & support staff",
+      "National park permits & camping fee",
+      "Microspikes & gaiters for snow walking"
+    ],
+    exclusions: ["Offloading personal luggage", "Insurance", "Personal snacks"],
+    howToReach: {
+      baseTown: "Sankri",
+      nearestAirport: "Jolly Grant Airport, Dehradun (210 km)",
+      nearestRailway: "Dehradun Railway Station (200 km)",
+      commuteDetails: "Shared Bolero cabs run daily from Dehradun Railway Station at 6:00 AM (₹800/person)."
+    },
+    faqs: [
+      { question: "Can kids do Kedarkantha?", answer: "Yes, children aged 8 and above with basic fitness can easily attempt Kedarkantha." }
+    ],
+    batches: [
+      { id: "kk-b1", startDate: "2027-11-15", endDate: "2027-11-19", seatsTotal: 20, seatsBooked: 5, pricePerPersonINR: 8500, status: "open" },
+      { id: "kk-b2", startDate: "2027-12-25", endDate: "2027-12-29", seatsTotal: 20, seatsBooked: 14, pricePerPersonINR: 9500, status: "open" }
+    ],
+    packages: [
+      { id: "kk-std", name: "Sankri to Sankri", priceINR: 8500, description: "Package starting from base village Sankri.", features: ["Sankri stay included", "Trek meals & equipment", "Forest fee"], isPopular: true }
+    ],
+    isFeatured: true
+  },
+  {
+    name: "Hampta Pass Trek",
+    slug: "hampta-pass",
+    difficulty: "moderate",
+    durationDays: 5,
+    maxAltitudeM: 4270,
+    trekDistanceKm: 28,
+    summary: "A thrilling crossover trek bridging the lush green valley of Kullu with the stark moonscape of Spiti.",
+    description: "Hampta Pass is one of the most dramatic landscapes in Himachal Pradesh. In just 5 days, watch pine valleys transform into jagged snow walls and desert canyons, concluding at Chandratal lake.",
+    coordinates: [77.2300, 32.2200],
+    region: "Himachal",
+    regionSlug: "himachal",
+    startPoint: "Manali, Himachal Pradesh",
+    bestSeasons: ["Jun", "Jul", "Aug", "Sep"],
+    fromPrice: 11000,
+    heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 2050, label: "Manali" },
+      { distanceKm: 5, altitudeM: 2900, label: "Chika" },
+      { distanceKm: 12, altitudeM: 3800, label: "Balu Ka Ghera" },
+      { distanceKm: 20, altitudeM: 4270, label: "Hampta Pass" },
+      { distanceKm: 28, altitudeM: 4300, label: "Chandratal Lake" }
+    ],
+    itinerary: [
+      { day: 1, title: "Drive to Jobra & Trek to Chika", altitudeM: 2900, distanceKm: 5, description: "Drive through 42 hairpin bends from Manali to Jobra dam." },
+      { day: 2, title: "Chika to Balu Ka Ghera", altitudeM: 3800, distanceKm: 7, description: "River crossing trek along the Rani Nallah with wildflowers everywhere." },
+      { day: 3, title: "Balu Ka Ghera to Shea Goru via Hampta Pass", altitudeM: 4270, distanceKm: 9, description: "Summit day crossing snow bridges into Spiti Valley." },
+      { day: 4, title: "Shea Goru to Chatru & Drive to Chandratal Lake", altitudeM: 4300, distanceKm: 7, description: "Descent to Chatru and jeep drive to the crescent moon lake." },
+      { day: 5, title: "Drive from Chatru to Manali via Atal Tunnel", altitudeM: 2050, distanceKm: 0, description: "Return drive across Rohtang/Atal tunnel." }
+    ],
+    inclusions: ["Trek equipment & guides", "Manali to Jobra drive", "Chandratal excursion cab", "All meals"],
+    exclusions: ["Offloading", "Personal gear"],
+    howToReach: {
+      baseTown: "Manali",
+      nearestAirport: "Bhuntar Airport, Kullu (50 km)",
+      nearestRailway: "Chandigarh Railway Station (300 km)",
+      commuteDetails: "Overnight HRTC Volvo buses run daily from ISBT Kashmiri Gate Delhi to Manali (₹1,200)."
+    },
+    faqs: [
+      { question: "Is river crossing dangerous?", answer: "We use rope technique and safety lines with experienced guides." }
+    ],
+    batches: [
+      { id: "hp-b1", startDate: "2027-06-15", endDate: "2027-06-19", seatsTotal: 18, seatsBooked: 7, pricePerPersonINR: 11000, status: "open" }
+    ],
+    packages: [
+      { id: "hp-std", name: "Manali to Manali", priceINR: 11000, description: "Complete package including Chandratal lake drive.", features: ["All inclusive trek", "Chandratal trip", "Atal Tunnel drive"], isPopular: true }
+    ],
+    isFeatured: true
+  },
+  {
+    name: "Brahmatal Trek",
+    slug: "brahmatal",
+    difficulty: "moderate",
+    durationDays: 6,
+    maxAltitudeM: 3733,
+    trekDistanceKm: 30,
+    summary: "Walk across snowy ridges to the sacred high-altitude Brahmatal lake with front-row Trishul views.",
+    description: "Brahmatal is legendary for its snow trails, frozen alpine tarns, and uninterrupted views of Mount Trishul (7,120m) and Nanda Ghunti.",
+    coordinates: [79.6700, 30.1300],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Lohajung, Uttarakhand",
+    bestSeasons: ["Dec", "Jan", "Feb", "Mar"],
+    fromPrice: 9500,
+    heroImage: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 2300, label: "Lohajung Base" },
+      { distanceKm: 6, altitudeM: 2950, label: "Bekaltal Lake" },
+      { distanceKm: 13, altitudeM: 3200, label: "Brahmatal Camp" },
+      { distanceKm: 21, altitudeM: 3733, label: "Brahmatal Pass" },
+      { distanceKm: 30, altitudeM: 2300, label: "Lohajung Return" }
+    ],
+    itinerary: [
+      { day: 1, title: "Drive from Kathgodam to Lohajung", altitudeM: 2300, distanceKm: 0, description: "Scenic mountain drive along Kumaon hills." },
+      { day: 2, title: "Lohajung to Bekaltal Lake", altitudeM: 2950, distanceKm: 6, description: "Oak forest trail leading to frozen brown lake." },
+      { day: 3, title: "Bekaltal to Brahmatal Campsite", altitudeM: 3200, distanceKm: 7, description: "Ridge walk with views of Roopkund valley." },
+      { day: 4, title: "Brahmatal to Pass & Top Summit", altitudeM: 3733, distanceKm: 8, description: "Pass climb with 180° Trishul peak panorama." },
+      { day: 5, title: "Brahmatal to Lohajung via Wan", altitudeM: 2300, distanceKm: 9, description: "Descent through rhododendron forests." },
+      { day: 6, title: "Lohajung to Kathgodam drive", altitudeM: 500, distanceKm: 0, description: "Departure drive." }
+    ],
+    inclusions: ["Meals", "Tents", "Guide", "Kathgodam transfer"],
+    exclusions: ["Offloading"],
+    howToReach: {
+      baseTown: "Lohajung",
+      nearestAirport: "Pantnagar (230 km)",
+      nearestRailway: "Kathgodam Railway Station (210 km)",
+      commuteDetails: "Shared cabs available daily from Kathgodam Railway Station at 6:00 AM."
+    },
+    faqs: [
+      { question: "Is Brahmatal good in January?", answer: "January offers peak snow cover with frozen lakes!" }
+    ],
+    batches: [
+      { id: "bt-b1", startDate: "2027-12-10", endDate: "2027-12-15", seatsTotal: 18, seatsBooked: 4, pricePerPersonINR: 9500, status: "open" }
+    ],
+    packages: [
+      { id: "bt-std", name: "Kathgodam to Kathgodam", priceINR: 9500, description: "Full package with Kathgodam transfers.", features: ["Transfers included", "All meals", "Gear"], isPopular: true }
+    ],
+    isFeatured: false
+  },
+  {
+    name: "Kedarnath Shrine Trek",
+    slug: "kedarnath-shrine",
+    difficulty: "moderate",
+    durationDays: 3,
+    maxAltitudeM: 3583,
+    trekDistanceKm: 16,
+    summary: "Sacred pilgrimage trail from Gaurikund to Kedarnath Shrine nestled beneath the Mandakini peaks.",
+    description: "The holy trek to Kedarnath takes pilgrims and adventurers along the roaring Mandakini river, across cascading waterfalls, and culminates at the 1,000-year-old stone temple standing at 11,755 ft.",
+    coordinates: [79.0669, 30.7352],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Gaurikund, Uttarakhand",
+    bestSeasons: ["May", "Jun", "Sep", "Oct"],
+    fromPrice: 6500,
+    heroImage: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 1980, label: "Gaurikund" },
+      { distanceKm: 6, altitudeM: 2400, label: "Jungle Chatti" },
+      { distanceKm: 10, altitudeM: 2800, label: "Bheembali" },
+      { distanceKm: 14, altitudeM: 3250, label: "Linchauli" },
+      { distanceKm: 16, altitudeM: 3583, label: "Kedarnath Temple" }
+    ],
+    itinerary: [
+      { day: 1, title: "Haridwar to Guptkashi", altitudeM: 1319, distanceKm: 210, description: "Drive from Haridwar to Guptkashi. Enjoy beautiful views along the Mandakini river." },
+      { day: 2, title: "Guptkashi to Kedarnath via Gaurikund", altitudeM: 3583, distanceKm: 16, description: "Drive to Gaurikund and start the 16km trek to Kedarnath. Evening darshan and aarti at the sacred shrine." },
+      { day: 3, title: "Kedarnath to Gaurikund & return drive to Haridwar", altitudeM: 1319, distanceKm: 16, description: "Trek down to Gaurikund and drive back to Haridwar/Rishikesh." }
+    ],
+    inclusions: [
+      "Accommodation in alpine guesthouses/tents near Kedarnath temple",
+      "Nutritious vegetarian meals during the trek",
+      "Certified local mountain guide and trek leaders",
+      "First aid and emergency medical kit"
+    ],
+    exclusions: [
+      "Helicopter tickets from Phata/Guptkashi",
+      "Personal mule or palanquin charges",
+      "Personal expenses & porter offloading"
+    ],
+    howToReach: {
+      baseTown: "Sonprayag / Gaurikund",
+      nearestAirport: "Dehradun Jolly Grant (238 km)",
+      nearestRailway: "Rishikesh Railway Station (215 km)",
+      commuteDetails: "Shared taxis and buses operate daily from Rishikesh to Sonprayag. Local government shuttles connect Sonprayag to Gaurikund."
+    },
+    faqs: [
+      { question: "Is the Kedarnath trek difficult?", answer: "It is a moderate trek with a paved stone path, though certain sections between Bheembali and Linchauli are steep." },
+      { question: "Can we hire mules or palanquins?", answer: "Yes, registered mules, palanquins, and helicopter shuttle services are available from Gaurikund." },
+      { question: "What is the best time to visit?", answer: "May to June for clear spring weather and September to October for crisp post-monsoon mountain skies." }
+    ],
+    batches: [
+      { id: "kd-b1", startDate: "2027-05-10", endDate: "2027-05-12", seatsTotal: 20, seatsBooked: 15, pricePerPersonINR: 6500, status: "open" },
+      { id: "kd-b2", startDate: "2027-06-05", endDate: "2027-06-07", seatsTotal: 20, seatsBooked: 8, pricePerPersonINR: 6500, status: "open" },
+      { id: "kd-b3", startDate: "2027-09-15", endDate: "2027-09-17", seatsTotal: 20, seatsBooked: 12, pricePerPersonINR: 6500, status: "open" }
+    ],
+    packages: [
+      { id: "kd-std", name: "Haridwar to Haridwar", priceINR: 6500, description: "Complete guided pilgrimage package.", features: ["Transport from Haridwar", "Temple assistance", "All meals"], isPopular: true }
+    ],
+    isFeatured: true
+  },
+  {
+    name: "Valley of Flowers & Hemkund Sahib",
+    slug: "valley-of-flowers",
+    difficulty: "moderate",
+    durationDays: 6,
+    maxAltitudeM: 4329,
+    trekDistanceKm: 38,
+    summary: "UNESCO World Heritage wonderland of endemic alpine blossoms and the glacial Hemkund Sahib lake.",
+    description: "Nestled in Chamoli Garhwal, the Valley of Flowers blooms with over 500 varieties of wild blossoms during the monsoon. The expedition also ascends to Hemkund Sahib (14,200 ft), a sacred high-altitude Sikh pilgrimage shrine.",
+    coordinates: [79.5603, 30.6385],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Govindghat, Uttarakhand",
+    bestSeasons: ["Jul", "Aug", "Sep"],
+    fromPrice: 10500,
+    heroImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 1920, label: "Govindghat" },
+      { distanceKm: 14, altitudeM: 3049, label: "Ghangaria Base" },
+      { distanceKm: 22, altitudeM: 3600, label: "Valley of Flowers" },
+      { distanceKm: 30, altitudeM: 4329, label: "Hemkund Sahib" },
+      { distanceKm: 38, altitudeM: 1920, label: "Govindghat Return" }
+    ],
+    itinerary: [
+      { day: 1, title: "Haridwar to Govindghat", altitudeM: 1920, distanceKm: 290, description: "Scenic mountain drive via Devprayag and Joshimath." },
+      { day: 2, title: "Govindghat to Ghangaria", altitudeM: 3049, distanceKm: 14, description: "Trek along the roaring Pushpawati river to the Ghangaria basecamp." },
+      { day: 3, title: "Ghangaria to Valley of Flowers & return", altitudeM: 3600, distanceKm: 8, description: "Explore the UNESCO floral paradise surrounded by snow-capped cliffs." },
+      { day: 4, title: "Ghangaria to Hemkund Sahib & return", altitudeM: 4329, distanceKm: 12, description: "Steep ascent to the glacial Hemkund Sahib lake and return to Ghangaria." },
+      { day: 5, title: "Ghangaria to Govindghat", altitudeM: 1920, distanceKm: 14, description: "Descent trek down to Govindghat." },
+      { day: 6, title: "Govindghat to Haridwar", altitudeM: 314, distanceKm: 290, description: "Return drive to Haridwar Railway Station." }
+    ],
+    inclusions: [
+      "Haridwar to Haridwar road transfers",
+      "Ghangaria guesthouse accommodation",
+      "Nutritious meals throughout the trek",
+      "Certified trek leaders and Nanda Devi National Park permits"
+    ],
+    exclusions: [
+      "Backpack offloading service",
+      "Personal trekking gear and rain ponchos",
+      "Personal medical expenses"
+    ],
+    howToReach: {
+      baseTown: "Govindghat",
+      nearestAirport: "Dehradun Jolly Grant (295 km)",
+      nearestRailway: "Rishikesh Railway Station (275 km)",
+      commuteDetails: "Shared mountain taxis leave daily from Rishikesh to Joshimath and Govindghat at 5:30 AM."
+    },
+    faqs: [
+      { question: "When do the flowers bloom in full glory?", answer: "The peak bloom occurs between mid-July and mid-August." },
+      { question: "Is camping permitted inside the Valley of Flowers?", answer: "No, camping inside the national park is strictly prohibited to preserve fragile ecosystems. All trekkers stay in Ghangaria." },
+      { question: "How challenging is the Hemkund Sahib climb?", answer: "The climb from Ghangaria to Hemkund gains 1,280 meters in just 6 km, making it a steep, rewarding altitude challenge." }
+    ],
+    batches: [
+      { id: "vof-b1", startDate: "2027-07-20", endDate: "2027-07-25", seatsTotal: 15, seatsBooked: 10, pricePerPersonINR: 10500, status: "open" },
+      { id: "vof-b2", startDate: "2027-08-05", endDate: "2027-08-10", seatsTotal: 15, seatsBooked: 15, pricePerPersonINR: 10500, status: "full" },
+      { id: "vof-b3", startDate: "2027-08-15", endDate: "2027-08-20", seatsTotal: 15, seatsBooked: 5, pricePerPersonINR: 10500, status: "open" }
+    ],
+    packages: [
+      { id: "vof-std", name: "Haridwar to Haridwar", priceINR: 10500, description: "Complete guided floral expedition.", features: ["Transfers included", "Park permits", "Guesthouse stay"], isPopular: true }
+    ],
+    isFeatured: true
+  },
+  {
+    name: "Gaumukh Tapovan Glacial Trek",
+    slug: "gaumukh-tapovan",
+    difficulty: "difficult",
+    durationDays: 8,
+    maxAltitudeM: 4463,
+    trekDistanceKm: 46,
+    summary: "Expedition to the snout of the Gangotri Glacier and the spiritual high-altitude meadow of Tapovan.",
+    description: "An extraordinary high-altitude glacial crossing in Gangotri National Park. Camp directly beneath the vertical granite walls of Mount Shivling (6,543m) and the Bhagirathi sister peaks.",
+    coordinates: [78.9398, 30.9947],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Gangotri, Uttarakhand",
+    bestSeasons: ["May", "Jun", "Sep", "Oct"],
+    fromPrice: 15500,
+    heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 3100, label: "Gangotri" },
+      { distanceKm: 9, altitudeM: 3580, label: "Chirbasa" },
+      { distanceKm: 14, altitudeM: 3775, label: "Bhojbasa" },
+      { distanceKm: 23, altitudeM: 4463, label: "Tapovan High Camp" },
+      { distanceKm: 32, altitudeM: 3775, label: "Bhojbasa" },
+      { distanceKm: 46, altitudeM: 3100, label: "Gangotri Return" }
+    ],
+    itinerary: [
+      { day: 1, title: "Dehradun to Gangotri", altitudeM: 3100, distanceKm: 240, description: "Drive past Uttarkashi and Harsil valley to the holy town of Gangotri." },
+      { day: 2, title: "Acclimatization day at Gangotri", altitudeM: 3100, distanceKm: 2, description: "Acclimatization walks and visit to Gangotri temple." },
+      { day: 3, title: "Gangotri to Chirbasa", altitudeM: 3580, distanceKm: 9, description: "Trek through pine forests following the Bhagirathi river." },
+      { day: 4, title: "Chirbasa to Bhojbasa", altitudeM: 3775, distanceKm: 5, description: "Short trek through birch (Bhojpatra) groves to Bhojbasa." },
+      { day: 5, title: "Bhojbasa to Tapovan via Gaumukh", altitudeM: 4463, distanceKm: 9, description: "Witness the holy snout of Gaumukh and conquer the steep moraine ridge to Tapovan." },
+      { day: 6, title: "Tapovan exploration & return to Bhojbasa", altitudeM: 3775, distanceKm: 9, description: "Wake up to unforgettable sunrise views of Mt. Shivling before descending." },
+      { day: 7, title: "Bhojbasa to Gangotri", altitudeM: 3100, distanceKm: 14, description: "Trek back along the river gorge to Gangotri." },
+      { day: 8, title: "Gangotri to Dehradun", altitudeM: 640, distanceKm: 240, description: "Return drive to Dehradun." }
+    ],
+    inclusions: [
+      "Alpine dome tents, sub-zero sleeping bags & kitchen setup",
+      "All meals and high-altitude nutritional rations",
+      "Gangotri National Park special permits & eco fees",
+      "Certified High Altitude Mountain Guides (WFR certified)"
+    ],
+    exclusions: [
+      "Transport from Dehradun to Gangotri (can be added)",
+      "Backpack offloading",
+      "Personal trekking gear and crampons"
+    ],
+    howToReach: {
+      baseTown: "Gangotri",
+      nearestAirport: "Dehradun Jolly Grant (260 km)",
+      nearestRailway: "Dehradun Railway Station (242 km)",
+      commuteDetails: "Early morning mountain buses and private cabs depart from Dehradun / Rishikesh to Uttarkashi and Gangotri."
+    },
+    faqs: [
+      { question: "Is prior high-altitude trekking experience required?", answer: "Yes, this trek involves moraine boulder hopping and glacier crossings above 4,400 meters." },
+      { question: "How cold does it get at Tapovan?", answer: "Night temperatures drop well below 0°C even during peak summer (May-June)." }
+    ],
+    batches: [
+      { id: "gt-b1", startDate: "2027-05-15", endDate: "2027-05-22", seatsTotal: 12, seatsBooked: 6, pricePerPersonINR: 15500, status: "open" },
+      { id: "gt-b2", startDate: "2027-09-10", endDate: "2027-09-17", seatsTotal: 12, seatsBooked: 10, pricePerPersonINR: 15500, status: "open" }
+    ],
+    packages: [
+      { id: "gt-std", name: "Gangotri to Gangotri", priceINR: 15500, description: "Expedition-grade high camp package.", features: ["Glacial guide", "Shivling views", "All meals"], isPopular: true }
+    ],
+    isFeatured: true
+  },
+  {
+    name: "Bali Pass High-Altitude Crossing",
+    slug: "bali-pass",
+    difficulty: "difficult",
+    durationDays: 8,
+    maxAltitudeM: 4940,
+    trekDistanceKm: 64,
+    summary: "A daring 16,207 ft crossover expedition connecting the Har Ki Dun valley with Yamunotri.",
+    description: "One of the most thrilling crossover treks in Garhwal. Trekkers traverse the Govind National Park, explore the pristine Ruinsara Tal lake, and cross the knife-edge Bali Pass at 16,207 ft down to Yamunotri shrine.",
+    coordinates: [78.2667, 31.0667],
+    region: "Garhwal",
+    regionSlug: "garhwal",
+    startPoint: "Sankri, Uttarakhand",
+    bestSeasons: ["May", "Jun", "Sep", "Oct"],
+    fromPrice: 19500,
+    heroImage: "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 1950, label: "Sankri" },
+      { distanceKm: 12, altitudeM: 2560, label: "Seema" },
+      { distanceKm: 30, altitudeM: 3500, label: "Ruinsara Tal" },
+      { distanceKm: 37, altitudeM: 4600, label: "Bali Pass Base" },
+      { distanceKm: 51, altitudeM: 4940, label: "Bali Pass Summit" },
+      { distanceKm: 64, altitudeM: 2500, label: "Yamunotri Valley" }
+    ],
+    itinerary: [
+      { day: 1, title: "Dehradun to Sankri", altitudeM: 1950, distanceKm: 197, description: "Drive along the Tons river gorge to Sankri base village." },
+      { day: 2, title: "Sankri to Seema via Taluka", altitudeM: 2560, distanceKm: 12, description: "Trek along Supin river past wooden houses in Osla." },
+      { day: 3, title: "Seema to Rainbasera", altitudeM: 3086, distanceKm: 10, description: "Scenic trek into the uninhabited Ruinsara valley." },
+      { day: 4, title: "Rainbasera to Ruinsara Tal", altitudeM: 3500, distanceKm: 8, description: "Camp beside the sacred alpine glacial lake of Ruinsara." },
+      { day: 5, title: "Ruinsara Tal to Odari", altitudeM: 4000, distanceKm: 4, description: "Steep rocky climb to the natural rock shelter of Odari." },
+      { day: 6, title: "Odari to Bali Pass Basecamp", altitudeM: 4600, distanceKm: 3, description: "Ascent over snow ridges and moraines to the summit base." },
+      { day: 7, title: "Summit Pass Crossing & descent to Lower Dhamni", altitudeM: 4940, distanceKm: 14, description: "Cross the 16,207 ft knife-edge ridge with ropes and descent to Yamunotri valley." },
+      { day: 8, title: "Lower Dhamni to Janki Chatti & drive to Dehradun", altitudeM: 2500, distanceKm: 5, description: "Reach roadhead and drive back to Dehradun." }
+    ],
+    inclusions: [
+      "High-altitude mountain tents & sub-zero sleeping bags",
+      "Technical gear (ropes, microspikes, ice axes) and specialized safety team",
+      "All meals and energy snacks during the trek",
+      "Wildlife and forest permits for Govind National Park"
+    ],
+    exclusions: [
+      "Transport from Dehradun to Sankri (can be arranged)",
+      "Backpack offloading",
+      "Personal climbing equipment"
+    ],
+    howToReach: {
+      baseTown: "Sankri",
+      nearestAirport: "Dehradun Jolly Grant (210 km)",
+      nearestRailway: "Dehradun Railway Station (195 km)",
+      commuteDetails: "Daily morning shared transport leaves Dehradun Railway Station at 6:30 AM direct to Sankri."
+    },
+    faqs: [
+      { question: "Is Bali Pass suitable for beginners?", answer: "No, Bali Pass is a challenging crossover expedition meant for trekkers with prior high-altitude endurance." },
+      { question: "Is technical gear required?", answer: "Yes, microspikes, gaiters, and safety ropes are deployed during the pass traverse." }
+    ],
+    batches: [
+      { id: "bp-b1", startDate: "2027-06-01", endDate: "2027-06-08", seatsTotal: 10, seatsBooked: 5, pricePerPersonINR: 19500, status: "open" },
+      { id: "bp-b2", startDate: "2027-09-20", endDate: "2027-09-27", seatsTotal: 10, seatsBooked: 3, pricePerPersonINR: 19500, status: "open" }
+    ],
+    packages: [
+      { id: "bp-std", name: "Sankri to Yamunotri", priceINR: 19500, description: "Complete technical crossover expedition.", features: ["Technical safety team", "All meals", "Ruinsara camping"], isPopular: true }
+    ],
+    isFeatured: false
+  },
+  {
+    name: "Pin Parvati Pass Trek",
+    slug: "pin-parvati",
+    difficulty: "difficult",
+    durationDays: 11,
+    maxAltitudeM: 5319,
+    trekDistanceKm: 110,
+    summary: "The ultimate trans-Himalayan crossover from the lush Parvati Valley into the barren cold desert of Spiti.",
+    description: "One of India's most legendary and demanding expeditions. Trekkers journey through lush pine forests, hot springs, glacial crossings, and negotiate the 17,450 ft snowy col into the moonscapes of Spiti Valley.",
+    coordinates: [77.4244, 31.9961],
+    region: "Himachal",
+    regionSlug: "himachal",
+    startPoint: "Barshaini / Bhuntar, Himachal Pradesh",
+    bestSeasons: ["Jul", "Aug", "Sep"],
+    fromPrice: 28500,
+    heroImage: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 2195, label: "Barshaini" },
+      { distanceKm: 12, altitudeM: 2800, label: "Kheerganga" },
+      { distanceKm: 47, altitudeM: 4100, label: "Mantalai Lake" },
+      { distanceKm: 68, altitudeM: 5319, label: "Pin Parvati Pass" },
+      { distanceKm: 92, altitudeM: 3740, label: "Mudh Village (Spiti)" },
+      { distanceKm: 110, altitudeM: 3800, label: "Kaza" }
+    ],
+    itinerary: [
+      { day: 1, title: "Bhuntar to Barshaini and trek to Kheerganga", altitudeM: 2800, distanceKm: 12, description: "Drive to Barshaini and trek through oak glades to the natural hot springs." },
+      { day: 2, title: "Kheerganga to Tunda Bhuj", altitudeM: 3285, distanceKm: 14, description: "Trek through birch forests into the remote Parvati gorge." },
+      { day: 3, title: "Tunda Bhuj to Thakur Kuan", altitudeM: 3560, distanceKm: 12, description: "Cross the Parvati river via the thrilling puli rope bridge." },
+      { day: 4, title: "Thakur Kuan to Odi Thatch", altitudeM: 3800, distanceKm: 9, description: "Traverse the colossal natural rock bridges of Pandu Pul." },
+      { day: 5, title: "Odi Thatch to Mantalai Lake", altitudeM: 4100, distanceKm: 12, description: "Reach the sacred source of the Parvati river." },
+      { day: 6, title: "Mantalai to Parvati Side Basecamp", altitudeM: 4800, distanceKm: 7, description: "Steep moraine ascent to the base of the glacier." },
+      { day: 7, title: "Cross Pin Parvati Pass into Pin Valley", altitudeM: 5319, distanceKm: 14, description: "Traverse the crevassed glacier, cross the 17,450 ft pass, and enter Spiti." },
+      { day: 8, title: "Pin Basecamp to Tiya", altitudeM: 3900, distanceKm: 12, description: "Trek across the dramatic multicolored scree slopes of Pin Valley." },
+      { day: 9, title: "Tiya to Mudh Village", altitudeM: 3740, distanceKm: 12, description: "Arrive at the remote, whitewashed Buddhist village of Mudh." },
+      { day: 10, title: "Mudh to Kaza", altitudeM: 3800, distanceKm: 50, description: "Drive across Spiti Valley to the town of Kaza." },
+      { day: 11, title: "Kaza to Manali via Kunzum Pass", altitudeM: 2050, distanceKm: 200, description: "Drive back over Kunzum and Atal Tunnel to Manali." }
+    ],
+    inclusions: [
+      "Expedition dome tents, insulation mats & sub-zero sleeping bags",
+      "Full expedition kitchen with hot meals and high-altitude rations",
+      "Technical climbing equipment (ropes, harnesses, carabiners, crampons)",
+      "Certified mountaineering guides & rescue support team"
+    ],
+    exclusions: [
+      "Transport from Kaza to Manali (can be arranged)",
+      "Backpack offloading service",
+      "Personal insurance and climbing gear"
+    ],
+    howToReach: {
+      baseTown: "Barshaini / Kasol",
+      nearestAirport: "Kullu Bhuntar Airport (45 km)",
+      nearestRailway: "Chandigarh Railway Station (290 km)",
+      commuteDetails: "Buses and private cabs run regularly from Delhi/Chandigarh to Bhuntar and Kasol."
+    },
+    faqs: [
+      { question: "How difficult is Pin Parvati Pass?", answer: "It is rated extremely difficult due to its 11-day duration, sustained altitudes over 4,000m, and glaciated terrain." },
+      { question: "Is previous high-altitude experience mandatory?", answer: "Yes, proof of previous 14,000+ ft trekking experience is strictly required." }
+    ],
+    batches: [
+      { id: "pp-b1", startDate: "2027-07-10", endDate: "2027-07-20", seatsTotal: 10, seatsBooked: 7, pricePerPersonINR: 28500, status: "open" },
+      { id: "pp-b2", startDate: "2027-08-01", endDate: "2027-08-11", seatsTotal: 10, seatsBooked: 10, pricePerPersonINR: 28500, status: "full" }
+    ],
+    packages: [
+      { id: "pp-std", name: "Kasol to Kaza Expedition", priceINR: 28500, description: "Full trans-Himalayan crossover expedition.", features: ["Technical team", "All meals", "Spiti drop"], isPopular: true }
+    ],
+    isFeatured: false
+  },
+  {
+    name: "Bhrigu Lake Alpine Trek",
+    slug: "bhrigu-lake",
+    difficulty: "easy",
+    durationDays: 4,
+    maxAltitudeM: 4300,
+    trekDistanceKm: 25,
+    summary: "A pristine high-altitude alpine lake trek in Himachal with rapid ascent through rhododendron meadows.",
+    description: "Located high above the Kullu valley near Manali, Bhrigu Lake is known for its ever-changing colors and sacred mythological significance. It is one of the few high-altitude lakes accessible within a 4-day weekend.",
+    coordinates: [77.2069, 32.3117],
+    region: "Himachal",
+    regionSlug: "himachal",
+    startPoint: "Gulaba / Manali, Himachal Pradesh",
+    bestSeasons: ["May", "Jun", "Jul", "Aug", "Sep", "Oct"],
+    fromPrice: 5500,
+    heroImage: "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1200&auto=format&fit=crop"
+    ],
+    altitudeProfile: [
+      { distanceKm: 0, altitudeM: 2050, label: "Manali" },
+      { distanceKm: 7, altitudeM: 3830, label: "Rola Kholi Camp" },
+      { distanceKm: 17, altitudeM: 4300, label: "Bhrigu Lake" },
+      { distanceKm: 22, altitudeM: 3600, label: "Pandu Ropa" },
+      { distanceKm: 25, altitudeM: 2050, label: "Vashisht / Manali" }
+    ],
+    itinerary: [
+      { day: 1, title: "Manali to Gulaba & trek to Rola Kholi", altitudeM: 3830, distanceKm: 7, description: "Short drive to Gulaba and scenic ascent through pine glades to Rola Kholi camp." },
+      { day: 2, title: "Rola Kholi to Bhrigu Lake & return", altitudeM: 4300, distanceKm: 10, description: "Trek to the holy alpine lake surrounded by snowfields and return to camp." },
+      { day: 3, title: "Rola Kholi to Pandu Ropa", altitudeM: 3600, distanceKm: 5, description: "Descent through high-altitude meadows towards the Vashisht ridge." },
+      { day: 4, title: "Pandu Ropa to Vashisht / Manali", altitudeM: 2050, distanceKm: 3, description: "Final descent to Vashisht hot springs and transfer to Manali." }
+    ],
+    inclusions: [
+      "Alpine tents, sleeping bags & foam mattresses",
+      "All meals (healthy vegetarian mountain menu)",
+      "Certified trek guide and camp staff",
+      "Forest entry permits and camping fees"
+    ],
+    exclusions: [
+      "Transport from Manali to Gulaba (can be added)",
+      "Personal trekking gear",
+      "Backpack offloading"
+    ],
+    howToReach: {
+      baseTown: "Manali",
+      nearestAirport: "Kullu Bhuntar Airport (50 km)",
+      nearestRailway: "Chandigarh Railway Station (310 km)",
+      commuteDetails: "Overnight Volvo buses run daily from Delhi and Chandigarh to Manali Mall Road."
+    },
+    faqs: [
+      { question: "Is Bhrigu Lake suitable for beginners?", answer: "Yes, it is suitable for fit beginners, though the rapid climb from 2,050m to 3,830m requires good hydration." },
+      { question: "Will the lake be frozen?", answer: "In early summer (May to early June), the lake remains semi-frozen with floating ice sheets." }
+    ],
+    batches: [
+      { id: "bl-b1", startDate: "2027-06-05", endDate: "2027-06-08", seatsTotal: 25, seatsBooked: 12, pricePerPersonINR: 5500, status: "open" },
+      { id: "bl-b2", startDate: "2027-07-15", endDate: "2027-07-18", seatsTotal: 25, seatsBooked: 20, pricePerPersonINR: 5500, status: "open" },
+      { id: "bl-b3", startDate: "2027-09-05", endDate: "2027-09-08", seatsTotal: 25, seatsBooked: 8, pricePerPersonINR: 5500, status: "open" }
+    ],
+    packages: [
+      { id: "bl-std", name: "Manali to Manali", priceINR: 5500, description: "Classic weekend lake trek.", features: ["Camp stays", "All meals", "Guide"], isPopular: true }
+    ],
+    isFeatured: false
+  }
+];

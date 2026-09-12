@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "garhwal",
+      "properties": {
+        "name": "Garhwal Himalayas",
+        "slug": "garhwal",
+        "state": "Uttarakhand",
+        "bounds": [78.0, 30.0, 79.9, 31.3],
+        "description": "Home to sacred peaks like Nanda Devi, Trishul, and classic treks like Kuari Pass & Valley of Flowers."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [78.0, 30.0],
+            [79.9, 30.0],
+            [79.9, 31.3],
+            [78.0, 31.3],
+            [78.0, 30.0]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "kumaon",
+      "properties": {
+        "name": "Kumaon Himalayas",
+        "slug": "kumaon",
+        "state": "Uttarakhand",
+        "bounds": [79.2, 29.3, 80.5, 30.6],
+        "description": "Pristine ridge treks, alpine meadows, and views of Panchachuli & Adi Kailash."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [79.2, 29.3],
+            [80.5, 29.3],
+            [80.5, 30.6],
+            [79.2, 30.6],
+            [79.2, 29.3]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "himachal",
+      "properties": {
+        "name": "Himachal Pradesh",
+        "slug": "himachal",
+        "state": "Himachal Pradesh",
+        "bounds": [76.5, 31.0, 78.5, 32.8],
+        "description": "Dramatic high passes connecting Kullu valley to Spiti desert, including Hampta Pass & Pin Parvati."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.5, 31.0],
+            [78.5, 31.0],
+            [78.5, 32.8],
+            [76.5, 32.8],
+            [76.5, 31.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

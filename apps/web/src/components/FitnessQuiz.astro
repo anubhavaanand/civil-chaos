@@ -1,0 +1,219 @@
+---
+// FitnessQuiz.astro
+// Interactive High-Altitude Trekking Fitness Readiness Calculator
+---
+
+<div class="w-full rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/95 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+    <div>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase tracking-wide">
+        High Altitude Fitness Index
+      </span>
+      <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
+        ⚡ "Am I Ready?" High-Altitude Readiness Quiz
+      </h3>
+    </div>
+    <div class="text-xs text-slate-400">
+      4 Quick Questions • Instant Personalized Training Plan
+    </div>
+  </div>
+
+  <!-- Quiz Form Container -->
+  <div id="quiz-step-container" class="my-6">
+    <!-- Question 1: 5KM Run Time -->
+    <div data-quiz-step="1" class="quiz-step block">
+      <h4 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full bg-cyan-500 text-slate-950 font-extrabold text-xs flex items-center justify-center">1</span>
+        What is your current 5KM running pace or cardio capability?
+      </h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="cardio" value="30" class="accent-cyan-400" checked />
+          <div>
+            <span class="block font-bold text-slate-200">Sub-30 Mins (5KM)</span>
+            <span class="text-slate-400 text-[11px]">Regular runner / high stamina</span>
+          </div>
+        </label>
+
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="cardio" value="20" class="accent-cyan-400" />
+          <div>
+            <span class="block font-bold text-slate-200">30 - 45 Mins (5KM)</span>
+            <span class="text-slate-400 text-[11px]">Brisk jogger / weekend sports</span>
+          </div>
+        </label>
+
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="cardio" value="10" class="accent-cyan-400" />
+          <div>
+            <span class="block font-bold text-slate-200">No Running / 50+ Mins</span>
+            <span class="text-slate-400 text-[11px]">Desk routine / occasional walks</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Question 2: Altitude Experience -->
+    <div data-quiz-step="2" class="quiz-step mt-6">
+      <h4 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full bg-cyan-500 text-slate-950 font-extrabold text-xs flex items-center justify-center">2</span>
+        Have you trekked above 9,000 ft (2,700m) before?
+      </h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="exp" value="30" class="accent-cyan-400" checked />
+          <div>
+            <span class="block font-bold text-slate-200">Yes, 12,000+ ft Summit</span>
+            <span class="text-slate-400 text-[11px]">Familiar with cold & thin air</span>
+          </div>
+        </label>
+
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="exp" value="20" class="accent-cyan-400" />
+          <div>
+            <span class="block font-bold text-slate-200">Moderate Hill Walks (6k-9k ft)</span>
+            <span class="text-slate-400 text-[11px]">Visited hill stations & day hikes</span>
+          </div>
+        </label>
+
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="exp" value="10" class="accent-cyan-400" />
+          <div>
+            <span class="block font-bold text-slate-200">First-Time Himalayan Trekker</span>
+            <span class="text-slate-400 text-[11px]">First high-altitude expedition</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Question 3: Leg Strength & Stair Climbing -->
+    <div data-quiz-step="3" class="quiz-step mt-6">
+      <h4 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full bg-cyan-500 text-slate-950 font-extrabold text-xs flex items-center justify-center">3</span>
+        How many flights of stairs can you climb continuously without stopping?
+      </h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="stairs" value="30" class="accent-cyan-400" checked />
+          <div>
+            <span class="block font-bold text-slate-200">10+ Floors continuously</span>
+            <span class="text-slate-400 text-[11px]">Excellent quad & calf endurance</span>
+          </div>
+        </label>
+
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="stairs" value="20" class="accent-cyan-400" />
+          <div>
+            <span class="block font-bold text-slate-200">5 - 8 Floors with breather</span>
+            <span class="text-slate-400 text-[11px]">Good baseline leg power</span>
+          </div>
+        </label>
+
+        <label class="quiz-option p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition flex items-center gap-3">
+          <input type="radio" name="stairs" value="10" class="accent-cyan-400" />
+          <div>
+            <span class="block font-bold text-slate-200">Under 4 Floors</span>
+            <span class="text-slate-400 text-[11px]">Need 3-week leg prep program</span>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Action Button -->
+  <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+    <span class="text-xs text-slate-400">Takes under 30 seconds</span>
+    <button id="calculate-fitness-btn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-lg transition transform hover:scale-105 flex items-center gap-2">
+      Calculate Fitness Score
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Results Box (Hidden initially) -->
+  <div id="quiz-results-box" class="hidden mt-6 p-5 rounded-xl bg-slate-950 border border-cyan-500/40 transition-all duration-300">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div>
+        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Your Himalayan Fitness Readiness Score</span>
+        <div id="fitness-score-display" class="text-3xl font-heading font-bold text-cyan-300 mt-0.5">
+          90 / 100 <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 ml-2">Summit Ready!</span>
+        </div>
+      </div>
+      <button id="retake-quiz-btn" class="text-xs text-cyan-400 hover:underline">Retake Quiz</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-xs">
+      <div>
+        <h5 class="font-bold text-slate-200 mb-2">🎯 Recommended Matched Treks:</h5>
+        <ul id="recommended-treks-list" class="space-y-1.5 text-slate-300">
+          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Kedarkantha Summit (12,500 ft):</strong> Perfect match for your cardio score!</li>
+          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Har Ki Dun Valley (11,768 ft):</strong> Ideal scenic endurance trail.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="font-bold text-slate-200 mb-2">📋 3-Week Custom Training Regimen:</h5>
+        <p id="fitness-regimen-text" class="text-slate-400 leading-relaxed">
+          • <strong>Week 1:</strong> 4km brisk jog 3x/week + 200 stair steps.<br/>
+          • <strong>Week 2:</strong> 5km jog under 35 mins + deep squats & lunges.<br/>
+          • <strong>Week 3:</strong> Weekend 10km practice walk with 5kg backpack load.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('calculate-fitness-btn')?.addEventListener('click', () => {
+    let score = 0;
+    const cardioEl = document.querySelector('input[name="cardio"]:checked') as HTMLInputElement;
+    const expEl = document.querySelector('input[name="exp"]:checked') as HTMLInputElement;
+    const stairsEl = document.querySelector('input[name="stairs"]:checked') as HTMLInputElement;
+
+    if (cardioEl) score += parseInt(cardioEl.value, 10);
+    if (expEl) score += parseInt(expEl.value, 10);
+    if (stairsEl) score += parseInt(stairsEl.value, 10);
+
+    // Normalize to 100
+    const finalScore = Math.min(100, Math.round((score / 90) * 100));
+
+    const resultsBox = document.getElementById('quiz-results-box');
+    const scoreDisplay = document.getElementById('fitness-score-display');
+    const treksList = document.getElementById('recommended-treks-list');
+
+    if (scoreDisplay) {
+      let badge = '';
+      if (finalScore >= 80) {
+        badge = `<span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 ml-2">Summit Ready!</span>`;
+      } else if (finalScore >= 55) {
+        badge = `<span class="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30 ml-2">Moderate Prep Needed</span>`;
+      } else {
+        badge = `<span class="text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/30 ml-2">3-Week Prep Recommended</span>`;
+      }
+      scoreDisplay.innerHTML = `${finalScore} / 100 ${badge}`;
+    }
+
+    if (treksList) {
+      if (finalScore >= 80) {
+        treksList.innerHTML = `
+          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Roopkund Glacial Ridge (15,750 ft):</strong> High altitude challenge unlocked!</li>
+          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Kedarkantha Winter Summit (12,500 ft):</strong> Full speed ahead.</li>
+        `;
+      } else {
+        treksList.innerHTML = `
+          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Kedarkantha Winter Trek (12,500 ft):</strong> Best introductory snow trek.</li>
+          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Har Ki Dun Valley (11,768 ft):</strong> Beautiful gradual ascent.</li>
+        `;
+      }
+    }
+
+    resultsBox?.classList.remove('hidden');
+    resultsBox?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('retake-quiz-btn')?.addEventListener('click', () => {
+    document.getElementById('quiz-results-box')?.classList.add('hidden');
+  });
+</script>

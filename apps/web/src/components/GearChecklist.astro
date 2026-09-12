@@ -1,0 +1,208 @@
+---
+// GearChecklist.astro
+// Interactive Himalayan Trekking Gear Packing Checklist & Weight Estimator
+---
+
+<div class="w-full rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+    <div>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wide">
+        Backpack Load Optimizer
+      </span>
+      <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
+        🎒 Interactive Gear & Weight Checklist
+      </h3>
+    </div>
+
+    <!-- Weight Meter Gauge -->
+    <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-800">
+      <div>
+        <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">Total Pack Weight</span>
+        <div id="weight-display" class="text-xl font-heading font-bold text-emerald-400">
+          <span id="pack-weight-val">6.4</span> KG <span class="text-xs font-normal text-slate-400">/ 10 KG Max</span>
+        </div>
+      </div>
+      <div class="w-24 bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
+        <div id="weight-bar" class="bg-gradient-to-r from-emerald-400 to-amber-400 h-full w-[64%] transition-all duration-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Checklist Categories Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+    <!-- Category 1: Technical Clothing -->
+    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+      <h4 class="font-heading font-bold text-sm text-cyan-300 flex items-center justify-between mb-3">
+        <span>🧥 Clothing & Thermal Layers</span>
+        <span class="text-xs text-slate-400 font-normal">~ 3.2 kg</span>
+      </h4>
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="1.2" checked />
+            <span>Heavy Down Jacket (-10°C rated)</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">1.20 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.45" checked />
+            <span>Fleece Thermal Jacket</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.45 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.4" checked />
+            <span>Waterproof Hardshell Jacket</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.40 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.5" checked />
+            <span>Merino Wool Thermal Sets (x2)</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.50 kg</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Category 2: Footwear & Hardware -->
+    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+      <h4 class="font-heading font-bold text-sm text-cyan-300 flex items-center justify-between mb-3">
+        <span>🥾 Footwear & Snow Gear</span>
+        <span class="text-xs text-slate-400 font-normal">~ 2.1 kg</span>
+      </h4>
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="1.3" checked />
+            <span>High-Ankle Waterproof Trek Boots</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">1.30 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.4" checked />
+            <span>Microspikes / Snow Crampons</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.40 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.25" checked />
+            <span>Waterproof Gaiters</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.25 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.5" />
+            <span>Trekking Poles (Pair)</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.50 kg</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Category 3: Essentials & Medical -->
+    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+      <h4 class="font-heading font-bold text-sm text-cyan-300 flex items-center justify-between mb-3">
+        <span>💊 Medical & Hydration</span>
+        <span class="text-xs text-slate-400 font-normal">~ 1.1 kg</span>
+      </h4>
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.3" checked />
+            <span>AMS & Altitude Medical Kit</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.30 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.35" checked />
+            <span>2L Insulated Hydration Bladder</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.35 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.2" checked />
+            <span>Headlamp (300+ Lumens) + Extra Batts</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.20 kg</span>
+        </label>
+
+        <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.4" />
+            <span>20,000 mAh Cold-Resistant Powerbank</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">0.40 kg</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Tip & Export Button -->
+  <div class="pt-4 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="text-xs text-slate-400 flex items-center gap-2">
+      <span class="text-amber-400 font-bold">💡 Holy Himalayas Pro Tip:</span>
+      <span>Keep your total offloaded rucksack under 9kg for maximum agility on high-pass climbs.</span>
+    </div>
+
+    <button id="print-checklist-btn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 font-bold text-xs shadow transition flex items-center gap-2">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+      Export Checklist PDF / Print
+    </button>
+  </div>
+</div>
+
+<script>
+  function calculateWeight() {
+    let total = 0;
+    document.querySelectorAll('.gear-item:checked').forEach((item) => {
+      const weight = parseFloat((item as HTMLInputElement).dataset.weight || '0');
+      total += weight;
+    });
+
+    const weightValEl = document.getElementById('pack-weight-val');
+    const weightBarEl = document.getElementById('weight-bar');
+    const displayEl = document.getElementById('weight-display');
+
+    if (weightValEl) weightValEl.innerText = total.toFixed(1);
+    
+    const pct = Math.min(100, (total / 10) * 100);
+    if (weightBarEl) {
+      weightBarEl.style.width = `${pct}%`;
+      if (total > 10) {
+        weightBarEl.className = 'bg-gradient-to-r from-amber-400 to-rose-500 h-full transition-all duration-300';
+        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-rose-400';
+      } else {
+        weightBarEl.className = 'bg-gradient-to-r from-emerald-400 to-amber-400 h-full transition-all duration-300';
+        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-emerald-400';
+      }
+    }
+  }
+
+  document.querySelectorAll('.gear-item').forEach((item) => {
+    item.addEventListener('change', calculateWeight);
+  });
+
+  document.getElementById('print-checklist-btn')?.addEventListener('click', () => {
+    window.print();
+  });
+</script>

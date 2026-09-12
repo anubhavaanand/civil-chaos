@@ -1,0 +1,23 @@
+{
+  "name": "@holy-himalayas/cms",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Strapi 5 Headless CMS for Dream of The Holy Himalayas",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "seed": "node scripts/seed.mjs"
+  },
+  "dependencies": {
+    "@strapi/strapi": "^5.0.0",
+    "@strapi/plugin-users-permissions": "^5.0.0",
+    "@strapi/plugin-cloud": "^5.0.0",
+    "@strapi/provider-upload-cloudinary": "*",
+    "pg": "^8.11.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

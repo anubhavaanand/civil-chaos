@@ -1,0 +1,55 @@
+---
+import CurrencySwitcher from './CurrencySwitcher.astro';
+
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Treks', href: '/treks' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+<header class="sticky top-0 z-50 w-full backdrop-blur-md backdrop-saturate-150 bg-slate-950/80 border-b border-white/10">
+  <div class="absolute inset-0 bg-black/30 -z-10 pointer-events-none" aria-hidden="true"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex-shrink-0">
+        <a href="/" class="text-xl font-['Space_Grotesk'] font-bold text-slate-200 hover:text-white transition-colors flex items-center gap-2">
+          <span>🏔️</span> Dream of The Holy Himalayas
+        </a>
+      </div>
+      
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center space-x-6">
+        <nav class="flex space-x-8" aria-label="Main Navigation">
+          {links.map((link) => (
+            <a href={link.href} class="text-slate-200 hover:text-cyan-400 font-['Inter'] text-sm font-medium transition-colors">
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <CurrencySwitcher />
+      </div>
+
+      <!-- Mobile Nav Toggle -->
+      <div class="md:hidden flex items-center">
+        <label for="mobile-menu-toggle" class="cursor-pointer text-slate-200 hover:text-teal-400 p-2" aria-label="Toggle mobile menu">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </label>
+        <input type="checkbox" id="mobile-menu-toggle" class="peer hidden" />
+        
+        <!-- Mobile Nav Menu -->
+        <div class="absolute top-16 left-0 w-full backdrop-blur-md backdrop-saturate-150 bg-slate-900/95 border-b border-white/20 hidden peer-checked:block transition-all z-40">
+          <nav class="px-4 pt-2 pb-4 space-y-1 shadow-lg" aria-label="Mobile Navigation">
+            {links.map((link) => (
+              <a href={link.href} class="block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:text-teal-400 hover:bg-white/5 font-['Inter']">
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

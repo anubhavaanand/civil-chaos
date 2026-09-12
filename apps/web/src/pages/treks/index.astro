@@ -1,0 +1,137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GlassNav from '../../components/GlassNav.astro';
+import TrekCard from '../../components/TrekCard.astro';
+import WhatsAppFab from '../../components/WhatsAppFab.astro';
+import Footer from '../../components/Footer.astro';
+import { mockTreks } from '../../data/mock-treks';
+---
+
+<Layout title="All Treks | Dream of The Holy Himalayas">
+  <GlassNav />
+
+  <main class="pt-24 pb-20 bg-slate-950 min-h-screen text-ink font-body">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <!-- Header -->
+      <div class="mt-8 mb-10 text-center md:text-left">
+        <span class="text-xs font-bold text-brand uppercase tracking-wider">Himalayan Catalog</span>
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-white mt-1">
+          Explore All Treks
+        </h1>
+        <p class="text-sm text-ink-dim mt-2 max-w-xl">Find your perfect Himalayan journey across Garhwal, Kumaon & Himachal Pradesh.</p>
+      </div>
+
+      <!-- Interactive Filter Bar -->
+      <div class="backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-2xl p-4 mb-10 shadow-xl grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label for="filter-region" class="block text-xs font-bold text-ink-dim uppercase tracking-wider mb-1">Region</label>
+          <select id="filter-region" class="w-full bg-slate-900 border border-white/20 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none cursor-pointer">
+            <option value="all">All Regions (Uttarakhand & HP)</option>
+            <option value="Garhwal">Garhwal</option>
+            <option value="Kumaon">Kumaon</option>
+            <option value="Himachal">Himachal Pradesh</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filter-difficulty" class="block text-xs font-bold text-ink-dim uppercase tracking-wider mb-1">Difficulty</label>
+          <select id="filter-difficulty" class="w-full bg-slate-900 border border-white/20 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none cursor-pointer">
+            <option value="all">Any Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="moderate">Moderate</option>
+            <option value="difficult">Difficult</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filter-duration" class="block text-xs font-bold text-ink-dim uppercase tracking-wider mb-1">Duration</label>
+          <select id="filter-duration" class="w-full bg-slate-900 border border-white/20 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none cursor-pointer">
+            <option value="all">Any Duration</option>
+            <option value="short">1 - 4 Days</option>
+            <option value="medium">5 - 6 Days</option>
+            <option value="long">7+ Days</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Treks Grid -->
+      <div id="treks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {mockTreks.map((trek) => (
+          <div
+            class="trek-item-card"
+            data-region={trek.region}
+            data-difficulty={trek.difficulty}
+            data-days={trek.durationDays}
+          >
+            <TrekCard trek={trek} />
+          </div>
+        ))}
+      </div>
+
+      <!-- No Treks Empty State -->
+      <div id="no-treks-empty" class="hidden text-center py-16 rounded-2xl border border-white/10 bg-white/5 p-8">
+        <p class="font-display text-xl font-bold text-white mb-2">No Treks Match Your Filters</p>
+        <p class="text-sm text-ink-dim mb-4">Try adjusting your region or difficulty selection.</p>
+        <button id="reset-filters-btn" class="bg-brand text-slate-950 font-bold px-5 py-2 rounded-full text-xs">Reset All Filters</button>
+      </div>
+    </div>
+  </main>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const regionSelect = document.getElementById('filter-region');
+      const difficultySelect = document.getElementById('filter-difficulty');
+      const durationSelect = document.getElementById('filter-duration');
+      const cards = document.querySelectorAll('.trek-item-card');
+      const emptyState = document.getElementById('no-treks-empty');
+      const resetBtn = document.getElementById('reset-filters-btn');
+
+      function filterTreks() {
+        const selectedRegion = regionSelect?.value || 'all';
+        const selectedDiff = difficultySelect?.value || 'all';
+        const selectedDuration = durationSelect?.value || 'all';
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const region = card.getAttribute('data-region');
+          const difficulty = card.getAttribute('data-difficulty');
+          const days = parseInt(card.getAttribute('data-days') || '0', 10);
+
+          const matchesRegion = selectedRegion === 'all' || region === selectedRegion;
+          const matchesDiff = selectedDiff === 'all' || difficulty === selectedDiff;
+          let matchesDuration = true;
+
+          if (selectedDuration === 'short') matchesDuration = days <= 4;
+          else if (selectedDuration === 'medium') matchesDuration = days >= 5 && days <= 6;
+          else if (selectedDuration === 'long') matchesDuration = days >= 7;
+
+          if (matchesRegion && matchesDiff && matchesDuration) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (emptyState) {
+          if (visibleCount === 0) emptyState.classList.remove('hidden');
+          else emptyState.classList.add('hidden');
+        }
+      }
+
+      regionSelect?.addEventListener('change', filterTreks);
+      difficultySelect?.addEventListener('change', filterTreks);
+      durationSelect?.addEventListener('change', filterTreks);
+
+      resetBtn?.addEventListener('click', () => {
+        if (regionSelect) regionSelect.value = 'all';
+        if (difficultySelect) difficultySelect.value = 'all';
+        if (durationSelect) durationSelect.value = 'all';
+        filterTreks();
+      });
+    });
+  </script>
+
+  <WhatsAppFab />
+  <Footer />
+</Layout>

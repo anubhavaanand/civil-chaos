@@ -1,20 +1,24 @@
 {
-  "name": "civil-chaos",
+  "name": "dream-of-holy-himalayas",
+  "private": true,
   "type": "module",
-  "version": "0.0.1",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "build:web": "npm run build --workspace=apps/web",
+    "dev:cms": "npm run develop --workspace=apps/cms",
+    "build:cms": "npm run build --workspace=apps/cms"
+  },
   "engines": {
     "node": ">=22.12.0"
   },
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
   "dependencies": {
-    "astro": "^7.2.10"
-  },
-  "allowScripts": {
-    "esbuild": true
+    "@astrojs/node": "^11.1.5",
+    "maplibre-gl": "^6.9.0",
+    "zod": "^4.6.2"
   }
 }

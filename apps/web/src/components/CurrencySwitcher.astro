@@ -1,0 +1,89 @@
+---
+// CurrencySwitcher.astro
+// Global Multi-Currency Conversion Dropdown for International Himalayan Trekkers
+---
+
+<div class="relative inline-block text-left" id="currency-switcher-root">
+  <button id="currency-dropdown-btn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-xs font-medium text-slate-200 shadow transition backdrop-blur-md">
+    <span id="active-curr-symbol" class="font-bold text-cyan-400">₹</span>
+    <span id="active-curr-code" class="font-mono">INR</span>
+    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div id="currency-menu" class="hidden absolute right-0 mt-2 w-36 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 shadow-2xl z-50 backdrop-blur-xl p-1">
+    <button data-curr="INR" data-rate="1" data-symbol="₹" class="curr-option-btn w-full px-3 py-2 rounded-lg hover:bg-cyan-500/20 hover:text-cyan-300 transition text-left flex items-center justify-between font-mono">
+      <span>🇮🇳 INR</span>
+      <span class="font-bold">₹</span>
+    </button>
+
+    <button data-curr="USD" data-rate="0.012" data-symbol="$" class="curr-option-btn w-full px-3 py-2 rounded-lg hover:bg-cyan-500/20 hover:text-cyan-300 transition text-left flex items-center justify-between font-mono">
+      <span>🇺🇸 USD</span>
+      <span class="font-bold">$</span>
+    </button>
+
+    <button data-curr="EUR" data-rate="0.011" data-symbol="€" class="curr-option-btn w-full px-3 py-2 rounded-lg hover:bg-cyan-500/20 hover:text-cyan-300 transition text-left flex items-center justify-between font-mono">
+      <span>🇪🇺 EUR</span>
+      <span class="font-bold">€</span>
+    </button>
+
+    <button data-curr="GBP" data-rate="0.0095" data-symbol="£" class="curr-option-btn w-full px-3 py-2 rounded-lg hover:bg-cyan-500/20 hover:text-cyan-300 transition text-left flex items-center justify-between font-mono">
+      <span>🇬🇧 GBP</span>
+      <span class="font-bold">£</span>
+    </button>
+
+    <button data-curr="AED" data-rate="0.044" data-symbol="AED" class="curr-option-btn w-full px-3 py-2 rounded-lg hover:bg-cyan-500/20 hover:text-cyan-300 transition text-left flex items-center justify-between font-mono">
+      <span>🇦🇪 AED</span>
+      <span class="font-bold">AED</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('currency-dropdown-btn');
+  const menu = document.getElementById('currency-menu');
+  const symbolEl = document.getElementById('active-curr-symbol');
+  const codeEl = document.getElementById('active-curr-code');
+
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu?.classList.toggle('hidden');
+  });
+
+  window.addEventListener('click', () => {
+    menu?.classList.add('hidden');
+  });
+
+  document.querySelectorAll('.curr-option-btn').forEach((option) => {
+    option.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement;
+      const curr = target.dataset.curr || 'INR';
+      const rate = parseFloat(target.dataset.rate || '1');
+      const symbol = target.dataset.symbol || '₹';
+
+      if (symbolEl) symbolEl.innerText = symbol;
+      if (codeEl) codeEl.innerText = curr;
+
+      // Update all prices across site with data-price-inr attribute
+      updateAllPrices(rate, symbol);
+      menu?.classList.add('hidden');
+    });
+  });
+
+  function updateAllPrices(rate: number, symbol: string) {
+    document.querySelectorAll('[data-price-inr]').forEach((el) => {
+      const inrStr = (el as HTMLElement).dataset.priceInr;
+      if (!inrStr) return;
+      const inrVal = parseFloat(inrStr);
+
+      if (rate === 1) {
+        el.textContent = `₹${inrVal.toLocaleString('en-IN')}`;
+      } else {
+        const converted = Math.round(inrVal * rate);
+        el.textContent = `${symbol}${converted.toLocaleString()}`;
+      }
+    });
+  }
+</script>

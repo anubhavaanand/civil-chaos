@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassNav from '../components/GlassNav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="About Us | Dream of The Holy Himalayas">
+  <GlassNav />
+  
+  <main class="pt-24 pb-20 bg-slate-950 min-h-screen">
+    <!-- Hero -->
+    <section class="relative py-20 px-4">
+      <!-- Decorative background glow -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand/20 rounded-full blur-[120px] opacity-50 pointer-events-none"></div>
+      
+      <div class="container mx-auto max-w-4xl relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-6">
+          Our Story
+        </h1>
+        <p class="text-xl md:text-2xl text-ink font-body leading-relaxed">
+          Born in the trails of Mautar, Uttarakhand, we are passionate about sharing the raw beauty of the Himalayas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Who We Are -->
+    <section class="container mx-auto px-4 py-12">
+      <div class="backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center @supports-not-(backdrop-filter:blur(1px)):bg-slate-900/85">
+        
+        <div class="relative h-64 md:h-full min-h-[300px] rounded-2xl overflow-hidden">
+          <!-- Placeholder image -->
+          <div class="absolute inset-0 bg-slate-800"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-ink-dim">
+            Agency photo loading...
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-display font-bold text-white mb-6">Who We Are</h2>
+          <div class="space-y-4 text-ink-dim">
+            <p>Dream of The Holy Himalayas is a boutique trekking agency focused on sustainable, safe, and breathtaking experiences in Uttarakhand and Himachal Pradesh.</p>
+            <p>With over a decade of combined guiding experience, our founders started this agency to provide a deeply personal connection to the mountains. We know the trails, the weather, and the local communities.</p>
+            <p>Our commitment to safety and quality has earned us a 5.0★ rating on Google from 40+ happy trekkers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

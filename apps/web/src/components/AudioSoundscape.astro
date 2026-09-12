@@ -1,0 +1,250 @@
+---
+// AudioSoundscape.astro
+// Procedural Himalayan Web Audio Soundscape Synthesizer
+---
+
+<div id="audio-soundscape-widget" class="fixed bottom-6 right-6 z-40">
+  <!-- Expanded Control Card -->
+  <div id="audio-card" class="hidden mb-3 p-4 rounded-2xl bg-slate-900/95 border border-cyan-500/30 text-white shadow-2xl backdrop-blur-2xl w-72 transition-all duration-300">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div class="flex items-center gap-2">
+        <span class="flex h-2 w-2 relative">
+          <span id="audio-pulse-ring" class="hidden animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+        </span>
+        <h4 class="font-heading font-bold text-xs text-cyan-200 uppercase tracking-wide">Himalayan Ambient Audio</h4>
+      </div>
+      <button id="close-audio-card" class="text-slate-400 hover:text-white text-xs">✕</button>
+    </div>
+
+    <!-- Soundscape Selectors -->
+    <div class="my-3 space-y-2 text-xs">
+      <button data-mode="wind" class="sound-mode-btn w-full px-3 py-2 rounded-xl bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-500/40 text-left font-medium transition flex items-center justify-between text-cyan-300 active-sound">
+        <span>🌬️ High Mountain Wind</span>
+        <span class="text-[10px] text-slate-400">12,000 ft</span>
+      </button>
+
+      <button data-mode="stream" class="sound-mode-btn w-full px-3 py-2 rounded-xl bg-slate-800/60 hover:bg-cyan-500/20 border border-slate-700/60 hover:border-cyan-500/40 text-left font-medium transition flex items-center justify-between text-slate-300">
+        <span>🌊 Glacier Melt Stream</span>
+        <span class="text-[10px] text-slate-400">Valley</span>
+      </button>
+
+      <button data-mode="bowl" class="sound-mode-btn w-full px-3 py-2 rounded-xl bg-slate-800/60 hover:bg-cyan-500/20 border border-slate-700/60 hover:border-cyan-500/40 text-left font-medium transition flex items-center justify-between text-slate-300">
+        <span>🔔 Tibetan Singing Bowl</span>
+        <span class="text-[10px] text-slate-400">432 Hz</span>
+      </button>
+
+      <button data-mode="fire" class="sound-mode-btn w-full px-3 py-2 rounded-xl bg-slate-800/60 hover:bg-cyan-500/20 border border-slate-700/60 hover:border-cyan-500/40 text-left font-medium transition flex items-center justify-between text-slate-300">
+        <span>🔥 Base Campfire</span>
+        <span class="text-[10px] text-slate-400">Night</span>
+      </button>
+    </div>
+
+    <!-- Volume Controls -->
+    <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-3 text-xs">
+      <span class="text-slate-400 text-[10px] font-bold uppercase">Volume</span>
+      <input id="audio-volume" type="range" min="0" max="1" step="0.05" value="0.4" class="w-full accent-cyan-400 cursor-pointer" />
+    </div>
+  </div>
+
+  <!-- Floating Trigger Badge -->
+  <button id="toggle-audio-btn" class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-cyan-500/40 text-cyan-300 font-bold text-xs shadow-2xl backdrop-blur-xl transition transform hover:scale-105">
+    <span id="audio-icon" class="text-base">🎧</span>
+    <span id="audio-btn-text">Himalayan Ambience</span>
+  </button>
+</div>
+
+<script>
+  let audioCtx: AudioContext | null = null;
+  let gainNode: GainNode | null = null;
+  let isPlaying = false;
+  let currentMode = 'wind';
+  let activeNoiseNode: AudioNode | null = null;
+  let timerId: any = null;
+
+  function initAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0.4;
+      gainNode.connect(audioCtx.destination);
+    }
+  }
+
+  function createNoiseBuffer() {
+    if (!audioCtx) return null;
+    const bufferSize = audioCtx.sampleRate * 2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = buffer.getChannelData(0);
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+      output[i] *= 0.11;
+      b6 = white * 0.115926;
+    }
+    return buffer;
+  }
+
+  function stopSoundscape() {
+    if (timerId) clearInterval(timerId);
+    if (activeNoiseNode) {
+      try { (activeNoiseNode as any).stop?.(); } catch (e) {}
+      activeNoiseNode.disconnect();
+      activeNoiseNode = null;
+    }
+  }
+
+  function startSoundscape(mode: string) {
+    initAudioContext();
+    if (!audioCtx || !gainNode) return;
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    stopSoundscape();
+
+    if (mode === 'wind') {
+      // High Mountain Wind
+      const buffer = createNoiseBuffer();
+      if (!buffer) return;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 350;
+
+      // LFO for wind howling effect
+      const lfo = audioCtx.createOscillator();
+      lfo.frequency.value = 0.15; // Slow sweep
+      const lfoGain = audioCtx.createGain();
+      lfoGain.gain.value = 250;
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      lfo.start();
+
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      activeNoiseNode = noise;
+
+    } else if (mode === 'stream') {
+      // Glacier Stream
+      const buffer = createNoiseBuffer();
+      if (!buffer) return;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1200;
+      filter.Q.value = 3.0;
+
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      activeNoiseNode = noise;
+
+    } else if (mode === 'bowl') {
+      // Tibetan Singing Bowl 432 Hz
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(432, audioCtx.currentTime);
+
+      const osc2 = audioCtx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(864, audioCtx.currentTime);
+
+      const bowlGain = audioCtx.createGain();
+      bowlGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+
+      osc.connect(bowlGain);
+      osc2.connect(bowlGain);
+      bowlGain.connect(gainNode);
+
+      osc.start();
+      osc2.start();
+
+      // Pulsing harmonic resonance
+      let angle = 0;
+      timerId = setInterval(() => {
+        angle += 0.05;
+        if (bowlGain && audioCtx) {
+          bowlGain.gain.value = 0.2 + Math.sin(angle) * 0.1;
+        }
+      }, 50);
+
+      activeNoiseNode = osc;
+
+    } else if (mode === 'fire') {
+      // Base Campfire
+      const buffer = createNoiseBuffer();
+      if (!buffer) return;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 180;
+
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      activeNoiseNode = noise;
+    }
+  }
+
+  // Setup DOM Event Listeners
+  const toggleBtn = document.getElementById('toggle-audio-btn');
+  const card = document.getElementById('audio-card');
+  const closeBtn = document.getElementById('close-audio-card');
+  const volumeInput = document.getElementById('audio-volume') as HTMLInputElement;
+  const pulseRing = document.getElementById('audio-pulse-ring');
+  const btnText = document.getElementById('audio-btn-text');
+
+  toggleBtn?.addEventListener('click', () => {
+    card?.classList.toggle('hidden');
+    if (!isPlaying) {
+      isPlaying = true;
+      startSoundscape(currentMode);
+      pulseRing?.classList.remove('hidden');
+      if (btnText) btnText.innerText = 'Playing Ambience';
+    }
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    card?.classList.add('hidden');
+  });
+
+  volumeInput?.addEventListener('input', (e) => {
+    const val = parseFloat((e.target as HTMLInputElement).value);
+    if (gainNode) gainNode.gain.value = val;
+  });
+
+  document.querySelectorAll('.sound-mode-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const mode = (e.currentTarget as HTMLElement).dataset.mode;
+      if (!mode) return;
+
+      currentMode = mode;
+      document.querySelectorAll('.sound-mode-btn').forEach(b => {
+        b.className = 'sound-mode-btn w-full px-3 py-2 rounded-xl bg-slate-800/60 hover:bg-cyan-500/20 border border-slate-700/60 hover:border-cyan-500/40 text-left font-medium transition flex items-center justify-between text-slate-300';
+      });
+      (e.currentTarget as HTMLElement).className = 'sound-mode-btn w-full px-3 py-2 rounded-xl bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-500/40 text-left font-medium transition flex items-center justify-between text-cyan-300 active-sound';
+
+      if (isPlaying) {
+        startSoundscape(currentMode);
+      }
+    });
+  });
+</script>

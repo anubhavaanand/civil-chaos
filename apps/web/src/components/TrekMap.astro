@@ -1,0 +1,305 @@
+---
+import { mockTreks } from '../data/mock-treks';
+import regionBoundaries from '../data/region-boundaries.json';
+
+const treksGeoJSON = {
+  type: 'FeatureCollection',
+  features: mockTreks.map((trek) => ({
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: trek.coordinates
+    },
+    properties: {
+      name: trek.name,
+      slug: trek.slug,
+      difficulty: trek.difficulty,
+      durationDays: trek.durationDays,
+      maxAltitudeM: trek.maxAltitudeM,
+      fromPrice: trek.fromPrice,
+      region: trek.region,
+      regionSlug: trek.regionSlug,
+      summary: trek.summary,
+      heroImage: trek.heroImage
+    }
+  }))
+};
+---
+
+<div class="relative w-full overflow-hidden rounded-3xl border border-white/20 bg-slate-900 shadow-2xl">
+  <!-- Top Glass Controls Bar -->
+  <div class="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/20 bg-slate-950/60 p-3 backdrop-blur-md backdrop-saturate-150">
+    <div class="flex items-center gap-2">
+      <span class="inline-block h-3 w-3 animate-pulse rounded-full bg-brand"></span>
+      <h3 class="font-display text-sm font-bold tracking-wide text-white md:text-base">Himalayan Trek Radar</h3>
+    </div>
+
+    <!-- Region Filter Chips -->
+    <div class="flex flex-wrap items-center gap-1.5" id="region-chips-container">
+      <button
+        data-region="all"
+        class="region-chip active-chip cursor-pointer rounded-full border border-brand bg-brand px-3 py-1 text-xs font-semibold text-slate-950 transition-all hover:scale-105"
+      >
+        All Regions
+      </button>
+      <button
+        data-region="garhwal"
+        class="region-chip cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-ink transition-all hover:bg-white/20 hover:scale-105"
+      >
+        Garhwal
+      </button>
+      <button
+        data-region="kumaon"
+        class="region-chip cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-ink transition-all hover:bg-white/20 hover:scale-105"
+      >
+        Kumaon
+      </button>
+      <button
+        data-region="himachal"
+        class="region-chip cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-ink transition-all hover:bg-white/20 hover:scale-105"
+      >
+        Himachal
+      </button>
+    </div>
+  </div>
+
+  <!-- Map Container -->
+  <div id="himalayan-map" class="h-[520px] w-full bg-slate-950">
+    <!-- Shimmer loading state -->
+    <div id="map-loader" class="flex h-full w-full items-center justify-center bg-slate-900/90 text-center">
+      <div class="flex flex-col items-center gap-3">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-brand border-t-transparent"></div>
+        <p class="font-display text-sm font-medium text-ink-dim">Initializing Himalayan Maplibre Engine...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maplibre GL CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.css" />
+
+  <!-- Client Interactive Map Logic -->
+  <script is:inline define:vars={{ treksGeoJSON, regionBoundaries }}>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loader = document.getElementById('map-loader');
+      
+      try {
+        // Dynamically load MapLibre GL
+        if (!window.maplibregl) {
+          await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
+        const maplibregl = window.maplibregl;
+
+        // Map initial bounds (Uttarakhand & Himachal region)
+        const initialBounds = [76.5, 29.3, 80.5, 32.8];
+
+        const map = new maplibregl.Map({
+          container: 'himalayan-map',
+          style: {
+            version: 8,
+            sources: {
+              'osm-tiles': {
+                type: 'raster',
+                tiles: [
+                  'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                ],
+                tileSize: 256,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }
+            },
+            layers: [
+              {
+                id: 'osm-tiles-layer',
+                type: 'raster',
+                source: 'osm-tiles',
+                minzoom: 0,
+                maxzoom: 19,
+                paint: {
+                  'raster-saturation': -0.4,
+                  'raster-brightness-max': 0.7
+                }
+              }
+            ]
+          },
+          bounds: initialBounds,
+          fitBoundsOptions: { padding: 40 },
+          touchPitch: false,
+          cooperativeGestures: true
+        });
+
+        map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+
+        map.on('load', () => {
+          if (loader) loader.style.display = 'none';
+
+          // Add GeoJSON source with clustering
+          map.addSource('treks', {
+            type: 'geojson',
+            data: treksGeoJSON,
+            cluster: true,
+            clusterMaxZoom: 8,
+            clusterRadius: 40
+          });
+
+          // Clusters layer
+          map.addLayer({
+            id: 'clusters',
+            type: 'circle',
+            source: 'treks',
+            filter: ['has', 'point_count'],
+            paint: {
+              'circle-color': '#14b8a6',
+              'circle-radius': ['step', ['get', 'point_count'], 20, 3, 28, 7, 36],
+              'circle-opacity': 0.85,
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#ffffff'
+            }
+          });
+
+          // Cluster count numbers
+          map.addLayer({
+            id: 'cluster-count',
+            type: 'symbol',
+            source: 'treks',
+            filter: ['has', 'point_count'],
+            layout: {
+              'text-field': '{point_count_abbreviated}',
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+              'text-size': 14
+            },
+            paint: {
+              'text-color': '#0f172a'
+            }
+          });
+
+          // Single unclustered trek markers
+          map.addLayer({
+            id: 'unclustered-point',
+            type: 'circle',
+            source: 'treks',
+            filter: ['!', ['has', 'point_count']],
+            paint: {
+              'circle-color': '#14b8a6',
+              'circle-radius': 10,
+              'circle-stroke-width': 3,
+              'circle-stroke-color': '#ffffff'
+            }
+          });
+
+          // Cluster click -> zoom in
+          map.on('click', 'clusters', (e) => {
+            const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+            const clusterId = features[0].properties.cluster_id;
+            map.getSource('treks').getClusterExpansionZoom(clusterId, (err, zoom) => {
+              if (err) return;
+              map.easeTo({
+                center: features[0].geometry.coordinates,
+                zoom: zoom
+              });
+            });
+          });
+
+          // Single point click -> glass popup card
+          map.on('click', 'unclustered-point', (e) => {
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const props = e.features[0].properties;
+
+            const difficultyColor = props.difficulty === 'easy' ? '#22c55e' : props.difficulty === 'moderate' ? '#f59e0b' : '#ef4444';
+
+            const popupNode = document.createElement('div');
+            popupNode.className = 'p-3 bg-slate-900/95 text-white rounded-xl shadow-2xl border border-white/20 max-w-[260px] font-sans';
+            popupNode.innerHTML = `
+              <img src="${props.heroImage}" alt="${props.name}" class="w-full h-28 object-cover rounded-lg mb-2" />
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full text-slate-950" style="background:${difficultyColor}">${props.difficulty}</span>
+                <span class="text-xs text-slate-400">${props.durationDays} Days</span>
+              </div>
+              <h4 class="font-bold text-base text-white mb-1">${props.name}</h4>
+              <p class="text-xs text-slate-300 mb-3">${props.summary}</p>
+              <div class="flex items-center justify-between pt-2 border-t border-white/10">
+                <span class="text-xs text-teal-400 font-bold">₹${Number(props.fromPrice).toLocaleString('en-IN')}</span>
+                <a href="/treks/${props.slug}" class="text-xs bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold px-3 py-1 rounded-md transition-colors">Explore Trek →</a>
+              </div>
+            `;
+
+            new maplibregl.Popup({ offset: 15, closeButton: true })
+              .setLngLat(coordinates)
+              .setDOMContent(popupNode)
+              .addTo(map);
+          });
+
+          // Pointer cursors
+          map.on('mouseenter', 'clusters', () => (map.getCanvas().style.cursor = 'pointer'));
+          map.on('mouseleave', 'clusters', () => (map.getCanvas().style.cursor = ''));
+          map.on('mouseenter', 'unclustered-point', () => (map.getCanvas().style.cursor = 'pointer'));
+          map.on('mouseleave', 'unclustered-point', () => (map.getCanvas().style.cursor = ''));
+
+          // Region filter chip interactions
+          const chips = document.querySelectorAll('.region-chip');
+          chips.forEach((chip) => {
+            chip.addEventListener('click', () => {
+              chips.forEach((c) => {
+                c.classList.remove('bg-brand', 'text-slate-950', 'border-brand', 'active-chip');
+                c.classList.add('bg-white/10', 'text-ink', 'border-white/20');
+              });
+
+              chip.classList.remove('bg-white/10', 'text-ink', 'border-white/20');
+              chip.classList.add('bg-brand', 'text-slate-950', 'border-brand', 'active-chip');
+
+              const selectedRegion = chip.getAttribute('data-region');
+
+              if (selectedRegion === 'all') {
+                map.setFilter('clusters', ['has', 'point_count']);
+                map.setFilter('unclustered-point', ['!', ['has', 'point_count']]);
+                map.fitBounds(initialBounds, { padding: 40 });
+              } else {
+                const regionFeature = regionBoundaries.features.find((f) => f.properties.slug === selectedRegion);
+                
+                // Filter map source by regionSlug
+                const filterCondition = ['==', ['get', 'regionSlug'], selectedRegion];
+                map.setFilter('unclustered-point', ['all', ['!', ['has', 'point_count']], filterCondition]);
+
+                if (regionFeature && regionFeature.properties.bounds) {
+                  map.fitBounds(regionFeature.properties.bounds, { padding: 60, duration: 1200 });
+                }
+              }
+            });
+          });
+        });
+      } catch (err) {
+        console.error('Failed to initialize MapLibre map:', err);
+        if (loader) {
+          loader.innerHTML = `
+            <div class="p-6 text-center text-rose-300">
+              <p class="font-bold text-base mb-1">Map View Unavailable</p>
+              <p class="text-xs text-ink-dim">Browse our full trek list below.</p>
+            </div>
+          `;
+        }
+      }
+    });
+  </script>
+
+  <!-- No-JS / Accessibility Fallback List -->
+  <noscript>
+    <div class="p-6 bg-slate-900 text-white">
+      <h4 class="font-bold text-lg mb-4 text-brand">Himalayan Treks Quick List</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {mockTreks.map((t) => (
+          <div class="p-4 rounded-xl border border-white/10 bg-white/5">
+            <h5 class="font-bold text-base text-white">{t.name} ({t.region})</h5>
+            <p class="text-xs text-ink-dim mb-2">{t.durationDays} Days · {t.maxAltitudeM}m altitude · ₹{t.fromPrice.toLocaleString('en-IN')}</p>
+            <a href={`/treks/${t.slug}`} class="text-xs text-brand underline font-semibold">View Trek Details →</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </noscript>
+</div>

@@ -1,22 +1,41 @@
-## Development
+# AGENTS.md — Project Rules (read this first)
 
-When starting the dev server, use background mode:
+Project: **Dream of The Holy Himalayas** — trekking agency website (Uttarakhand, India)
+Owner agency site (single company, NOT a marketplace). Urgent: ship a working prototype fast.
 
-```
-astro dev --background
-```
+## What this project is
+Astro (frontend) + Strapi 5 (headless CMS) + MapLibre GL interactive Himalayan trek map.
+Booking = request form (NO live payments in Phase 1). Razorpay is Phase 2.
+Detailed specs live in `/docs/*.md` (this file only summarizes + sets guardrails).
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+## Spec map (read the relevant one before touching that area)
+| File | Covers |
+|---|---|
+| docs/PRD.md | Goals, scope, users, phases |
+| docs/ARCHITECTURE.md | Stack, infra, repo layout, env vars, deploy |
+| docs/DATABASE_SCHEMA.md | All Strapi content types + fields |
+| docs/API_CONTRACT.md | REST endpoints, webhook, action contract |
+| docs/MAP_COMPONENT_SPEC.md | Homepage interactive map |
+| docs/FRONTEND_DESIGN_SPEC.md | Pages, glass design system, SEO |
+| docs/BOOKING_FLOW.md | Booking action, validation, notifications |
 
-## Documentation
+## Hard rules / guardrails
+1. NEVER commit secrets. Env vars only (see ARCHITECTURE.md). Add `.env` to `.gitignore` on sight.
+2. Do NOT introduce a payment gateway, auth system, or GraphQL. Phase 1 is deliberately small.
+3. Do NOT add SSR to static marketing pages. Render mode: `output: 'hybrid'` — prerender everything EXCEPT the booking action endpoint and webhook receiver.
+4. All content must be editable in Strapi — never hard-code trek names, prices, dates, or itineraries in the frontend.
+5. Strapi writes from the frontend go ONLY through the Astro booking action (server-side token) — the public Strapi API is read-only.
+6. Booking schema changes must stay backward-compatible (Phase 2 Razorpay adds fields, never rewrites).
+7. Keep commits atomic and phase-scoped (foundation / content / map / booking / polish).
+8. Run `npm run check` (astro check) and build before declaring any task done.
+9. Self-host nothing (no self-hosted OSM tiles, no VPS) until MapTiler free tier (100k loads/mo) is exhausted.
 
-Full documentation: https://docs.astro.build
+## Tech decisions already made (do not revisit without explicit ask)
+- REST from Strapi (not GraphQL) · Astro Actions for booking form · MapLibre GL + MapTiler tiles
+- Deploy: Cloudflare Pages (web) + Render (Strapi, persistent disk) + Neon Postgres + Cloudinary
+- WhatsApp deep-link = primary booking notification; email = backup/record
+- Map scope: Uttarakhand + Himachal Pradesh only (not all-India)
 
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+## Commands
+- Web: `npm run dev` / `npm run build` / `npm run check` (in `apps/web`)
+- CMS: `npm run develop` / `npm run build` (in `apps/cms`)

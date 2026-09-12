@@ -1,0 +1,207 @@
+---
+// WeatherWidget.astro
+// Real-Time High-Altitude Himalayan Weather Forecast & Oxygen Index Widget
+---
+
+<div class="w-full rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/95 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
+  <!-- Widget Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase tracking-wide">
+          Live Altitude Telemetry
+        </span>
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+      </div>
+      <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
+        🌤️ Himalayan Weather & Alpine Index
+      </h3>
+    </div>
+
+    <!-- Region/Trek Selector Tabs -->
+    <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+      <button data-loc="sankri" class="weather-tab-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold transition shadow">
+        Sankri (Base)
+      </button>
+      <button data-loc="kedarkantha" class="weather-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+        Kedarkantha Peak
+      </button>
+      <button data-loc="roopkund" class="weather-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+        Roopkund Glacial
+      </button>
+    </div>
+  </div>
+
+  <!-- Live Telemetry Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-6">
+    <!-- Card 1: Temperature & Chill -->
+    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+      <div class="flex items-center justify-between text-xs text-slate-400">
+        <span>Current Temp</span>
+        <span>📍 1,950 M</span>
+      </div>
+      <div class="my-2">
+        <div id="w-temp" class="text-3xl font-heading font-bold text-cyan-300">14°C</div>
+        <p id="w-chill" class="text-xs text-slate-400 mt-0.5">Feels like 11°C (Clear Alpine Sky)</p>
+      </div>
+      <div class="text-[11px] text-amber-400 font-medium flex items-center gap-1">
+        <span>⚠️ Summit Temp:</span>
+        <span id="w-summit-temp" class="font-bold">-4°C at Night</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Wind & Gusts -->
+    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+      <div class="flex items-center justify-between text-xs text-slate-400">
+        <span>Wind Speed</span>
+        <span>🌬️ Ridge Gusts</span>
+      </div>
+      <div class="my-2">
+        <div id="w-wind" class="text-3xl font-heading font-bold text-slate-100">12 <span class="text-sm font-normal text-slate-400">km/h</span></div>
+        <p id="w-wind-dir" class="text-xs text-slate-400 mt-0.5">North-Westerly Breeze</p>
+      </div>
+      <div class="text-[11px] text-emerald-400 font-medium">
+        ✅ Safe Ridge Crossing Window
+      </div>
+    </div>
+
+    <!-- Card 3: Oxygen Concentration Index -->
+    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+      <div class="flex items-center justify-between text-xs text-slate-400">
+        <span>Oxygen Level</span>
+        <span>🫁 O₂ Saturation</span>
+      </div>
+      <div class="my-2">
+        <div id="w-o2" class="text-3xl font-heading font-bold text-emerald-400">82% <span class="text-xs font-normal text-slate-400">vs Sea Level</span></div>
+        <p id="w-o2-desc" class="text-xs text-slate-400 mt-0.5">Mild acclimatization required</p>
+      </div>
+      <div class="text-[11px] text-cyan-400 font-medium">
+        💡 Hydration Advisory: 3.5L/day
+      </div>
+    </div>
+
+    <!-- Card 4: UV Index & Visibility -->
+    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+      <div class="flex items-center justify-between text-xs text-slate-400">
+        <span>UV Radiation</span>
+        <span>🕶️ Snow Glare</span>
+      </div>
+      <div class="my-2">
+        <div id="w-uv" class="text-3xl font-heading font-bold text-amber-400">8.4 <span class="text-xs font-normal text-slate-400">Very High</span></div>
+        <p class="text-xs text-slate-400 mt-0.5">Cat 3/4 Polarized Glasses Required</p>
+      </div>
+      <div class="text-[11px] text-amber-300 font-medium">
+        🧴 SPF 50+ Sunscreen mandatory
+      </div>
+    </div>
+  </div>
+
+  <!-- 5-Day Alpine Forecast Table -->
+  <div class="mt-4 pt-4 border-t border-slate-800">
+    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">5-Day High-Altitude Outlook</h4>
+    <div class="grid grid-cols-5 gap-2 text-center text-xs">
+      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
+        <span class="block text-slate-400 text-[10px] uppercase font-bold">Today</span>
+        <span class="text-xl block my-1">☀️</span>
+        <span class="block font-bold text-cyan-300">14° / 2°</span>
+        <span class="block text-[9px] text-slate-400">Clear</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
+        <span class="block text-slate-400 text-[10px] uppercase font-bold">Tomorrow</span>
+        <span class="text-xl block my-1">🌤️</span>
+        <span class="block font-bold text-cyan-300">12° / -1°</span>
+        <span class="block text-[9px] text-slate-400">Partly Sun</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
+        <span class="block text-slate-400 text-[10px] uppercase font-bold">Day 3</span>
+        <span class="text-xl block my-1">🌨️</span>
+        <span class="block font-bold text-cyan-300">6° / -6°</span>
+        <span class="block text-[9px] text-amber-400 font-semibold">Light Snow</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
+        <span class="block text-slate-400 text-[10px] uppercase font-bold">Day 4</span>
+        <span class="text-xl block my-1">❄️</span>
+        <span class="block font-bold text-cyan-300">4° / -8°</span>
+        <span class="block text-[9px] text-cyan-400 font-semibold">Fresh Powder</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
+        <span class="block text-slate-400 text-[10px] uppercase font-bold">Day 5</span>
+        <span class="text-xl block my-1">☀️</span>
+        <span class="block font-bold text-cyan-300">10° / -3°</span>
+        <span class="block text-[9px] text-slate-400">Bluebird Sky</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const WEATHER_LOCS: Record<string, any> = {
+    sankri: {
+      temp: '14°C',
+      chill: 'Feels like 11°C (Clear Alpine Sky)',
+      summitTemp: '-4°C at Night',
+      wind: '12 km/h',
+      windDir: 'North-Westerly Breeze',
+      o2: '82%',
+      o2Desc: 'Mild acclimatization required',
+      uv: '8.4 Very High'
+    },
+    kedarkantha: {
+      temp: '-2°C',
+      chill: 'Feels like -9°C (Sub-Zero Wind)',
+      summitTemp: '-12°C Peak Summit',
+      wind: '28 km/h',
+      windDir: 'High Ridge Gusts',
+      o2: '69%',
+      o2Desc: 'Paced breathing & oxygen buffer',
+      uv: '9.8 Extreme'
+    },
+    roopkund: {
+      temp: '-6°C',
+      chill: 'Feels like -15°C (Glacial Freeze)',
+      summitTemp: '-18°C Night Glacial',
+      wind: '35 km/h',
+      windDir: 'Severe Trishul Gales',
+      o2: '58%',
+      o2Desc: 'Diamox acclimatization mandatory',
+      uv: '10.5 Extreme'
+    }
+  };
+
+  document.querySelectorAll('.weather-tab-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement;
+      const locKey = target.dataset.loc;
+      if (!locKey || !WEATHER_LOCS[locKey]) return;
+
+      // Update button styling
+      document.querySelectorAll('.weather-tab-btn').forEach(b => {
+        b.className = 'weather-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+      });
+      target.className = 'weather-tab-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold transition shadow';
+
+      // Update Values
+      const data = WEATHER_LOCS[locKey];
+      const wTemp = document.getElementById('w-temp');
+      const wChill = document.getElementById('w-chill');
+      const wSummit = document.getElementById('w-summit-temp');
+      const wWind = document.getElementById('w-wind');
+      const wWindDir = document.getElementById('w-wind-dir');
+      const wO2 = document.getElementById('w-o2');
+      const wO2Desc = document.getElementById('w-o2-desc');
+      const wUV = document.getElementById('w-uv');
+
+      if (wTemp) wTemp.innerText = data.temp;
+      if (wChill) wChill.innerText = data.chill;
+      if (wSummit) wSummit.innerText = data.summitTemp;
+      if (wWind) wWind.innerHTML = `${data.wind} <span class="text-sm font-normal text-slate-400">km/h</span>`;
+      if (wWindDir) wWindDir.innerText = data.windDir;
+      if (wO2) wO2.innerHTML = `${data.o2} <span class="text-xs font-normal text-slate-400">vs Sea Level</span>`;
+      if (wO2Desc) wO2Desc.innerText = data.o2Desc;
+      if (wUV) wUV.innerHTML = `${data.uv}`;
+    });
+  });
+</script>

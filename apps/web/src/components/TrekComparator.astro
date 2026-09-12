@@ -1,0 +1,104 @@
+---
+// TrekComparator.astro
+// Side-by-Side Himalayan Trek Comparison Matrix
+---
+
+<div class="w-full rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+    <div>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase tracking-wide">
+        Expedition Decision Matrix
+      </span>
+      <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
+        ⚖️ Compare Himalayan Expeditions
+      </h3>
+    </div>
+    <div class="text-xs text-slate-400">
+      Side-by-Side Altitude, Difficulty & Pricing
+    </div>
+  </div>
+
+  <!-- Comparison Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+    <!-- Trek 1: Kedarkantha -->
+    <div class="p-5 rounded-xl bg-slate-950/70 border border-cyan-500/30 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Garhwal</span>
+          <span class="text-xs font-mono font-bold text-emerald-400">₹8,500</span>
+        </div>
+        <h4 class="text-lg font-heading font-bold text-slate-100">Kedarkantha Winter</h4>
+        <p class="text-xs text-slate-400 mt-1">Pinnacle 360° summit snow climb</p>
+
+        <div class="mt-4 pt-4 border-t border-slate-800 space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-slate-400">Max Altitude:</span><span class="font-bold text-cyan-300">12,500 ft (3,810 m)</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Duration:</span><span class="font-bold text-slate-200">5 Days / 4 Nights</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Difficulty:</span><span class="font-bold text-emerald-400">Easy-Moderate</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Trek Distance:</span><span class="font-bold text-slate-200">20 KM Total</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Best Season:</span><span class="font-bold text-amber-300">Dec - April (Snow)</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Oxygen %:</span><span class="font-bold text-emerald-400">~ 76% (Low AMS Risk)</span></div>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <a href="/treks/kedarkantha" class="block w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs text-center shadow transition">
+          View Expedition Details
+        </a>
+      </div>
+    </div>
+
+    <!-- Trek 2: Har Ki Dun -->
+    <div class="p-5 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Uttarkashi</span>
+          <span class="text-xs font-mono font-bold text-emerald-400">₹10,500</span>
+        </div>
+        <h4 class="text-lg font-heading font-bold text-slate-100">Har Ki Dun Valley</h4>
+        <p class="text-xs text-slate-400 mt-1">Cradle of ancient Himalayan folklore</p>
+
+        <div class="mt-4 pt-4 border-t border-slate-800 space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-slate-400">Max Altitude:</span><span class="font-bold text-cyan-300">11,768 ft (3,587 m)</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Duration:</span><span class="font-bold text-slate-200">7 Days / 6 Nights</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Difficulty:</span><span class="font-bold text-cyan-400">Moderate</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Trek Distance:</span><span class="font-bold text-slate-200">47 KM Total</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Best Season:</span><span class="font-bold text-amber-300">March - June, Sept - Dec</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Oxygen %:</span><span class="font-bold text-emerald-400">~ 79% (Very Low Risk)</span></div>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <a href="/treks/har-ki-dun" class="block w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs text-center border border-slate-700 shadow transition">
+          View Expedition Details
+        </a>
+      </div>
+    </div>
+
+    <!-- Trek 3: Roopkund Glacial -->
+    <div class="p-5 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Chamoli</span>
+          <span class="text-xs font-mono font-bold text-emerald-400">₹14,500</span>
+        </div>
+        <h4 class="text-lg font-heading font-bold text-slate-100">Roopkund Glacial Ridge</h4>
+        <p class="text-xs text-slate-400 mt-1">High-pass glacial mystery trail</p>
+
+        <div class="mt-4 pt-4 border-t border-slate-800 space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-slate-400">Max Altitude:</span><span class="font-bold text-cyan-300">15,750 ft (4,800 m)</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Duration:</span><span class="font-bold text-slate-200">8 Days / 7 Nights</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Difficulty:</span><span class="font-bold text-rose-400">Difficult</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Trek Distance:</span><span class="font-bold text-slate-200">53 KM Total</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Best Season:</span><span class="font-bold text-amber-300">May - June, Sept - Oct</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Oxygen %:</span><span class="font-bold text-amber-400">~ 58% (AMS Prep Required)</span></div>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <a href="/treks/roopkund" class="block w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs text-center border border-slate-700 shadow transition">
+          View Expedition Details
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

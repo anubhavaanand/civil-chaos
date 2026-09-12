@@ -1,0 +1,42 @@
+---
+import type { ItineraryDay } from '../data/mock-treks';
+
+interface Props {
+  days: ItineraryDay[];
+}
+
+const { days } = Astro.props;
+---
+
+<div class="space-y-4">
+  {days.map((item) => (
+    <details class="group rounded-2xl border border-white/10 bg-slate-900/60 transition-all duration-300 hover:border-brand/40 [&[open]]:bg-slate-900/90 [&[open]]:border-brand/60">
+      <summary class="flex cursor-pointer items-center justify-between p-5 text-left select-none">
+        <div class="flex items-center gap-4">
+          <!-- Day badge -->
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 border border-brand/30 text-brand font-display text-sm font-bold">
+            Day {item.day}
+          </div>
+          <div>
+            <h4 class="font-display text-base font-bold text-white group-hover:text-brand transition-colors">
+              {item.title}
+            </h4>
+            <div class="mt-1 flex items-center gap-3 text-xs text-ink-dim">
+              <span>⛰️ {item.altitudeM.toLocaleString()} m</span>
+              {item.distanceKm > 0 && <span>· 🚶 {item.distanceKm} km trek</span>}
+            </div>
+          </div>
+        </div>
+
+        <!-- Chevron Icon -->
+        <svg class="h-5 w-5 text-ink-dim transition-transform duration-300 group-open:rotate-180 group-open:text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+
+      <div class="px-5 pb-5 pt-2 text-sm text-ink leading-relaxed border-t border-white/5">
+        <p>{item.description}</p>
+      </div>
+    </details>
+  ))}
+</div>

@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassNav from '../components/GlassNav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Contact Us | Dream of The Holy Himalayas">
+  <GlassNav />
+  
+  <main class="pt-24 pb-20 bg-slate-950 min-h-screen">
+    <div class="container mx-auto px-4 max-w-6xl mt-12">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">
+          Get in Touch
+        </h1>
+        <p class="text-xl text-ink font-body max-w-2xl mx-auto">
+          Have questions about a trek or want to plan a custom itinerary? We're here to help.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <!-- Contact Info Glass Card -->
+        <div class="backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-3xl p-8 @supports-not-(backdrop-filter:blur(1px)):bg-slate-900/85">
+          <h2 class="text-2xl font-display font-bold text-white mb-8">Contact Information</h2>
+          
+          <ul class="space-y-8">
+            <li class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <span class="text-brand text-xl">📍</span>
+              </div>
+              <div>
+                <h3 class="text-white font-medium mb-1">Office Address</h3>
+                <p class="text-ink-dim">Dream of The Holy Himalayas<br/>Mautar, Uttarakhand<br/>India</p>
+              </div>
+            </li>
+            
+            <li class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <span class="text-brand text-xl">📞</span>
+              </div>
+              <div>
+                <h3 class="text-white font-medium mb-1">Phone</h3>
+                <p class="text-ink-dim">+91 98765 43210</p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <span class="text-brand text-xl">✉️</span>
+              </div>
+              <div>
+                <h3 class="text-white font-medium mb-1">Email</h3>
+                <p class="text-ink-dim">hello@holyhimalayas.com</p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-[#25D366]/20 flex items-center justify-center shrink-0">
+                <span class="text-[#25D366] text-xl">💬</span>
+              </div>
+              <div>
+                <h3 class="text-white font-medium mb-1">WhatsApp</h3>
+                <a href="https://wa.me/919876543210" class="text-[#25D366] hover:underline">Message us on WhatsApp</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Map Embed Placeholder -->
+        <div class="backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-3xl p-4 @supports-not-(backdrop-filter:blur(1px)):bg-slate-900/85">
+          <div class="w-full h-[500px] rounded-2xl bg-slate-900 flex items-center justify-center border border-white/5">
+            <p class="text-ink-dim text-lg">Google Maps Business Embed Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <Footer />
+</Layout>

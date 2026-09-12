@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import "@fontsource/space-grotesk";
+@import "@fontsource/inter";
+
+@theme {
+  --color-glass: rgb(255 255 255 / 0.10);
+  --color-glass-border: rgb(255 255 255 / 0.20);
+  --color-ink: #e8eef2;
+  --color-ink-dim: #a9b8c0;
+  --color-brand: #14b8a6;
+  --color-brand-deep: #0f766e;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer utilities {
+  .alpine-glass {
+    @apply backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-2xl shadow-lg;
+  }
+  
+  @supports not (backdrop-filter: blur(1px)) {
+    .alpine-glass {
+      @apply bg-slate-900/85;
+    }
+  }
+
+  .dark-scrim {
+    @apply bg-black/30;
+  }
+}

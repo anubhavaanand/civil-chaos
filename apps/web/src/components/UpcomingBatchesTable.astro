@@ -1,0 +1,85 @@
+---
+import type { Batch } from '../data/mock-treks';
+
+interface Props {
+  batches: Batch[];
+  trekName: string;
+  trekSlug: string;
+}
+
+const { batches } = Astro.props;
+
+const formatDate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+const isLowSeatsCheck = (seats: number) => seats > 0 && seats <= 5;
+---
+
+<div class="overflow-x-auto rounded-2xl border border-white/10 bg-slate-900/80 backdrop-blur-md">
+  <table class="w-full text-left text-sm text-ink border-collapse">
+    <thead class="bg-slate-950/80 text-xs uppercase tracking-wider text-ink-dim border-b border-white/10">
+      <tr>
+        <th class="py-3.5 px-4 font-semibold">Dates</th>
+        <th class="py-3.5 px-4 font-semibold">Availability</th>
+        <th class="py-3.5 px-4 font-semibold">Price / Person</th>
+        <th class="py-3.5 px-4 font-semibold text-right">Action</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-white/5">
+      {batches.length === 0 ? (
+        <tr>
+          <td colspan="4" class="py-6 px-4 text-center text-ink-dim">No open fixed departures currently. Contact us for custom private group dates!</td>
+        </tr>
+      ) : (
+        batches.map((batch) => {
+          const seatsLeft = batch.seatsTotal - batch.seatsBooked;
+          const isFull = batch.status === 'full' || seatsLeft === 0;
+          const isLowSeats = isLowSeatsCheck(seatsLeft);
+          return (
+            <tr class="hover:bg-white/5 transition-colors">
+              <td class="py-4 px-4 font-medium text-white">
+                <div>{formatDate(batch.startDate)} - {formatDate(batch.endDate)}</div>
+              </td>
+              <td class="py-4 px-4">
+                {isFull ? (
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-semibold text-rose-400 border border-rose-500/20">
+                    Full
+                  </span>
+                ) : isLowSeats ? (
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-400 border border-amber-500/20">
+                    🔥 Only {seatsLeft} seats left
+                  </span>
+                ) : (
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 border border-emerald-500/20">
+                    Available ({seatsLeft} seats)
+                  </span>
+                )}
+              </td>
+              <td class="py-4 px-4 font-bold text-brand">
+                ₹{batch.pricePerPersonINR.toLocaleString('en-IN')}
+              </td>
+              <td class="py-4 px-4 text-right">
+                {isFull ? (
+                  <button disabled class="rounded-lg bg-slate-800 px-3.5 py-1.5 text-xs font-semibold text-slate-500 cursor-not-allowed">
+                    Sold Out
+                  </button>
+                ) : (
+                  <button
+                    data-open-modal="booking-modal"
+                    data-batch-id={batch.id}
+                    data-dates={`${formatDate(batch.startDate)} - ${formatDate(batch.endDate)}`}
+                    class="open-booking-trigger cursor-pointer rounded-lg bg-brand hover:bg-brand-deep px-3.5 py-1.5 text-xs font-bold text-slate-950 transition-all hover:scale-105 shadow-md"
+                  >
+                    Select Batch
+                  </button>
+                )}
+              </td>
+            </tr>
+          );
+        })
+      )}
+    </tbody>
+  </table>
+</div>
