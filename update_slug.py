@@ -1,4 +1,6 @@
----
+import sys
+
+content = """---
 import Layout from '../../layouts/Layout.astro';
 import GlassNav from '../../components/GlassNav.astro';
 import WhatsAppFab from '../../components/WhatsAppFab.astro';
@@ -299,3 +301,7 @@ const touristTripSchema = {
   <WhatsAppFab />
   <Footer />
 </Layout>
+"""
+
+with open('apps/web/src/pages/treks/[slug].astro', 'w') as f:
+    f.write(content)
