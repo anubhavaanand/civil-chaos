@@ -22,19 +22,32 @@
     <!-- Controls: Lighting & Particles -->
     <div class="flex items-center gap-2 text-xs">
       <div class="flex items-center bg-slate-800/80 rounded-lg p-1 border border-slate-700">
-        <button id="btn-theme-dawn" class="px-2.5 py-1 rounded-md text-amber-300 hover:bg-slate-700 transition font-medium flex items-center gap-1" title="Golden Hour">
-          🌅 Dawn
+        <button id="btn-theme-dawn" class="px-2.5 py-1 rounded-md text-amber-300 hover:bg-slate-700 transition font-medium flex items-center gap-1.5" title="Golden Hour">
+          <svg class="w-3.5 h-3.5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414M16.95 16.95l1.414 1.414M6.343 6.343l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+          <span>Dawn</span>
         </button>
-        <button id="btn-theme-day" class="px-2.5 py-1 rounded-md bg-cyan-500 text-slate-950 font-bold shadow transition flex items-center gap-1" title="Alpine Day">
-          ☀️ Day
+        <button id="btn-theme-day" class="px-2.5 py-1 rounded-md bg-cyan-500 text-slate-950 font-bold shadow transition flex items-center gap-1.5" title="Alpine Day">
+          <svg class="w-3.5 h-3.5 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41"/>
+          </svg>
+          <span>Day</span>
         </button>
-        <button id="btn-theme-night" class="px-2.5 py-1 rounded-md text-cyan-300 hover:bg-slate-700 transition font-medium flex items-center gap-1" title="Starlight Night">
-          🌙 Night
+        <button id="btn-theme-night" class="px-2.5 py-1 rounded-md text-cyan-300 hover:bg-slate-700 transition font-medium flex items-center gap-1.5" title="Starlight Night">
+          <svg class="w-3.5 h-3.5 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <span>Night</span>
         </button>
       </div>
 
-      <button id="btn-toggle-snow" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-cyan-300 transition flex items-center gap-1 font-medium">
-        ❄️ <span id="snow-status-text">Snow On</span>
+      <button id="btn-toggle-snow" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-cyan-300 transition flex items-center gap-1.5 font-medium">
+        <svg class="w-3.5 h-3.5 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m17.07-7.07L4.93 19.07m14.14 0L4.93 4.93" />
+        </svg>
+        <span id="snow-status-text">Snow On</span>
       </button>
     </div>
   </div>
@@ -67,17 +80,33 @@
     <!-- Quick Peak Selector Chips -->
     <div class="absolute bottom-6 right-6 z-20 hidden md:flex flex-col gap-2">
       <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right pr-1">Select Summit</span>
-      <button data-peak="kedarkantha" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-medium backdrop-blur transition text-right shadow active-chip">
-        📍 Kedarkantha (12,500 ft)
+      <button data-peak="kedarkantha" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-medium backdrop-blur transition text-right shadow active-chip flex items-center justify-end gap-1.5">
+        <svg class="w-3 h-3 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>Kedarkantha (12,500 ft)</span>
       </button>
-      <button data-peak="harkidun" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-slate-700 text-slate-300 text-xs font-medium backdrop-blur transition text-right shadow">
-        📍 Har Ki Dun (11,768 ft)
+      <button data-peak="harkidun" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-slate-700 text-slate-300 text-xs font-medium backdrop-blur transition text-right shadow flex items-center justify-end gap-1.5">
+        <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>Har Ki Dun (11,768 ft)</span>
       </button>
-      <button data-peak="roopkund" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-slate-700 text-slate-300 text-xs font-medium backdrop-blur transition text-right shadow">
-        📍 Roopkund (15,750 ft)
+      <button data-peak="roopkund" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-slate-700 text-slate-300 text-xs font-medium backdrop-blur transition text-right shadow flex items-center justify-end gap-1.5">
+        <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>Roopkund (15,750 ft)</span>
       </button>
-      <button data-peak="brahmatal" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-slate-700 text-slate-300 text-xs font-medium backdrop-blur transition text-right shadow">
-        📍 Brahmatal (12,250 ft)
+      <button data-peak="brahmatal" class="peak-chip px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-cyan-500/20 border border-slate-700 text-slate-300 text-xs font-medium backdrop-blur transition text-right shadow flex items-center justify-end gap-1.5">
+        <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>Brahmatal (12,250 ft)</span>
       </button>
     </div>
   </div>

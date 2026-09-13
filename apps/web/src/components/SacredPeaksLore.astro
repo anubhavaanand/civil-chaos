@@ -1,0 +1,391 @@
+---
+// SacredPeaksLore.astro
+// Interactive Sacred Peaks Lore & Topographic Mythology of Devbhoomi
+// Oral traditions, spiritual legends, and alpine folklore preserved by Village Mautar elders
+---
+
+<section id="sacred-peaks" class="py-24 bg-[#050505] border-t border-white/5 relative overflow-hidden">
+  <!-- Subtle Ambient Glow -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#00f2fe]/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    
+    <!-- Eyebrow & Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Oral Traditions of Devbhoomi</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+          SACRED PEAKS & ALPINE LORE
+        </h2>
+        <p class="text-silver mt-3 max-w-2xl text-base font-light leading-relaxed">
+          In Garhwali heritage, mountains are living deities, not conquerable trophies. Explore the sacred folklore, celestial myths, and oral histories safeguarded by Mautar elders.
+        </p>
+      </div>
+
+      <!-- Sacred Chime Ambient Audio Trigger -->
+      <button 
+        id="btn-temple-chime" 
+        class="btn-tactile inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:border-[#00f2fe]/50 hover:bg-[#00f2fe]/10 text-white font-mono text-xs transition-all self-start md:self-auto"
+        title="Harmonic Tibetan singing bowl pulse"
+      >
+        <svg class="w-4 h-4 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <span id="chime-label">Play Temple Bell</span>
+      </button>
+    </div>
+
+    <!-- Interactive Peak Selection Ribbon -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none" role="tablist">
+      <button 
+        class="peak-lore-btn active-lore-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all shrink-0 border border-[#00f2fe] bg-[#00f2fe] text-[#050505]"
+        data-peak-id="nanda-devi"
+        role="tab"
+        aria-selected="true"
+      >
+        Nanda Devi
+      </button>
+      <button 
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        data-peak-id="shivling"
+        role="tab"
+        aria-selected="false"
+      >
+        Mt. Shivling
+      </button>
+      <button 
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        data-peak-id="swargarohini"
+        role="tab"
+        aria-selected="false"
+      >
+        Swargarohini
+      </button>
+      <button 
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        data-peak-id="trishul"
+        role="tab"
+        aria-selected="false"
+      >
+        Mt. Trishul
+      </button>
+      <button 
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        data-peak-id="chaukhamba"
+        role="tab"
+        aria-selected="false"
+      >
+        Chaukhamba
+      </button>
+      <button 
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        data-peak-id="bandarpunch"
+        role="tab"
+        aria-selected="false"
+      >
+        Bandarpunch
+      </button>
+    </div>
+
+    <!-- Active Lore Display Stage (Concentric Double Bezel) -->
+    <div class="double-bezel-outer">
+      <div class="double-bezel-inner p-6 sm:p-10 bg-[#0a0f18]/90 backdrop-blur-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Visual Portal -->
+          <div class="lg:col-span-6 relative rounded-2xl overflow-hidden border border-white/10 aspect-[4/3] shadow-2xl group">
+            <img 
+              id="lore-image" 
+              src="https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop" 
+              alt="Nanda Devi sacred mountain peak" 
+              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent"></div>
+            
+            <div class="absolute top-4 left-4">
+              <span id="lore-tag" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#050505]/80 backdrop-blur-md border border-white/15 font-mono text-[11px] text-[#00f2fe] font-bold uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#00f2fe] animate-pulse"></span>
+                <span id="lore-subtitle">Patron Goddess of Uttarakhand</span>
+              </span>
+            </div>
+
+            <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-[#050505]/85 backdrop-blur-md border border-white/10 flex items-center justify-between font-mono text-xs">
+              <div>
+                <span class="text-silver/60 text-[10px] block uppercase tracking-wider">Peak Elevation</span>
+                <span id="lore-elev" class="text-white font-bold text-sm">7,816m (25,643 ft)</span>
+              </div>
+              <div class="text-right">
+                <span class="text-silver/60 text-[10px] block uppercase tracking-wider">Sanctuary Status</span>
+                <span id="lore-status" class="text-emerald-400 font-bold">Legally Protected Biosphere</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mythological Editorial Content -->
+          <div class="lg:col-span-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-2 font-mono text-xs text-[#00f2fe]">
+                <span id="lore-sanskrit">आनन्ददा देवी · The Bliss-Giving Divine Mother</span>
+              </div>
+              <h3 id="lore-title" class="text-2xl sm:text-4xl font-display font-black text-white tracking-tight mb-4">
+                Nanda Devi
+              </h3>
+              <p id="lore-body" class="text-silver text-sm sm:text-base leading-relaxed font-light mb-6">
+                Revered across Garhwal and Kumaon as the divine daughter of the Himalaya who wed Lord Shiva. She is the fierce yet merciful guardian of the mountain passes. Every twelve years, the sacred Nanda Devi Raj Jat pilgrimage traces a rigorous 280-kilometer high-altitude glacial route behind a sacred four-horned ram. Because the inner sanctuary was desecrated by excessive expeditions in the 1970s, the Indian government legally sealed the core biosphere in 1982. To this day, no climber is permitted to set foot on her summit sanctuary.
+              </p>
+
+              <!-- Sacred Ethic Banner -->
+              <div class="p-4 rounded-xl border border-white/10 bg-white/[0.02] mb-6">
+                <div class="flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="text-white font-bold text-xs font-display block">The Mautar Elder Counsel</span>
+                    <p id="lore-counsel" class="text-silver/80 text-xs font-light mt-0.5">
+                      "When you gaze upon Nanda Devi from Kuari Pass, fold your hands in silence before you pick up your camera. The mountain provides life to the rivers that sustain our children."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visible On Expeditions Footer -->
+            <div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs">
+              <div>
+                <span class="text-silver/60 block text-[10px] uppercase tracking-wider mb-1">Visible On Expeditions</span>
+                <div id="lore-routes" class="flex flex-wrap gap-2">
+                  <a href="/treks/kuari-pass" class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors">
+                    Kuari Pass
+                  </a>
+                  <a href="/treks/brahmatal" class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors">
+                    Brahmatal
+                  </a>
+                </div>
+              </div>
+
+              <a 
+                id="lore-cta"
+                href="/treks/kuari-pass" 
+                class="btn-tactile inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00f2fe] text-[#050505] font-bold uppercase tracking-wider hover:bg-white transition-colors self-start sm:self-auto"
+              >
+                <span>Witness This Peak</span>
+                <span>&rarr;</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const PEAKS = {
+      'nanda-devi': {
+        title: 'Nanda Devi',
+        sanskrit: 'आनन्ददा देवी · The Bliss-Giving Divine Mother',
+        subtitle: 'Patron Goddess of Uttarakhand',
+        elev: '7,816m (25,643 ft)',
+        status: 'Legally Protected Biosphere',
+        image: 'https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop',
+        body: 'Revered across Garhwal and Kumaon as the divine daughter of the Himalaya who wed Lord Shiva. She is the fierce yet merciful guardian of the mountain passes. Every twelve years, the sacred Nanda Devi Raj Jat pilgrimage traces a rigorous 280-kilometer high-altitude glacial route behind a sacred four-horned ram. Because the inner sanctuary was desecrated by excessive expeditions in the 1970s, the Indian government legally sealed the core biosphere in 1982. To this day, no climber is permitted to set foot on her summit sanctuary.',
+        counsel: '"When you gaze upon Nanda Devi from Kuari Pass, fold your hands in silence before you pick up your camera. The mountain provides life to the rivers that sustain our children."',
+        routes: [
+          { name: 'Kuari Pass', slug: 'kuari-pass' },
+          { name: 'Brahmatal', slug: 'brahmatal' }
+        ],
+        primaryRoute: '/treks/kuari-pass'
+      },
+      'shivling': {
+        title: 'Mt. Shivling',
+        sanskrit: 'शिवलिङ्ग शैल · The Cosmic Pillar of Mahadeva',
+        subtitle: 'The Matterhorn of the East',
+        elev: '6,543m (21,466 ft)',
+        status: 'Sacred Source of Bhagirathi',
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop',
+        body: 'Rising like a sheer granite needle directly above the high glacial meadow of Tapovan, Mt. Shivling is regarded by world alpinists as one of the most aesthetically immaculate peaks on earth. In Hindu cosmology, it represents the living phallus of Lord Shiva from whose matted locks the sacred Ganges is released into the world. Sages and yogis have meditated in rock caves beneath its sheer western face for over two thousand years.',
+        counsel: '"At Tapovan, silence is the only appropriate language. You do not shout at the foot of Mahadeva. The wind roaring off Shivling is the breath of the cosmos."',
+        routes: [
+          { name: 'Gaumukh Tapovan', slug: 'gaumukh-tapovan' }
+        ],
+        primaryRoute: '/treks/gaumukh-tapovan'
+      },
+      'swargarohini': {
+        title: 'Swargarohini',
+        sanskrit: 'स्वर्गारोहिणी · The Stairway to Heaven',
+        subtitle: 'The Mortal Ascent of the Pandavas',
+        elev: '6,252m (20,512 ft)',
+        status: 'Mahabharata Pilgrimage Corridor',
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop',
+        body: 'According to the final book of the Mahabharata (Mahaprasthanika Parva), the Pandava brothers and Queen Draupadi renounced their kingdom and undertook their ultimate journey up this jagged knife-edge massif to reach heaven. One by one, four brothers and Draupadi fell along the steep moraines due to subtle earthly attachments. Only King Yudhishthira, accompanied by a stray dog who proved to be Lord Dharma, ascended to heaven in his mortal body.',
+        counsel: '"On the ridge above Sankri, when clouds part at dawn and Swargarohini catches the first gold light, you understand that some paths are meant to transform the spirit, not just test the legs."',
+        routes: [
+          { name: 'Kedarkantha', slug: 'kedarkantha' },
+          { name: 'Bali Pass', slug: 'bali-pass' }
+        ],
+        primaryRoute: '/treks/kedarkantha'
+      },
+      'trishul': {
+        title: 'Mt. Trishul',
+        sanskrit: 'त्रिशूल पर्वत · The Three Celestial Prongs of Shiva',
+        subtitle: 'Guardian of the Nanda Sanctuary',
+        elev: '7,120m (23,360 ft)',
+        status: 'Glacial Rampart of Chamoli',
+        image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop',
+        body: 'A formidable massif composed of three distinct summits (Trishul I, II, and III) resembling the sacred three-pronged trident of Lord Shiva. The mountain forms the south-western wall of the Nanda Devi ring. Standing on the frozen lake ridge of Brahmatal in midwinter, Mt. Trishul rises so steeply that climbers feel they can reach out and touch its vertical avalanche couloirs.',
+        counsel: '"When the winter storm gathers over Trishul, you do not argue with the forecast. We listen to the bells of our village temples and respect the mountain\'s decision."',
+        routes: [
+          { name: 'Brahmatal', slug: 'brahmatal' },
+          { name: 'Kuari Pass', slug: 'kuari-pass' }
+        ],
+        primaryRoute: '/treks/brahmatal'
+      },
+      'chaukhamba': {
+        title: 'Chaukhamba',
+        sanskrit: 'चतुःस्तम्भ · The Four Pillars of the Universe',
+        subtitle: 'Celestial Fortress of Badrinath',
+        elev: '7,138m (23,419 ft)',
+        status: 'Four-Summited Alpine Wall',
+        image: 'https://images.unsplash.com/photo-1522163723043-478ef79a5a22?q=80&w=1600&auto=format&fit=crop',
+        body: 'A colossal four-mile-long rampart with four prominent peaks aligned along a massive northeast-southwest crest. In ancient Puranic cosmology, Chaukhamba represents the four pillars supporting the vaults of the firmament above the sacred shrine of Badrinath. It acts as the primary moisture barrier protecting the inner valleys from torrential trans-Himalayan squalls.',
+        counsel: '"From the summit ridge of Kuari Pass, Chaukhamba fills your entire horizon. It is a monument that puts all human ambition into serene perspective."',
+        routes: [
+          { name: 'Kuari Pass', slug: 'kuari-pass' },
+          { name: 'Kedarnath Shrine', slug: 'kedarnath-shrine' },
+          { name: 'Valley of Flowers', slug: 'valley-of-flowers' }
+        ],
+        primaryRoute: '/treks/kuari-pass'
+      },
+      'bandarpunch': {
+        title: 'Bandarpunch & Kalanag',
+        sanskrit: 'वानरपुच्छ · The Tail of the Monkey God',
+        subtitle: 'Overlooking Yamunotri & Rawain',
+        elev: '6,316m (20,722 ft)',
+        status: 'Sacred Water Tower of the Yamuna',
+        image: 'https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop',
+        body: 'Legend recounts that after Lord Hanuman set Lanka on fire with his burning tail in the epic Ramayana, he bounded to this solitary snow-capped massif in the upper Garhwal to quench the flames in its virgin snowfields. Its sister peak, Kalanag (Black Peak), resembles the hooded hood of the cosmic serpent Sheshnaag. The glacier system feeds both the Bhagirathi and Yamuna river networks.',
+        counsel: '"When the shepherds of Mautar lead sheep toward Dayara Bugyal in the spring, Bandarpunch is their northern compass. We measure the seasons by how low the snowline sits on its flank."',
+        routes: [
+          { name: 'Kedarkantha', slug: 'kedarkantha' },
+          { name: 'Bali Pass', slug: 'bali-pass' }
+        ],
+        primaryRoute: '/treks/bali-pass'
+      }
+    };
+
+    const buttons = document.querySelectorAll('.peak-lore-btn');
+    const titleEl = document.getElementById('lore-title');
+    const sanskritEl = document.getElementById('lore-sanskrit');
+    const subtitleEl = document.getElementById('lore-subtitle');
+    const elevEl = document.getElementById('lore-elev');
+    const statusEl = document.getElementById('lore-status');
+    const imageEl = document.getElementById('lore-image');
+    const bodyEl = document.getElementById('lore-body');
+    const counselEl = document.getElementById('lore-counsel');
+    const routesEl = document.getElementById('lore-routes');
+    const ctaEl = document.getElementById('lore-cta');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const peakId = btn.getAttribute('data-peak-id') || 'nanda-devi';
+        const data = PEAKS[peakId];
+        if (!data) return;
+
+        // Button state
+        buttons.forEach((b) => {
+          b.classList.remove('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+          b.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        btn.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+        btn.setAttribute('aria-selected', 'true');
+
+        // Update Content
+        if (titleEl) titleEl.textContent = data.title;
+        if (sanskritEl) sanskritEl.textContent = data.sanskrit;
+        if (subtitleEl) subtitleEl.textContent = data.subtitle;
+        if (elevEl) elevEl.textContent = data.elev;
+        if (statusEl) statusEl.textContent = data.status;
+        if (bodyEl) bodyEl.textContent = data.body;
+        if (counselEl) counselEl.textContent = data.counsel;
+
+        if (imageEl && imageEl instanceof HTMLImageElement) {
+          imageEl.src = data.image;
+          imageEl.alt = `${data.title} sacred mountain peak`;
+        }
+
+        if (ctaEl && ctaEl instanceof HTMLAnchorElement) {
+          ctaEl.href = data.primaryRoute;
+        }
+
+        if (routesEl) {
+          routesEl.innerHTML = '';
+          data.routes.forEach((r) => {
+            const link = document.createElement('a');
+            link.href = `/treks/${r.slug}`;
+            link.className = 'px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors';
+            link.textContent = r.name;
+            routesEl.appendChild(link);
+          });
+        }
+      });
+    });
+
+    // Procedural Web Audio Tibetan Singing Bowl Chime
+    const chimeBtn = document.getElementById('btn-temple-chime');
+    const chimeLabel = document.getElementById('chime-label');
+
+    if (chimeBtn) {
+      chimeBtn.addEventListener('click', () => {
+        try {
+          const AudioContextClass = window.AudioContext;
+          if (!AudioContextClass) return;
+          const ctx = new AudioContextClass();
+
+          // Fundamental + Harmonic overtones of Tibetan singing bowl (approx 432 Hz Pythagorean A)
+          const freqs = [432, 864, 1296, 1728];
+          const gains = [0.4, 0.2, 0.08, 0.03];
+
+          freqs.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+            // Natural organic envelope
+            gainNode.gain.setValueAtTime(0, ctx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(gains[idx], ctx.currentTime + 0.08);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.5);
+
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 3.6);
+          });
+
+          if (chimeLabel) {
+            chimeLabel.textContent = 'Harmonic Resonating';
+            setTimeout(() => {
+              if (chimeLabel) chimeLabel.textContent = 'Play Temple Bell';
+            }, 3500);
+          }
+        } catch (e) {
+          // Gracefully continue if Web Audio is blocked
+        }
+      });
+    }
+  });
+</script>
