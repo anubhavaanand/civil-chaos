@@ -144,7 +144,7 @@ const { trek } = Astro.props;
     const clearBatchBtn = document.getElementById('clear-batch-btn');
 
     triggers.forEach((trigger) => {
-      trigger.addEventListener('click', (e) => {
+      trigger.addEventListener('click', () => {
         const dates = trigger.getAttribute('data-dates');
         if (dates) {
           batchInput.value = dates;

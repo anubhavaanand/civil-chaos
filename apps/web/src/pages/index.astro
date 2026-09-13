@@ -8,9 +8,6 @@ import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
 import { mockTreks } from '../data/mock-treks';
 
-// Filter featured treks for the bento grid
-const featuredTreks = mockTreks.filter((t) => t.isFeatured);
-
 // Gather upcoming fixed departures
 const allBatches = mockTreks.flatMap(trek => 
   trek.batches.map(batch => ({
@@ -34,7 +31,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
 <Layout title="Dream of The Holy Himalayas - Boutique Himalayan Trekking Expeditions">
 
   <!-- Schema.org TouristInformationCenter Markup -->
-  <script type="application/ld+json" slot="head">
+  <script type="application/ld+json" slot="head" is:inline>
     {
       "@context": "https://schema.org",
       "@type": "TouristInformationCenter",
