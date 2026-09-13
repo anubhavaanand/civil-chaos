@@ -15,7 +15,7 @@
         3D Himalayan Peak Explorer
       </h3>
       <span class="hidden xl:inline-block text-[10px] font-mono text-slate-400 border-l border-white/10 pl-2">
-        3D Scan by Shahriar Shahrabi (CC BY 4.0)
+        Weisse Wand Peak 2,517m by Shahriar Shahrabi (CC BY 4.0)
       </span>
     </div>
 
@@ -328,17 +328,41 @@
       loader.setDRACOLoader(dracoLoader);
 
       loader.load(
-        '/models/rugged_mountain_landscape_draco.glb',
+        '/models/weisse_wand_mountain_peek_draco.glb',
         (gltf) => {
           const model = gltf.scene;
-          model.scale.set(0.85, 0.85, 0.85);
-          model.position.set(0, -1.2, 0);
+
+          // Filter out the external flat skybox dome so custom dynamic atmosphere & snow shine
           model.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
+              if (child.name && child.name.includes('Material.001')) {
+                child.visible = false;
+              } else {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                const mesh = child as THREE.Mesh;
+                if (mesh.material) {
+                  const mat = mesh.material as THREE.MeshStandardMaterial;
+                  mat.roughness = 0.85;
+                  mat.metalness = 0.05;
+                }
+              }
             }
           });
+
+          // Auto-calculate bounding box and normalize scale & position
+          const box = new THREE.Box3().setFromObject(model);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const targetDim = 24; // Ideal viewing size in camera frustum
+          const scale = targetDim / maxDim;
+
+          model.scale.set(scale, scale, scale);
+          model.position.x = -center.x * scale;
+          model.position.y = -center.y * scale - 1.2;
+          model.position.z = -center.z * scale;
+
           scene.add(model);
           if (terrainMesh) {
             terrainMesh.visible = false;
