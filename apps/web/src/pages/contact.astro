@@ -1,80 +1,314 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GlassNav from '../components/GlassNav.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
+import { mockTreks } from '../data/mock-treks';
+
+// Direct comms channels
+const channels = [
+  {
+    protocol: "WHATSAPP EXPEDITION RELAY",
+    value: "+91 98765 43210",
+    note: "Instant dispatch & permit inquiries (06:00 to 22:00 IST)",
+    link: "https://wa.me/919876543210",
+    linkText: "Launch Direct Message",
+    icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>`
+  },
+  {
+    protocol: "HEADQUARTERS DISPATCH DESK",
+    value: "hello@holyhimalayas.com",
+    note: "Custom routes, private charters, and institutional expeditions",
+    link: "mailto:hello@holyhimalayas.com",
+    linkText: "Send Transmission",
+    icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`
+  },
+  {
+    protocol: "BASECAMP CARTOGRAPHY & RADIO",
+    value: "VHF Simplex 146.520 MHz",
+    note: "Village Mautar Relay Station & 406 MHz Emergency Beacon",
+    link: "#basecamp-datum",
+    linkText: "Inspect Coordinates",
+    icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>`
+  }
+];
 ---
 
-<Layout title="Contact Us | Dream of The Holy Himalayas">
+<Layout title="Alpine Dispatch & Contact | Dream of The Holy Himalayas">
   <GlassNav />
-  
-  <main class="pt-24 pb-20 bg-slate-950 min-h-screen">
-    <div class="container mx-auto px-4 max-w-6xl mt-12">
-      <div class="text-center mb-16">
-        <h1 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">
-          Get in Touch
-        </h1>
-        <p class="text-xl text-ink font-body max-w-2xl mx-auto">
-          Have questions about a trek or want to plan a custom itinerary? We're here to help.
-        </p>
-      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        <!-- Contact Info Glass Card -->
-        <div class="backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-3xl p-8 @supports-not-(backdrop-filter:blur(1px)):bg-slate-900/85">
-          <h2 class="text-2xl font-display font-bold text-white mb-8">Contact Information</h2>
-          
-          <ul class="space-y-8">
-            <li class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                <span class="text-brand text-xl">📍</span>
-              </div>
-              <div>
-                <h3 class="text-white font-medium mb-1">Office Address</h3>
-                <p class="text-ink-dim">Dream of The Holy Himalayas<br/>Mautar, Uttarakhand<br/>India</p>
-              </div>
-            </li>
-            
-            <li class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                <span class="text-brand text-xl">📞</span>
-              </div>
-              <div>
-                <h3 class="text-white font-medium mb-1">Phone</h3>
-                <p class="text-ink-dim">+91 98765 43210</p>
-              </div>
-            </li>
+  <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
+    <div class="container mx-auto px-4 max-w-7xl">
 
-            <li class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                <span class="text-brand text-xl">✉️</span>
-              </div>
-              <div>
-                <h3 class="text-white font-medium mb-1">Email</h3>
-                <p class="text-ink-dim">hello@holyhimalayas.com</p>
-              </div>
-            </li>
-
-            <li class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-full bg-[#25D366]/20 flex items-center justify-center shrink-0">
-                <span class="text-[#25D366] text-xl">💬</span>
-              </div>
-              <div>
-                <h3 class="text-white font-medium mb-1">WhatsApp</h3>
-                <a href="https://wa.me/919876543210" class="text-[#25D366] hover:underline">Message us on WhatsApp</a>
-              </div>
-            </li>
-          </ul>
+      <!-- Header Section -->
+      <div class="mb-12 pb-8 border-b border-white/10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Field Communications Protocol</span>
         </div>
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight">
+              ALPINE DISPATCH HUB
+            </h1>
+            <p class="text-silver text-sm sm:text-base mt-2 max-w-2xl font-light">
+              Connect directly with our lead guides in Village Mautar. Dispatch expedition reservations, custom logistics requests, or verify real-time mountain conditions.
+            </p>
+          </div>
 
-        <!-- Map Embed Placeholder -->
-        <div class="backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-3xl p-4 @supports-not-(backdrop-filter:blur(1px)):bg-slate-900/85">
-          <div class="w-full h-[500px] rounded-2xl bg-slate-900 flex items-center justify-center border border-white/5">
-            <p class="text-ink-dim text-lg">Google Maps Business Embed Loading...</p>
+          <!-- Basecamp Status Readout -->
+          <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/10 bg-[#0a0f18]/80 backdrop-blur-md font-mono text-xs self-start lg:self-auto">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+            <span class="text-silver">Mautar Basecamp Link:</span>
+            <span class="text-emerald-400 font-bold uppercase">Active Online</span>
           </div>
         </div>
       </div>
+
+      <!-- Main Grid: Interactive Dispatch Generator vs Communications Matrix -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-20">
+
+        <!-- Left Column: Interactive Pre-Filled WhatsApp Dispatch Generator (7 Cols) -->
+        <div class="lg:col-span-7 double-bezel-outer">
+          <div class="double-bezel-inner p-6 sm:p-8 bg-[#0a0f18]/90 backdrop-blur-xl">
+            <div class="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+              <div>
+                <span class="text-[10px] font-mono uppercase text-[#00f2fe] font-bold tracking-wider">Fast-Track Reservation</span>
+                <h2 class="text-2xl font-display font-bold text-white mt-0.5">Expedition Dispatch Transmission</h2>
+              </div>
+              <div class="hidden sm:flex items-center gap-2 font-mono text-[11px] text-silver/60">
+                <span>DIRECT RELAY</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#00f2fe]"></span>
+              </div>
+            </div>
+
+            <!-- Form -->
+            <form id="dispatchForm" class="space-y-4 font-body">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="contactName" class="block text-[11px] font-mono uppercase tracking-wider text-silver mb-1.5">Your Full Name *</label>
+                  <input
+                    type="text"
+                    id="contactName"
+                    required
+                    placeholder="e.g. Priya Iyer"
+                    class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-all font-mono"
+                  />
+                </div>
+                <div>
+                  <label for="contactPhone" class="block text-[11px] font-mono uppercase tracking-wider text-silver mb-1.5">Mobile / WhatsApp Number *</label>
+                  <input
+                    type="tel"
+                    id="contactPhone"
+                    required
+                    placeholder="+91 98765 43210"
+                    class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="sm:col-span-1">
+                  <label for="contactTrek" class="block text-[11px] font-mono uppercase tracking-wider text-silver mb-1.5">Target Route</label>
+                  <select
+                    id="contactTrek"
+                    class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-3 py-2.5 text-xs text-white outline-none transition-all font-mono cursor-pointer"
+                  >
+                    {mockTreks.map((t) => (
+                      <option value={t.name}>{t.name} ({t.region})</option>
+                    ))}
+                    <option value="Custom Expedition">Custom Alpine Route</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-1">
+                  <label for="contactGroup" class="block text-[11px] font-mono uppercase tracking-wider text-silver mb-1.5">Group Size</label>
+                  <select
+                    id="contactGroup"
+                    class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-3 py-2.5 text-xs text-white outline-none transition-all font-mono cursor-pointer"
+                  >
+                    <option value="Solo Climber">Solo Climber (1)</option>
+                    <option value="Tandem (2 Climbers)">Tandem (2 Climbers)</option>
+                    <option value="Small Team (3 to 6)">Small Team (3 to 6)</option>
+                    <option value="Private Batch (7 to 12)">Private Batch (7 to 12)</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-1">
+                  <label for="contactDates" class="block text-[11px] font-mono uppercase tracking-wider text-silver mb-1.5">Preferred Window</label>
+                  <input
+                    type="text"
+                    id="contactDates"
+                    placeholder="e.g. October 2026"
+                    class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="contactNotes" class="block text-[11px] font-mono uppercase tracking-wider text-silver mb-1.5">Logistical Requirements or Experience Notes</label>
+                <textarea
+                  id="contactNotes"
+                  rows="3"
+                  placeholder="Tell us about prior high-altitude ascents, gear offloading requirements, or custom staging dates..."
+                  class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-all font-mono"
+                ></textarea>
+              </div>
+
+              <!-- Real-Time Payload Preview Box -->
+              <div class="p-4 rounded-xl border border-white/10 bg-[#050505]/90 space-y-2">
+                <div class="flex items-center justify-between text-[10px] font-mono text-silver/60 uppercase">
+                  <span>Outgoing Transmission Payload Preview</span>
+                  <span class="text-[#00f2fe]">WhatsApp Ready</span>
+                </div>
+                <pre id="dispatchPayloadPreview" class="text-xs text-silver/80 font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-32">Namaste Holy Himalayas team! I would like to inquire about an expedition.</pre>
+              </div>
+
+              <!-- Submit Button -->
+              <button
+                type="button"
+                id="btnSendDispatch"
+                class="btn-tactile w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00f2fe] to-[#14b8a6] py-3.5 text-sm font-bold text-[#050505] uppercase tracking-wider font-mono shadow-[0_0_25px_rgba(0,242,254,0.3)] hover:shadow-[0_0_35px_rgba(0,242,254,0.5)] transition-all cursor-pointer"
+              >
+                <span>Dispatch Via WhatsApp</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right Column: Protocol Channels & Basecamp Telemetry (5 Cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Channels List -->
+          <div class="double-bezel-outer">
+            <div class="double-bezel-inner p-6 bg-[#0a0f18]/90 backdrop-blur-xl space-y-6">
+              <div class="pb-3 border-b border-white/10">
+                <span class="text-[10px] font-mono uppercase text-[#00f2fe] font-bold tracking-wider">Official Inbound Channels</span>
+                <h3 class="text-lg font-display font-bold text-white mt-0.5">Communications Directory</h3>
+              </div>
+
+              <div class="space-y-4">
+                {channels.map((ch) => (
+                  <div class="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all">
+                    <div class="flex items-start gap-3.5">
+                      <div class="w-9 h-9 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] shrink-0">
+                        <Fragment set:html={ch.icon} />
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider">{ch.protocol}</div>
+                        <div class="text-sm font-mono font-bold text-white mt-0.5 truncate">{ch.value}</div>
+                        <p class="text-xs text-silver/70 mt-1 font-light">{ch.note}</p>
+                        <a 
+                          href={ch.link} 
+                          class="btn-tactile inline-flex items-center gap-1 text-xs font-mono font-bold text-[#00f2fe] hover:text-white mt-2.5 transition-colors"
+                        >
+                          <span>{ch.linkText}</span>
+                          <span>&rarr;</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Basecamp Geographic Datum Card -->
+          <div id="basecamp-datum" class="p-6 rounded-2xl border border-white/10 bg-[#0a0f18]/80 backdrop-blur-xl">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-4 h-4 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <h4 class="text-xs font-mono uppercase font-bold text-white tracking-wider">Basecamp Headquarters Datum</h4>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 font-mono text-xs pt-2">
+              <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                <span class="text-[10px] text-silver/60 uppercase block">Latitude / Longitude</span>
+                <span class="text-white font-bold text-xs mt-0.5 block">30°43'36" N, 78°26'07" E</span>
+              </div>
+              <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                <span class="text-[10px] text-silver/60 uppercase block">Base Elevation</span>
+                <span class="text-[#00f2fe] font-bold text-xs mt-0.5 block">1,950m (6,397 ft)</span>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-white/10 text-xs text-silver/80 space-y-1.5 font-light">
+              <p><strong class="text-white font-medium font-mono">Location:</strong> Village Mautar, Upper Bhagirathi Basin, Uttarkashi, Uttarakhand 249193</p>
+              <p><strong class="text-white font-medium font-mono">Transit Corridor:</strong> Dehradun Airport (DED) &rarr; Rishikesh &rarr; Chamba &rarr; Uttarkashi &rarr; Mautar Basecamp (approx. 6.5 hrs)</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   </main>
-  
+
+  <!-- Client-Side Dispatch Relay Script -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameInput = document.getElementById('contactName');
+      const phoneInput = document.getElementById('contactPhone');
+      const trekSelect = document.getElementById('contactTrek');
+      const groupSelect = document.getElementById('contactGroup');
+      const datesInput = document.getElementById('contactDates');
+      const notesInput = document.getElementById('contactNotes');
+      const previewBox = document.getElementById('dispatchPayloadPreview');
+      const btnSend = document.getElementById('btnSendDispatch');
+
+      function generatePayload() {
+        const name = nameInput?.value.trim() || 'Trekker';
+        const phone = phoneInput?.value.trim() || 'Provided on WhatsApp';
+        const trek = trekSelect?.value || 'Kuari Pass';
+        const group = groupSelect?.value || 'Solo Climber';
+        const dates = datesInput?.value.trim() || 'Flexible season window in 2026/2027';
+        const notes = notesInput?.value.trim() || 'Standard acclimatization protocol requested.';
+
+        return `Namaste Holy Himalayas Team!
+
+I am submitting an expedition dispatch from the website:
+
+• Climber Name: ${name}
+• Contact Mobile: ${phone}
+• Expedition Route: ${trek}
+• Group Composition: ${group}
+• Staging Window: ${dates}
+• Logistics Notes: ${notes}
+
+Please confirm current route permits, batch availability, and acclimatization itinerary.
+
+Thank you!`;
+      }
+
+      function updatePreview() {
+        if (previewBox) {
+          previewBox.textContent = generatePayload();
+        }
+      }
+
+      // Bind input events to live preview
+      [nameInput, phoneInput, trekSelect, groupSelect, datesInput, notesInput].forEach((el) => {
+        el?.addEventListener('input', updatePreview);
+        el?.addEventListener('change', updatePreview);
+      });
+
+      // Initial render
+      updatePreview();
+
+      // Dispatch action
+      btnSend?.addEventListener('click', () => {
+        const payload = generatePayload();
+        const encoded = encodeURIComponent(payload);
+        const url = `https://wa.me/919876543210?text=${encoded}`;
+        window.open(url, '_blank');
+      });
+    });
+  </script>
+
+  <WhatsAppFab />
   <Footer />
 </Layout>

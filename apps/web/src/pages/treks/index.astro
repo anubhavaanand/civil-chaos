@@ -2,64 +2,213 @@
 import Layout from '../../layouts/Layout.astro';
 import GlassNav from '../../components/GlassNav.astro';
 import TrekCard from '../../components/TrekCard.astro';
+import DifficultyBadge from '../../components/DifficultyBadge.astro';
 import WhatsAppFab from '../../components/WhatsAppFab.astro';
 import Footer from '../../components/Footer.astro';
 import { mockTreks } from '../../data/mock-treks';
+
+// Pre-calculate filter category counts
+const regionCounts = {
+  all: mockTreks.length,
+  Garhwal: mockTreks.filter(t => t.region === 'Garhwal').length,
+  Kumaon: mockTreks.filter(t => t.region === 'Kumaon').length,
+  Himachal: mockTreks.filter(t => t.region === 'Himachal').length
+};
+
+const altitudeCounts = {
+  all: mockTreks.length,
+  sub4k: mockTreks.filter(t => t.maxAltitudeM < 4000).length,
+  mid4k: mockTreks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
+  above5k: mockTreks.filter(t => t.maxAltitudeM > 5000).length
+};
+
+const difficultyCounts = {
+  all: mockTreks.length,
+  easy: mockTreks.filter(t => t.difficulty === 'easy').length,
+  moderate: mockTreks.filter(t => t.difficulty === 'moderate').length,
+  difficult: mockTreks.filter(t => t.difficulty === 'difficult').length
+};
 ---
 
-<Layout title="All Treks | Dream of The Holy Himalayas">
+<Layout title="Expedition Catalog | Dream of The Holy Himalayas">
   <GlassNav />
 
-  <main class="pt-24 pb-20 bg-slate-950 min-h-screen text-ink font-body">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <!-- Header -->
-      <div class="mt-8 mb-10 text-center md:text-left">
-        <span class="text-xs font-bold text-brand uppercase tracking-wider">Himalayan Catalog</span>
-        <h1 class="text-4xl md:text-5xl font-display font-bold text-white mt-1">
-          Explore All Treks
-        </h1>
-        <p class="text-sm text-ink-dim mt-2 max-w-xl">Find your perfect Himalayan journey across Garhwal, Kumaon & Himachal Pradesh.</p>
-      </div>
-
-      <!-- Interactive Filter Bar -->
-      <div class="backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-2xl p-4 mb-10 shadow-xl grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
+    <div class="container mx-auto px-4 max-w-7xl">
+      
+      <!-- Catalog Eyebrow & Hero Header -->
+      <div class="mt-4 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
         <div>
-          <label for="filter-region" class="block text-xs font-bold text-ink-dim uppercase tracking-wider mb-1">Region</label>
-          <select id="filter-region" class="w-full bg-slate-900 border border-white/20 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none cursor-pointer">
-            <option value="all">All Regions (Uttarakhand & HP)</option>
-            <option value="Garhwal">Garhwal</option>
-            <option value="Kumaon">Kumaon</option>
-            <option value="Himachal">Himachal Pradesh</option>
-          </select>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+            <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Himalayan Route Roster</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight">
+            EXPEDITION CATALOG
+          </h1>
+          <p class="text-silver text-sm sm:text-base mt-2 max-w-2xl font-light">
+            Ten precision-scouted alpine routes across Garhwal, Kumaon, and Himachal Pradesh. Intimate micro-batches led by native Mautar mountain guides.
+          </p>
         </div>
 
-        <div>
-          <label for="filter-difficulty" class="block text-xs font-bold text-ink-dim uppercase tracking-wider mb-1">Difficulty</label>
-          <select id="filter-difficulty" class="w-full bg-slate-900 border border-white/20 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none cursor-pointer">
-            <option value="all">Any Difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="moderate">Moderate</option>
-            <option value="difficult">Difficult</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="filter-duration" class="block text-xs font-bold text-ink-dim uppercase tracking-wider mb-1">Duration</label>
-          <select id="filter-duration" class="w-full bg-slate-900 border border-white/20 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none cursor-pointer">
-            <option value="all">Any Duration</option>
-            <option value="short">1 - 4 Days</option>
-            <option value="medium">5 - 6 Days</option>
-            <option value="long">7+ Days</option>
-          </select>
+        <!-- Telemetry Summary Pill -->
+        <div class="flex items-center gap-4 p-3 rounded-xl border border-white/10 bg-[#0a0f18]/80 backdrop-blur-md self-start md:self-auto font-mono text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#00f2fe] shadow-[0_0_8px_#00f2fe] animate-pulse"></span>
+            <span class="text-silver uppercase tracking-wider">Matching Routes:</span>
+            <span id="active-routes-count" class="font-bold text-[#00f2fe] text-sm">{mockTreks.length}</span>
+          </div>
         </div>
       </div>
 
-      <!-- Treks Grid -->
-      <div id="treks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Linear-Style High-Density Filter Matrix Toolbar -->
+      <div class="double-bezel-outer mb-10">
+        <div class="double-bezel-inner p-5 sm:p-6 bg-[#0a0f18]/90 backdrop-blur-xl">
+          
+          <!-- Top Row: Search & View Mode Switcher -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/10">
+            <!-- Quick Search Input -->
+            <div class="relative flex-1 max-w-md">
+              <span class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-ink-dim">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                id="trekSearchInput"
+                placeholder="Search summit, pass, valley, or region..."
+                class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 outline-none transition-all font-mono"
+              />
+            </div>
+
+            <!-- View Switcher & Clear Controls -->
+            <div class="flex items-center gap-3 self-end md:self-auto">
+              <!-- View Mode Segmented Control -->
+              <div class="inline-flex rounded-lg border border-white/10 bg-[#050505] p-1 font-mono text-xs">
+                <button
+                  id="viewBentoBtn"
+                  class="btn-tactile flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#00f2fe] text-[#050505] font-bold transition-all"
+                  aria-pressed="true"
+                  title="Bento Card View"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                  <span>Cards</span>
+                </button>
+                <button
+                  id="viewMatrixBtn"
+                  class="btn-tactile flex items-center gap-1.5 px-3 py-1.5 rounded-md text-ink-dim hover:text-white transition-all"
+                  aria-pressed="false"
+                  title="High-Density Matrix View"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                  <span>Matrix</span>
+                </button>
+              </div>
+
+              <!-- Reset Button -->
+              <button
+                id="resetAllFiltersBtn"
+                class="btn-tactile px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-[11px] font-mono text-ink-dim hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400 uppercase tracking-wider transition-all"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Filter Pill Groups -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
+            
+            <!-- Region Group -->
+            <div>
+              <div class="flex items-center gap-2 mb-2.5">
+                <svg class="w-3.5 h-3.5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-silver font-bold">Himalayan Region</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5" data-filter-group="region">
+                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
+                  All ({regionCounts.all})
+                </button>
+                <button data-value="Garhwal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  Garhwal ({regionCounts.Garhwal})
+                </button>
+                <button data-value="Kumaon" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  Kumaon ({regionCounts.Kumaon})
+                </button>
+                <button data-value="Himachal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  Himachal ({regionCounts.Himachal})
+                </button>
+              </div>
+            </div>
+
+            <!-- Altitude Band Group -->
+            <div>
+              <div class="flex items-center gap-2 mb-2.5">
+                <svg class="w-3.5 h-3.5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-silver font-bold">Max Altitude Band</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5" data-filter-group="altitude">
+                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
+                  All ({altitudeCounts.all})
+                </button>
+                <button data-value="sub4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  &lt; 4,000m ({altitudeCounts.sub4k})
+                </button>
+                <button data-value="mid4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  4,000 to 5,000m ({altitudeCounts.mid4k})
+                </button>
+                <button data-value="above5k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  &gt; 5,000m ({altitudeCounts.above5k})
+                </button>
+              </div>
+            </div>
+
+            <!-- Difficulty Group -->
+            <div>
+              <div class="flex items-center gap-2 mb-2.5">
+                <svg class="w-3.5 h-3.5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-silver font-bold">Trail Rigor</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5" data-filter-group="difficulty">
+                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
+                  All ({difficultyCounts.all})
+                </button>
+                <button data-value="easy" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  Easy ({difficultyCounts.easy})
+                </button>
+                <button data-value="moderate" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  Moderate ({difficultyCounts.moderate})
+                </button>
+                <button data-value="difficult" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                  Difficult ({difficultyCounts.difficult})
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 1: Bento Cards Grid -->
+      <div id="treks-bento-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {mockTreks.map((trek) => (
           <div
-            class="trek-item-card"
+            class="trek-item-wrapper transition-all duration-300"
+            data-slug={trek.slug}
+            data-name={trek.name.toLowerCase()}
             data-region={trek.region}
+            data-altitude={trek.maxAltitudeM}
             data-difficulty={trek.difficulty}
             data-days={trek.durationDays}
           >
@@ -68,67 +217,271 @@ import { mockTreks } from '../../data/mock-treks';
         ))}
       </div>
 
-      <!-- No Treks Empty State -->
-      <div id="no-treks-empty" class="hidden text-center py-16 rounded-2xl border border-white/10 bg-white/5 p-8">
-        <p class="font-display text-xl font-bold text-white mb-2">No Treks Match Your Filters</p>
-        <p class="text-sm text-ink-dim mb-4">Try adjusting your region or difficulty selection.</p>
-        <button id="reset-filters-btn" class="bg-brand text-slate-950 font-bold px-5 py-2 rounded-full text-xs">Reset All Filters</button>
+      <!-- VIEW 2: High-Density Technical Matrix (Linear / Swiss Atelier Table) -->
+      <div id="treks-matrix-view" class="hidden double-bezel-outer overflow-hidden">
+        <div class="double-bezel-inner bg-[#0a0f18]/90 overflow-x-auto">
+          <table class="w-full text-left text-sm border-collapse font-mono">
+            <thead>
+              <tr class="border-b border-white/10 bg-[#050505]/60 text-[11px] uppercase tracking-wider text-silver">
+                <th class="p-4">Expedition Route</th>
+                <th class="p-4">Sector</th>
+                <th class="p-4">Peak Datum</th>
+                <th class="p-4">Distance</th>
+                <th class="p-4">Duration</th>
+                <th class="p-4">Rigor</th>
+                <th class="p-4 text-right">Starting Fee</th>
+                <th class="p-4 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              {mockTreks.map((trek) => (
+                <tr 
+                  class="trek-matrix-row hover:bg-white/[0.04] transition-colors"
+                  data-slug={trek.slug}
+                  data-name={trek.name.toLowerCase()}
+                  data-region={trek.region}
+                  data-altitude={trek.maxAltitudeM}
+                  data-difficulty={trek.difficulty}
+                  data-days={trek.durationDays}
+                >
+                  <td class="p-4 font-sans font-bold text-white">
+                    <a href={`/treks/${trek.slug}`} class="hover:text-[#00f2fe] transition-colors flex items-center gap-2">
+                      <span>{trek.name}</span>
+                      {trek.isFeatured && (
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] uppercase">Featured</span>
+                      )}
+                    </a>
+                  </td>
+                  <td class="p-4 text-silver/80 text-xs">
+                    {trek.region}
+                  </td>
+                  <td class="p-4 text-white font-bold">
+                    {trek.maxAltitudeM.toLocaleString()}m
+                    <span class="text-[10px] text-silver/50 block font-normal">({Math.round(trek.maxAltitudeM * 3.28084).toLocaleString()} ft)</span>
+                  </td>
+                  <td class="p-4 text-silver/80 text-xs">
+                    {trek.trekDistanceKm} km
+                  </td>
+                  <td class="p-4 text-silver/80 text-xs">
+                    {trek.durationDays} Days
+                  </td>
+                  <td class="p-4">
+                    <DifficultyBadge difficulty={trek.difficulty} />
+                  </td>
+                  <td class="p-4 text-right font-bold text-[#00f2fe]">
+                    ₹{trek.fromPrice.toLocaleString('en-IN')}
+                  </td>
+                  <td class="p-4 text-center">
+                    <a 
+                      href={`/treks/${trek.slug}`} 
+                      class="btn-tactile inline-flex items-center gap-1 px-3 py-1 rounded border border-white/15 bg-white/5 text-[11px] text-white hover:border-[#00f2fe] hover:text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-all font-mono"
+                    >
+                      <span>Inspect</span>
+                      <span class="text-xs">→</span>
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <!-- No Treks Empty State -->
+      <div id="no-treks-empty" class="hidden text-center py-20 rounded-2xl border border-white/10 bg-[#0a0f18]/60 p-8 mt-6">
+        <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-silver mb-4">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-white mb-2">No Matching Routes Found</h3>
+        <p class="text-sm text-ink-dim mb-6 max-w-md mx-auto">No expeditions match your current search query and filter criteria. Adjust your criteria or reset filters.</p>
+        <button id="reset-empty-btn" class="btn-tactile bg-[#00f2fe] text-[#050505] font-bold font-mono px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
+          Reset All Filters
+        </button>
+      </div>
+
     </div>
   </main>
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-      const regionSelect = document.getElementById('filter-region');
-      const difficultySelect = document.getElementById('filter-difficulty');
-      const durationSelect = document.getElementById('filter-duration');
-      const cards = document.querySelectorAll('.trek-item-card');
-      const emptyState = document.getElementById('no-treks-empty');
-      const resetBtn = document.getElementById('reset-filters-btn');
+      // Filter State
+      const state = {
+        search: '',
+        region: 'all',
+        altitude: 'all',
+        difficulty: 'all',
+        view: 'bento' // 'bento' or 'matrix'
+      };
 
-      function filterTreks() {
-        const selectedRegion = regionSelect?.value || 'all';
-        const selectedDiff = difficultySelect?.value || 'all';
-        const selectedDuration = durationSelect?.value || 'all';
+      const searchInput = document.getElementById('trekSearchInput');
+      const bentoCards = document.querySelectorAll('.trek-item-wrapper');
+      const matrixRows = document.querySelectorAll('.trek-matrix-row');
+      const bentoView = document.getElementById('treks-bento-view');
+      const matrixView = document.getElementById('treks-matrix-view');
+      const viewBentoBtn = document.getElementById('viewBentoBtn');
+      const viewMatrixBtn = document.getElementById('viewMatrixBtn');
+      const counterEl = document.getElementById('active-routes-count');
+      const emptyState = document.getElementById('no-treks-empty');
+      const resetBtn = document.getElementById('resetAllFiltersBtn');
+      const resetEmptyBtn = document.getElementById('reset-empty-btn');
+
+      // Update Filter Engine
+      function evaluateFilters() {
+        const query = state.search.trim().toLowerCase();
         let visibleCount = 0;
 
-        cards.forEach((card) => {
-          const region = card.getAttribute('data-region');
-          const difficulty = card.getAttribute('data-difficulty');
-          const days = parseInt(card.getAttribute('data-days') || '0', 10);
+        const checkMatch = (item) => {
+          const name = item.getAttribute('data-name') || '';
+          const region = item.getAttribute('data-region') || '';
+          const altitude = parseInt(item.getAttribute('data-altitude') || '0', 10);
+          const difficulty = item.getAttribute('data-difficulty') || '';
 
-          const matchesRegion = selectedRegion === 'all' || region === selectedRegion;
-          const matchesDiff = selectedDiff === 'all' || difficulty === selectedDiff;
-          let matchesDuration = true;
+          // Text search matching
+          if (query && !name.includes(query) && !region.toLowerCase().includes(query)) {
+            return false;
+          }
 
-          if (selectedDuration === 'short') matchesDuration = days <= 4;
-          else if (selectedDuration === 'medium') matchesDuration = days >= 5 && days <= 6;
-          else if (selectedDuration === 'long') matchesDuration = days >= 7;
+          // Region matching
+          if (state.region !== 'all' && region !== state.region) {
+            return false;
+          }
 
-          if (matchesRegion && matchesDiff && matchesDuration) {
-            card.classList.remove('hidden');
+          // Altitude matching
+          if (state.altitude === 'sub4k' && altitude >= 4000) return false;
+          if (state.altitude === 'mid4k' && (altitude < 4000 || altitude > 5000)) return false;
+          if (state.altitude === 'above5k' && altitude <= 5000) return false;
+
+          // Difficulty matching
+          if (state.difficulty !== 'all' && difficulty !== state.difficulty) {
+            return false;
+          }
+
+          return true;
+        };
+
+        // Apply to Bento cards
+        bentoCards.forEach((card) => {
+          if (checkMatch(card)) {
+            card.style.display = 'block';
             visibleCount++;
           } else {
-            card.classList.add('hidden');
+            card.style.display = 'none';
           }
         });
 
+        // Apply to Matrix rows
+        matrixRows.forEach((row) => {
+          if (checkMatch(row)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        // Update counter
+        if (counterEl) {
+          counterEl.textContent = String(visibleCount);
+        }
+
+        // Show/hide empty state
         if (emptyState) {
-          if (visibleCount === 0) emptyState.classList.remove('hidden');
-          else emptyState.classList.add('hidden');
+          if (visibleCount === 0) {
+            emptyState.classList.remove('hidden');
+          } else {
+            emptyState.classList.add('hidden');
+          }
         }
       }
 
-      regionSelect?.addEventListener('change', filterTreks);
-      difficultySelect?.addEventListener('change', filterTreks);
-      durationSelect?.addEventListener('change', filterTreks);
+      // Handle Segmented Pill Clicks
+      document.querySelectorAll('[data-filter-group]').forEach((group) => {
+        const groupName = group.getAttribute('data-filter-group');
+        const pills = group.querySelectorAll('.filter-pill');
 
-      resetBtn?.addEventListener('click', () => {
-        if (regionSelect) regionSelect.value = 'all';
-        if (difficultySelect) difficultySelect.value = 'all';
-        if (durationSelect) durationSelect.value = 'all';
-        filterTreks();
+        pills.forEach((pill) => {
+          pill.addEventListener('click', () => {
+            const val = pill.getAttribute('data-value') || 'all';
+            state[groupName] = val;
+
+            // Update UI styles for pills in this group
+            pills.forEach((p) => {
+              p.classList.remove('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+              p.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+            });
+
+            pill.classList.add('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+            pill.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+
+            evaluateFilters();
+          });
+        });
       });
+
+      // Quick Search input listener
+      searchInput?.addEventListener('input', (e) => {
+        state.search = e.target.value;
+        evaluateFilters();
+      });
+
+      // View Switcher Handlers
+      viewBentoBtn?.addEventListener('click', () => {
+        state.view = 'bento';
+        viewBentoBtn.classList.add('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewBentoBtn.classList.remove('text-ink-dim');
+        viewBentoBtn.setAttribute('aria-pressed', 'true');
+
+        viewMatrixBtn?.classList.remove('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewMatrixBtn?.classList.add('text-ink-dim');
+        viewMatrixBtn?.setAttribute('aria-pressed', 'false');
+
+        bentoView?.classList.remove('hidden');
+        matrixView?.classList.add('hidden');
+      });
+
+      viewMatrixBtn?.addEventListener('click', () => {
+        state.view = 'matrix';
+        viewMatrixBtn.classList.add('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewMatrixBtn.classList.remove('text-ink-dim');
+        viewMatrixBtn.setAttribute('aria-pressed', 'true');
+
+        viewBentoBtn?.classList.remove('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewBentoBtn?.classList.add('text-ink-dim');
+        viewBentoBtn?.setAttribute('aria-pressed', 'false');
+
+        matrixView?.classList.remove('hidden');
+        bentoView?.classList.add('hidden');
+      });
+
+      // Reset Functionality
+      const handleReset = () => {
+        state.search = '';
+        state.region = 'all';
+        state.altitude = 'all';
+        state.difficulty = 'all';
+
+        if (searchInput) searchInput.value = '';
+
+        document.querySelectorAll('[data-filter-group]').forEach((group) => {
+          const pills = group.querySelectorAll('.filter-pill');
+          pills.forEach((p) => {
+            const isAll = p.getAttribute('data-value') === 'all';
+            if (isAll) {
+              p.classList.add('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+              p.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+            } else {
+              p.classList.remove('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+              p.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+            }
+          });
+        });
+
+        evaluateFilters();
+      };
+
+      resetBtn?.addEventListener('click', handleReset);
+      resetEmptyBtn?.addEventListener('click', handleReset);
     });
   </script>
 

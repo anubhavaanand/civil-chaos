@@ -1,148 +1,175 @@
 ---
 // WeatherWidget.astro
-// Real-Time High-Altitude Himalayan Weather Forecast & Oxygen Index Widget
+// Real-Time High-Altitude Himalayan Weather Forecast & Alpine Telemetry Widget
 ---
 
-<div class="w-full rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/95 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
-  <!-- Widget Header -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
-    <div>
-      <div class="flex items-center gap-2">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase tracking-wide">
-          Live Altitude Telemetry
-        </span>
-        <span class="flex h-2 w-2 relative">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
+<div class="p-1.5 rounded-[24px] bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+  <div class="rounded-[18px] bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-6 md:p-8">
+    
+    <!-- Widget Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-sm text-[10px] font-mono font-bold bg-[#00f2fe]/15 text-[#00f2fe] border border-[#00f2fe]/30 uppercase tracking-widest">
+            Live Barometric Telemetry
+          </span>
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+        </div>
+        <h3 class="text-xl font-display font-bold text-white mt-1.5 flex items-center gap-2 tracking-tight">
+          <svg class="w-5 h-5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          Himalayan Weather & Micro-Climate Index
+        </h3>
       </div>
-      <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
-        🌤️ Himalayan Weather & Alpine Index
-      </h3>
-    </div>
 
-    <!-- Region/Trek Selector Tabs -->
-    <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-      <button data-loc="sankri" class="weather-tab-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold transition shadow">
-        Sankri (Base)
-      </button>
-      <button data-loc="kedarkantha" class="weather-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-        Kedarkantha Peak
-      </button>
-      <button data-loc="roopkund" class="weather-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-        Roopkund Glacial
-      </button>
-    </div>
-  </div>
-
-  <!-- Live Telemetry Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-6">
-    <!-- Card 1: Temperature & Chill -->
-    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
-      <div class="flex items-center justify-between text-xs text-slate-400">
-        <span>Current Temp</span>
-        <span>📍 1,950 M</span>
-      </div>
-      <div class="my-2">
-        <div id="w-temp" class="text-3xl font-heading font-bold text-cyan-300">14°C</div>
-        <p id="w-chill" class="text-xs text-slate-400 mt-0.5">Feels like 11°C (Clear Alpine Sky)</p>
-      </div>
-      <div class="text-[11px] text-amber-400 font-medium flex items-center gap-1">
-        <span>⚠️ Summit Temp:</span>
-        <span id="w-summit-temp" class="font-bold">-4°C at Night</span>
+      <!-- Region/Trek Selector Tabs -->
+      <div class="flex items-center bg-[#050505] p-1 rounded-lg border border-white/10 text-xs font-mono">
+        <button data-loc="sankri" class="weather-tab-btn px-3 py-1.5 rounded-md bg-[#00f2fe] text-[#050505] font-bold transition shadow">
+          Sankri (Base)
+        </button>
+        <button data-loc="kedarkantha" class="weather-tab-btn px-3 py-1.5 rounded-md text-silver hover:text-white transition">
+          Kedarkantha Peak
+        </button>
+        <button data-loc="roopkund" class="weather-tab-btn px-3 py-1.5 rounded-md text-silver hover:text-white transition">
+          Roopkund Glacial
+        </button>
       </div>
     </div>
 
-    <!-- Card 2: Wind & Gusts -->
-    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
-      <div class="flex items-center justify-between text-xs text-slate-400">
-        <span>Wind Speed</span>
-        <span>🌬️ Ridge Gusts</span>
+    <!-- Live Telemetry Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-6">
+      <!-- Card 1: Temperature & Chill -->
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
+          <span>Current Temp</span>
+          <span class="text-[#00f2fe]">1,950 m</span>
+        </div>
+        <div class="my-2">
+          <div id="w-temp" class="text-3xl font-display font-bold text-[#00f2fe]">14°C</div>
+          <p id="w-chill" class="text-xs text-silver mt-0.5 font-light">Feels like 11°C (Clear Alpine Sky)</p>
+        </div>
+        <div class="text-[11px] font-mono text-amber-400 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <span id="w-summit-temp" class="font-bold">-4°C Night Ridge</span>
+        </div>
       </div>
-      <div class="my-2">
-        <div id="w-wind" class="text-3xl font-heading font-bold text-slate-100">12 <span class="text-sm font-normal text-slate-400">km/h</span></div>
-        <p id="w-wind-dir" class="text-xs text-slate-400 mt-0.5">North-Westerly Breeze</p>
+
+      <!-- Card 2: Wind & Gusts -->
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
+          <span>Wind Velocity</span>
+          <span class="text-silver">Ridge Gusts</span>
+        </div>
+        <div class="my-2">
+          <div id="w-wind" class="text-3xl font-display font-bold text-white">12 <span class="text-sm font-mono font-normal text-silver/60">km/h</span></div>
+          <p id="w-wind-dir" class="text-xs text-silver mt-0.5 font-light">North-Westerly Breeze</p>
+        </div>
+        <div class="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>Safe Traverse Window</span>
+        </div>
       </div>
-      <div class="text-[11px] text-emerald-400 font-medium">
-        ✅ Safe Ridge Crossing Window
+
+      <!-- Card 3: Oxygen Concentration Index -->
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
+          <span>Effective Oxygen</span>
+          <span class="text-emerald-400">O₂ Ratio</span>
+        </div>
+        <div class="my-2">
+          <div id="w-o2" class="text-3xl font-display font-bold text-emerald-400">82% <span class="text-xs font-mono font-normal text-silver/60">vs Sea Level</span></div>
+          <p id="w-o2-desc" class="text-xs text-silver mt-0.5 font-light">Mild acclimatization required</p>
+        </div>
+        <div class="text-[11px] font-mono text-[#00f2fe] flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-[#00f2fe] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Hydration Buffer: 3.5L/day</span>
+        </div>
+      </div>
+
+      <!-- Card 4: UV Radiation & Snow Glare -->
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
+          <span>UV Radiation</span>
+          <span class="text-amber-400">Glare Index</span>
+        </div>
+        <div class="my-2">
+          <div id="w-uv" class="text-3xl font-display font-bold text-amber-400">8.4 <span class="text-xs font-mono font-normal text-silver/60">Very High</span></div>
+          <p class="text-xs text-silver mt-0.5 font-light">Cat 3/4 Polarized Lenses Required</p>
+        </div>
+        <div class="text-[11px] font-mono text-amber-300 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <span>SPF 50+ Zinc Mandatory</span>
+        </div>
       </div>
     </div>
 
-    <!-- Card 3: Oxygen Concentration Index -->
-    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
-      <div class="flex items-center justify-between text-xs text-slate-400">
-        <span>Oxygen Level</span>
-        <span>🫁 O₂ Saturation</span>
-      </div>
-      <div class="my-2">
-        <div id="w-o2" class="text-3xl font-heading font-bold text-emerald-400">82% <span class="text-xs font-normal text-slate-400">vs Sea Level</span></div>
-        <p id="w-o2-desc" class="text-xs text-slate-400 mt-0.5">Mild acclimatization required</p>
-      </div>
-      <div class="text-[11px] text-cyan-400 font-medium">
-        💡 Hydration Advisory: 3.5L/day
-      </div>
-    </div>
-
-    <!-- Card 4: UV Index & Visibility -->
-    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
-      <div class="flex items-center justify-between text-xs text-slate-400">
-        <span>UV Radiation</span>
-        <span>🕶️ Snow Glare</span>
-      </div>
-      <div class="my-2">
-        <div id="w-uv" class="text-3xl font-heading font-bold text-amber-400">8.4 <span class="text-xs font-normal text-slate-400">Very High</span></div>
-        <p class="text-xs text-slate-400 mt-0.5">Cat 3/4 Polarized Glasses Required</p>
-      </div>
-      <div class="text-[11px] text-amber-300 font-medium">
-        🧴 SPF 50+ Sunscreen mandatory
-      </div>
-    </div>
-  </div>
-
-  <!-- 5-Day Alpine Forecast Table -->
-  <div class="mt-4 pt-4 border-t border-slate-800">
-    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">5-Day High-Altitude Outlook</h4>
-    <div class="grid grid-cols-5 gap-2 text-center text-xs">
-      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
-        <span class="block text-slate-400 text-[10px] uppercase font-bold">Today</span>
-        <span class="text-xl block my-1">☀️</span>
-        <span class="block font-bold text-cyan-300">14° / 2°</span>
-        <span class="block text-[9px] text-slate-400">Clear</span>
-      </div>
-      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
-        <span class="block text-slate-400 text-[10px] uppercase font-bold">Tomorrow</span>
-        <span class="text-xl block my-1">🌤️</span>
-        <span class="block font-bold text-cyan-300">12° / -1°</span>
-        <span class="block text-[9px] text-slate-400">Partly Sun</span>
-      </div>
-      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
-        <span class="block text-slate-400 text-[10px] uppercase font-bold">Day 3</span>
-        <span class="text-xl block my-1">🌨️</span>
-        <span class="block font-bold text-cyan-300">6° / -6°</span>
-        <span class="block text-[9px] text-amber-400 font-semibold">Light Snow</span>
-      </div>
-      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
-        <span class="block text-slate-400 text-[10px] uppercase font-bold">Day 4</span>
-        <span class="text-xl block my-1">❄️</span>
-        <span class="block font-bold text-cyan-300">4° / -8°</span>
-        <span class="block text-[9px] text-cyan-400 font-semibold">Fresh Powder</span>
-      </div>
-      <div class="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/80">
-        <span class="block text-slate-400 text-[10px] uppercase font-bold">Day 5</span>
-        <span class="text-xl block my-1">☀️</span>
-        <span class="block font-bold text-cyan-300">10° / -3°</span>
-        <span class="block text-[9px] text-slate-400">Bluebird Sky</span>
+    <!-- 5-Day Alpine Forecast Table -->
+    <div class="mt-4 pt-4 border-t border-white/10">
+      <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-silver/60 mb-3">5-Day High-Altitude Outlook</h4>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs font-mono">
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Today</span>
+          <svg class="w-6 h-6 mx-auto my-1.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <span class="block font-bold text-[#00f2fe]">14° / 2°</span>
+          <span class="block text-[9px] text-silver/60">Bluebird</span>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Tomorrow</span>
+          <svg class="w-6 h-6 mx-auto my-1.5 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z"/>
+          </svg>
+          <span class="block font-bold text-[#00f2fe]">12° / -1°</span>
+          <span class="block text-[9px] text-silver/60">Partly Sun</span>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Day 3</span>
+          <svg class="w-6 h-6 mx-auto my-1.5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14m0-14.14l14.14 14.14"/>
+          </svg>
+          <span class="block font-bold text-[#00f2fe]">6° / -6°</span>
+          <span class="block text-[9px] text-amber-400 font-semibold">Light Snow</span>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Day 4</span>
+          <svg class="w-6 h-6 mx-auto my-1.5 text-cyan-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14m0-14.14l14.14 14.14"/>
+          </svg>
+          <span class="block font-bold text-[#00f2fe]">4° / -8°</span>
+          <span class="block text-[9px] text-cyan-300 font-semibold">Powder</span>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10 col-span-2 sm:col-span-1">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Day 5</span>
+          <svg class="w-6 h-6 mx-auto my-1.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <span class="block font-bold text-[#00f2fe]">10° / -3°</span>
+          <span class="block text-[9px] text-silver/60">Clear Ridge</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-  const WEATHER_LOCS: Record<string, any> = {
+<script is:inline>
+  const WEATHER_LOCS = {
     sankri: {
       temp: '14°C',
       chill: 'Feels like 11°C (Clear Alpine Sky)',
-      summitTemp: '-4°C at Night',
+      summitTemp: '-4°C Night Ridge',
       wind: '12 km/h',
       windDir: 'North-Westerly Breeze',
       o2: '82%',
@@ -173,17 +200,15 @@
 
   document.querySelectorAll('.weather-tab-btn').forEach((btn) => {
     btn.addEventListener('click', (e) => {
-      const target = e.currentTarget as HTMLElement;
+      const target = e.currentTarget;
       const locKey = target.dataset.loc;
       if (!locKey || !WEATHER_LOCS[locKey]) return;
 
-      // Update button styling
       document.querySelectorAll('.weather-tab-btn').forEach(b => {
-        b.className = 'weather-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+        b.className = 'weather-tab-btn px-3 py-1.5 rounded-md text-silver hover:text-white transition';
       });
-      target.className = 'weather-tab-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold transition shadow';
+      target.className = 'weather-tab-btn px-3 py-1.5 rounded-md bg-[#00f2fe] text-[#050505] font-bold transition shadow';
 
-      // Update Values
       const data = WEATHER_LOCS[locKey];
       const wTemp = document.getElementById('w-temp');
       const wChill = document.getElementById('w-chill');
@@ -197,9 +222,9 @@
       if (wTemp) wTemp.innerText = data.temp;
       if (wChill) wChill.innerText = data.chill;
       if (wSummit) wSummit.innerText = data.summitTemp;
-      if (wWind) wWind.innerHTML = `${data.wind} <span class="text-sm font-normal text-slate-400">km/h</span>`;
+      if (wWind) wWind.innerHTML = `${data.wind} <span class="text-sm font-mono font-normal text-silver/60">km/h</span>`;
       if (wWindDir) wWindDir.innerText = data.windDir;
-      if (wO2) wO2.innerHTML = `${data.o2} <span class="text-xs font-normal text-slate-400">vs Sea Level</span>`;
+      if (wO2) wO2.innerHTML = `${data.o2} <span class="text-xs font-mono font-normal text-silver/60">vs Sea Level</span>`;
       if (wO2Desc) wO2Desc.innerText = data.o2Desc;
       if (wUV) wUV.innerHTML = `${data.uv}`;
     });

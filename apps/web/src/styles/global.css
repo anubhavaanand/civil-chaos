@@ -63,6 +63,14 @@
     background-size: cover;
     background-position: center;
   }
+
+  /* Double-Bezel Concentric Curve Tokens (R_in = R_out - Padding) */
+  .double-bezel-outer {
+    @apply p-1.5 rounded-[24px] bg-white/5 border border-white/10 shadow-2xl;
+  }
+  .double-bezel-inner {
+    @apply rounded-[18px] bg-[#0f172a]/80 backdrop-blur-xl border border-white/5;
+  }
 }
 
 :focus-visible {
@@ -71,12 +79,56 @@
   border-radius: 4px;
 }
 
+/* Modern Top-Layer Dialog Animations with @starting-style */
+dialog[open] {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+}
+
+dialog {
+  opacity: 0;
+  transform: scale(0.96) translateY(8px);
+  transition-property: opacity, transform, display, overlay;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-behavior: allow-discrete;
+}
+
+dialog::backdrop {
+  background-color: rgba(5, 5, 5, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: display 0.25s allow-discrete, overlay 0.25s allow-discrete, background-color 0.25s ease-out, backdrop-filter 0.25s ease-out;
+}
+
+dialog[open]::backdrop {
+  background-color: rgba(5, 5, 5, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  @starting-style {
+    background-color: rgba(5, 5, 5, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  dialog, dialog[open] {
+    transform: none;
+    transition-duration: 0.01ms;
   }
 }
 

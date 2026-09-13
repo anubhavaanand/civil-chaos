@@ -1,4 +1,6 @@
 ---
+// ElevationProfile.astro
+// Interactive Swiss Telemetry SVG Elevation Profile with Barometric Altitude Physics
 import type { AltitudePoint } from '../data/mock-treks';
 
 interface Props {
@@ -9,12 +11,12 @@ interface Props {
 const { points, maxAltitudeM } = Astro.props;
 
 // SVG chart dimensions
-const svgWidth = 800;
-const svgHeight = 260;
-const padding = { top: 35, right: 40, bottom: 45, left: 55 };
+const svgWidth = 840;
+const svgHeight = 280;
+const padding = { top: 40, right: 40, bottom: 50, left: 60 };
 
-const minAlt = Math.min(...points.map((p) => p.altitudeM)) - 200;
-const maxAlt = Math.max(...points.map((p) => p.altitudeM), maxAltitudeM) + 150;
+const minAlt = Math.min(...points.map((p) => p.altitudeM)) - 250;
+const maxAlt = Math.max(...points.map((p) => p.altitudeM), maxAltitudeM) + 200;
 const maxDist = Math.max(...points.map((p) => p.distanceKm));
 
 // Map coordinate helpers
@@ -29,69 +31,231 @@ const getY = (alt: number) => {
   return svgHeight - padding.bottom - ((alt - minAlt) / range) * (svgHeight - padding.top - padding.bottom);
 };
 
-// Generate SVG polyline / path coordinates
-const svgPathPoints = points.map((p) => `${getX(p.distanceKm)},${getY(p.altitudeM)}`).join(' L ');
-const areaPath = `M ${getX(points[0].distanceKm)},${svgHeight - padding.bottom} L ${svgPathPoints} L ${getX(points[points.length - 1].distanceKm)},${svgHeight - padding.bottom} Z`;
+// Generate SVG polyline and area path coordinates
+const svgPathPoints = points.map((p) => `${getX(p.distanceKm).toFixed(1)},${getY(p.altitudeM).toFixed(1)}`).join(' L ');
+const areaPath = `M ${getX(points[0].distanceKm).toFixed(1)},${svgHeight - padding.bottom} L ${svgPathPoints} L ${getX(points[points.length - 1].distanceKm).toFixed(1)},${svgHeight - padding.bottom} Z`;
+
+// Barometric formula helper (Effective O2 saturation drops with altitude)
+const getO2Percentage = (altM: number) => {
+  const ratio = Math.exp(-altM / 8400);
+  return Math.round(ratio * 100);
+};
 ---
 
-<div class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-md">
-  <div class="mb-4 flex items-center justify-between">
-    <div>
-      <h3 class="font-display text-lg font-bold text-white">Interactive Altitude Profile</h3>
-      <p class="text-xs text-ink-dim">Distance vs Elevation profile with key campsite waypoints</p>
+<div class="p-1.5 rounded-[24px] bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+  <div class="rounded-[18px] bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-6 md:p-8">
+    
+    <!-- Top Telemetry Header -->
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2 h-2 rounded-full bg-[#00f2fe] animate-ping"></span>
+          <span class="text-[10px] font-mono tracking-widest text-[#00f2fe] uppercase font-bold">Hypsometric Telemetry</span>
+        </div>
+        <h3 class="font-display text-xl font-bold text-white tracking-tight">Altitude Gradient & Waypoint Profile</h3>
+      </div>
+      
+      <div class="flex items-center gap-3 font-mono text-xs">
+        <div class="px-3 py-1.5 rounded-sm bg-white/5 border border-white/10 text-silver">
+          <span class="text-[#d4d4d8]/60">Total Dist:</span> <span class="text-white font-bold">{maxDist} km</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-sm bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] font-bold">
+          Peak: {maxAltitudeM.toLocaleString()} m ({Math.round(maxAltitudeM * 3.28084).toLocaleString()} ft)
+        </div>
+      </div>
     </div>
-    <div class="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-bold text-brand">
-      Max: {maxAltitudeM.toLocaleString()} m
+
+    <!-- Live Scrubber Telemetry HUD (Updated via hover/touch) -->
+    <div id="elevation-scrubber-hud" class="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#050505]/70 border border-white/10 font-mono text-xs">
+      <div>
+        <span class="text-[10px] text-silver/60 uppercase block">Active Waypoint</span>
+        <span id="hud-point-label" class="text-white font-bold truncate block">{points[0]?.label || 'Base Camp'}</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-silver/60 uppercase block">Elevation</span>
+        <span id="hud-point-alt" class="text-[#00f2fe] font-bold block">{points[0]?.altitudeM.toLocaleString()} m ({Math.round((points[0]?.altitudeM || 0) * 3.28084).toLocaleString()} ft)</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-silver/60 uppercase block">Trail Progress</span>
+        <span id="hud-point-dist" class="text-white font-bold block">{points[0]?.distanceKm} km ({Math.round(((points[0]?.distanceKm || 0) / maxDist) * 100)}%)</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-silver/60 uppercase block">Effective O2 Level</span>
+        <span id="hud-point-o2" class="text-emerald-400 font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
+      </div>
     </div>
-  </div>
 
-  <div class="w-full overflow-x-auto">
-    <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} class="w-full min-w-[600px] h-auto select-none overflow-visible">
-      <defs>
-        <!-- Gradient fill for mountain elevation -->
-        <linearGradient id="elevationGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.45"></stop>
-          <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.05"></stop>
-        </linearGradient>
-      </defs>
+    <!-- SVG Elevation Diagram -->
+    <div class="w-full overflow-x-auto select-none">
+      <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} class="w-full min-w-[700px] h-auto overflow-visible font-mono">
+        <defs>
+          <linearGradient id="glacierElevationGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.35"></stop>
+            <stop offset="50%" stop-color="#00f2fe" stop-opacity="0.10"></stop>
+            <stop offset="100%" stop-color="#050505" stop-opacity="0.0"></stop>
+          </linearGradient>
+        </defs>
 
-      <!-- Horizontal grid lines -->
-      <line x1={padding.left} y1={getY(minAlt + 500)} x2={svgWidth - padding.right} y2={getY(minAlt + 500)} stroke="#ffffff" stroke-opacity="0.08" stroke-dasharray="4 4" />
-      <line x1={padding.left} y1={getY((minAlt + maxAlt) / 2)} x2={svgWidth - padding.right} y2={getY((minAlt + maxAlt) / 2)} stroke="#ffffff" stroke-opacity="0.08" stroke-dasharray="4 4" />
-
-      <!-- Area fill -->
-      <path d={areaPath} fill="url(#elevationGradient)" />
-
-      <!-- Elevation stroke line -->
-      <path d={`M ${svgPathPoints}`} fill="none" stroke="#14b8a6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-
-      <!-- Points and labels -->
-      {points.map((p) => {
-        const cx = getX(p.distanceKm);
-        const cy = getY(p.altitudeM);
-        return (
-          <g class="group cursor-pointer">
-            <!-- Pulsing outer circle on hover -->
-            <circle cx={cx} cy={cy} r="7" fill="#14b8a6" fill-opacity="0.3" class="transition-transform group-hover:scale-150" />
-            <circle cx={cx} cy={cy} r="4" fill="#ffffff" stroke="#0f766e" stroke-width="2" />
-            
-            <!-- Altitude Text Above -->
-            <text x={cx} y={cy - 12} text-anchor="middle" fill="#14b8a6" font-size="11" font-weight="700" class="font-sans">
-              {p.altitudeM}m
+        <!-- Horizontal Guide Elevation Contours -->
+        {[minAlt + 500, (minAlt + maxAlt) / 2, maxAlt - 300].map((levelAlt) => (
+          <g>
+            <line 
+              x1={padding.left} 
+              y1={getY(levelAlt)} 
+              x2={svgWidth - padding.right} 
+              y2={getY(levelAlt)} 
+              stroke="#ffffff" 
+              stroke-opacity="0.08" 
+              stroke-dasharray="4 4" 
+            />
+            <text x={padding.left - 8} y={getY(levelAlt) + 3} text-anchor="end" fill="#71717a" font-size="10">
+              {Math.round(levelAlt)}m
             </text>
-
-            <!-- Waypoint Label Below -->
-            {p.label && (
-              <text x={cx} y={svgHeight - padding.bottom + 18} text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="500" class="font-sans">
-                {p.label} ({p.distanceKm}km)
-              </text>
-            )}
           </g>
-        );
-      })}
+        ))}
 
-      <!-- X-Axis Line -->
-      <line x1={padding.left} y1={svgHeight - padding.bottom} x2={svgWidth - padding.right} y2={svgHeight - padding.bottom} stroke="#ffffff" stroke-opacity="0.2" stroke-width="1.5" />
-    </svg>
+        <!-- Area Gradient Fill -->
+        <path d={areaPath} fill="url(#glacierElevationGrad)" />
+
+        <!-- High-Altitude Mountain Ridge Vector -->
+        <path 
+          d={`M ${svgPathPoints}`} 
+          fill="none" 
+          stroke="#00f2fe" 
+          stroke-width="2.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+        />
+
+        <!-- Waypoint Nodes with Interactive Data Trigger -->
+        {points.map((p, idx) => {
+          const cx = getX(p.distanceKm);
+          const cy = getY(p.altitudeM);
+          const isPeak = p.altitudeM === maxAltitudeM;
+          const o2 = getO2Percentage(p.altitudeM);
+          return (
+            <g 
+              class="elevation-waypoint group cursor-pointer"
+              data-idx={idx}
+              data-label={p.label || `Waypoint ${idx + 1}`}
+              data-alt={p.altitudeM}
+              data-alt-ft={Math.round(p.altitudeM * 3.28084)}
+              data-dist={p.distanceKm}
+              data-dist-pct={Math.round((p.distanceKm / maxDist) * 100)}
+              data-o2={o2}
+            >
+              <!-- Vertical Guide Drop Line -->
+              <line 
+                x1={cx} 
+                y1={cy} 
+                x2={cx} 
+                y2={svgHeight - padding.bottom} 
+                stroke="#00f2fe" 
+                stroke-opacity="0.15" 
+                stroke-dasharray="2 2"
+                class="group-hover:stroke-opacity-60 transition-all"
+              />
+
+              <!-- Outer Glowing Halo -->
+              <circle 
+                cx={cx} 
+                cy={cy} 
+                r={isPeak ? "9" : "6"} 
+                fill="#00f2fe" 
+                fill-opacity={isPeak ? "0.4" : "0.2"} 
+                class="group-hover:scale-150 transition-transform origin-center"
+              />
+              
+              <!-- Core Node -->
+              <circle 
+                cx={cx} 
+                cy={cy} 
+                r={isPeak ? "4.5" : "3"} 
+                fill={isPeak ? "#ffffff" : "#00f2fe"} 
+                stroke="#050505" 
+                stroke-width="1.5" 
+              />
+              
+              <!-- Waypoint Elevation Pill Above -->
+              <text 
+                x={cx} 
+                y={cy - 12} 
+                text-anchor="middle" 
+                fill={isPeak ? "#00f2fe" : "#d4d4d8"} 
+                font-size="10" 
+                font-weight={isPeak ? "700" : "500"}
+              >
+                {p.altitudeM}m
+              </text>
+
+              <!-- Waypoint Name Tag Below Axis -->
+              {p.label && (
+                <text 
+                  x={cx} 
+                  y={svgHeight - padding.bottom + 18} 
+                  text-anchor="middle" 
+                  fill="#a1a1aa" 
+                  font-size="9.5"
+                  class="group-hover:fill-[#00f2fe] transition-colors"
+                >
+                  {p.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
+
+        <!-- Bottom Base Axis -->
+        <line 
+          x1={padding.left} 
+          y1={svgHeight - padding.bottom} 
+          x2={svgWidth - padding.right} 
+          y2={svgHeight - padding.bottom} 
+          stroke="#ffffff" 
+          stroke-opacity="0.15" 
+          stroke-width="1" 
+        />
+      </svg>
+    </div>
   </div>
 </div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const waypoints = document.querySelectorAll('.elevation-waypoint');
+    const hudLabel = document.getElementById('hud-point-label');
+    const hudAlt = document.getElementById('hud-point-alt');
+    const hudDist = document.getElementById('hud-point-dist');
+    const hudO2 = document.getElementById('hud-point-o2');
+
+    waypoints.forEach((wp) => {
+      const updateHUD = () => {
+        const label = wp.getAttribute('data-label') || '';
+        const alt = wp.getAttribute('data-alt') || '0';
+        const altFt = wp.getAttribute('data-alt-ft') || '0';
+        const dist = wp.getAttribute('data-dist') || '0';
+        const distPct = wp.getAttribute('data-dist-pct') || '0';
+        const o2 = parseInt(wp.getAttribute('data-o2') || '100', 10);
+
+        if (hudLabel) hudLabel.textContent = label;
+        if (hudAlt) hudAlt.textContent = `${parseInt(alt, 10).toLocaleString()} m (${parseInt(altFt, 10).toLocaleString()} ft)`;
+        if (hudDist) hudDist.textContent = `${dist} km (${distPct}%)`;
+        
+        if (hudO2) {
+          hudO2.textContent = `${o2}% of Sea Level`;
+          if (o2 < 60) {
+            hudO2.className = 'text-rose-400 font-bold block';
+          } else if (o2 < 75) {
+            hudO2.className = 'text-amber-400 font-bold block';
+          } else {
+            hudO2.className = 'text-emerald-400 font-bold block';
+          }
+        }
+      };
+
+      wp.addEventListener('mouseenter', updateHUD);
+      wp.addEventListener('click', updateHUD);
+      wp.addEventListener('touchstart', updateHUD, { passive: true });
+    });
+  });
+</script>
