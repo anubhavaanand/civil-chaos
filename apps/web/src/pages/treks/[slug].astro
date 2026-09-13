@@ -9,6 +9,7 @@ import ItineraryTimeline from '../../components/ItineraryTimeline.astro';
 import UpcomingBatchesTable from '../../components/UpcomingBatchesTable.astro';
 import WeatherWidget from '../../components/WeatherWidget.astro';
 import GearChecklist from '../../components/GearChecklist.astro';
+import AltitudeAcclimatizationLab from '../../components/AltitudeAcclimatizationLab.astro';
 import BookingModal from '../../components/BookingModal.astro';
 import { mockTreks, type Trek } from '../../data/mock-treks';
 
@@ -188,6 +189,11 @@ const touristTripSchema = {
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- High-Altitude Physiology & Lake Louise AMS Diagnostic Lab -->
+        <div class="mt-8">
+          <AltitudeAcclimatizationLab initialAltitudeM={trek.maxAltitudeM} trekName={trek.name} />
         </div>
       </section>
 

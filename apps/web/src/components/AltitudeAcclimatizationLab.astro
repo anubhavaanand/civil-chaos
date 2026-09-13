@@ -1,0 +1,298 @@
+---
+// AltitudeAcclimatizationLab.astro
+// Interactive High-Altitude Physiology & Lake Louise AMS Diagnostic Telemetry Lab
+// Grounded in Himalayan high-altitude medical protocols, barometric lapse equations, and SDRF Uttarakhand emergency staging
+
+interface Props {
+  initialAltitudeM?: number;
+  trekName?: string;
+}
+
+const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
+---
+
+<div class="double-bezel-outer shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+  <div class="double-bezel-inner p-6 sm:p-8 bg-[#0a0f18]/95 backdrop-blur-2xl">
+    
+    <!-- Header Row -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+          <span class="text-[10px] font-mono text-[#00f2fe] uppercase tracking-widest font-bold">Himalayan Medical Protocol</span>
+        </div>
+        <h3 class="text-2xl font-display font-bold text-white">High-Altitude Physiology & Acclimatization Lab</h3>
+        <p class="text-xs text-silver mt-1 font-light">Interactive barometric telemetry and Lake Louise AMS (Acute Mountain Sickness) clinical screener.</p>
+      </div>
+
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 font-mono text-xs text-silver self-start sm:self-auto">
+        <span>Target:</span>
+        <span class="text-[#00f2fe] font-bold">{trekName}</span>
+      </div>
+    </div>
+
+    <!-- Interactive Elevation Scrubber -->
+    <div class="mb-8 p-5 rounded-xl bg-[#050505]/80 border border-white/10">
+      <div class="flex items-center justify-between mb-3 font-mono text-xs">
+        <label for="altitudeRange" class="uppercase text-silver font-bold tracking-wider">
+          Simulated Ascent Datum (Meters MSL)
+        </label>
+        <span id="altitudeDisplay" class="text-lg font-bold text-[#00f2fe]">
+          {initialAltitudeM.toLocaleString()}m 
+          <span class="text-xs text-silver/60 font-normal">({Math.round(initialAltitudeM * 3.28084).toLocaleString()} ft)</span>
+        </span>
+      </div>
+
+      <input 
+        type="range" 
+        id="altitudeRange" 
+        min="1500" 
+        max="5500" 
+        step="50" 
+        value={initialAltitudeM}
+        class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00f2fe]"
+      />
+
+      <div class="flex justify-between font-mono text-[10px] text-silver/50 mt-2">
+        <span>1,500m (Valley)</span>
+        <span>1,950m (Mautar HQ)</span>
+        <span>3,800m (Kedarkantha)</span>
+        <span>4,940m (Bali Pass)</span>
+        <span>5,319m (Pin Parvati)</span>
+      </div>
+    </div>
+
+    <!-- Real-Time Computed Telemetry Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      
+      <!-- Oxygen Concentration -->
+      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Effective Oxygen</div>
+        <div id="telemetryO2" class="text-2xl font-mono font-bold text-white">63.8%</div>
+        <p class="text-[11px] text-silver/70 mt-1 font-mono">Relative to Sea Level</p>
+      </div>
+
+      <!-- Barometric Pressure -->
+      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Air Pressure</div>
+        <div id="telemetryPressure" class="text-2xl font-mono font-bold text-white">646 hPa</div>
+        <p class="text-[11px] text-silver/70 mt-1 font-mono">Standard 1013 hPa</p>
+      </div>
+
+      <!-- Hydration Advisory -->
+      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Daily Hydration</div>
+        <div id="telemetryWater" class="text-2xl font-mono font-bold text-[#00f2fe]">4.2 L</div>
+        <p class="text-[11px] text-silver/70 mt-1 font-mono">Minimum Required</p>
+      </div>
+
+      <!-- Water Boiling Point -->
+      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Boiling Point</div>
+        <div id="telemetryBoil" class="text-2xl font-mono font-bold text-white">87.5°C</div>
+        <p class="text-[11px] text-silver/70 mt-1 font-mono">Affects Digestion & Heat</p>
+      </div>
+
+    </div>
+
+    <!-- Lake Louise Acute Mountain Sickness (AMS) Interactive Clinical Diagnostic -->
+    <div class="p-6 rounded-2xl border border-white/10 bg-[#050505]/90 mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-5 border-b border-white/10">
+        <div>
+          <h4 class="text-sm font-mono font-bold text-white uppercase tracking-wider">Lake Louise AMS Clinical Screener (2018 Consensus)</h4>
+          <p class="text-[11px] text-silver font-light mt-0.5">Self-evaluate altitude symptom severity before or during high moraine crossings.</p>
+        </div>
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <span class="text-silver">AMS Clinical Score:</span>
+          <span id="amsScoreBadge" class="px-2.5 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 / 12 (Safe)</span>
+        </div>
+      </div>
+
+      <!-- 4 Symptoms Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        
+        <!-- Headache -->
+        <div>
+          <label for="sympHeadache" class="block text-xs font-mono font-bold text-silver mb-1.5">Headache</label>
+          <select id="sympHeadache" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+            <option value="0">0: None</option>
+            <option value="1">1: Mild headache</option>
+            <option value="2">2: Moderate headache</option>
+            <option value="3">3: Severe / incapacitating</option>
+          </select>
+        </div>
+
+        <!-- Gastrointestinal -->
+        <div>
+          <label for="sympGI" class="block text-xs font-mono font-bold text-silver mb-1.5">Gastrointestinal</label>
+          <select id="sympGI" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+            <option value="0">0: Normal appetite</option>
+            <option value="1">1: Poor appetite / nausea</option>
+            <option value="2">2: Moderate nausea / vomiting</option>
+            <option value="3">3: Severe nausea / incapacitating</option>
+          </select>
+        </div>
+
+        <!-- Fatigue / Weakness -->
+        <div>
+          <label for="sympFatigue" class="block text-xs font-mono font-bold text-silver mb-1.5">Fatigue / Weakness</label>
+          <select id="sympFatigue" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+            <option value="0">0: Normal energy</option>
+            <option value="1">1: Mild tiredness</option>
+            <option value="2">2: Moderate weakness</option>
+            <option value="3">3: Severe exhaustion / bedridden</option>
+          </select>
+        </div>
+
+        <!-- Dizziness / Lightheadedness -->
+        <div>
+          <label for="sympDizziness" class="block text-xs font-mono font-bold text-silver mb-1.5">Dizziness</label>
+          <select id="sympDizziness" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+            <option value="0">0: None</option>
+            <option value="1">1: Mild dizziness</option>
+            <option value="2">2: Moderate vertigo</option>
+            <option value="3">3: Severe loss of balance</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Live Clinical Triage Advisory Box -->
+      <div id="triageAdvisoryBox" class="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 flex items-start gap-3.5">
+        <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <div class="text-xs font-mono">
+          <div id="triageTitle" class="font-bold text-emerald-400 uppercase tracking-wider">Clinical Triage: Optimal Physiology</div>
+          <p id="triageText" class="text-silver/90 mt-1 font-light font-body leading-relaxed">
+            Zero significant acute mountain symptoms recorded. Maintain hydration pace of 4+ liters/day and proceed with standard ascent schedule.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Emergency Staging & Evacuation Protocol Footer -->
+    <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div>
+          <span class="text-white font-bold block">Uttarkashi Emergency Rescue Chain</span>
+          <span class="text-silver/60 text-[11px]">SDRF Uttarakhand &middot; Matli Helipad IAF Evacuation &middot; ITBP 12th Bn Liaison</span>
+        </div>
+      </div>
+
+      <a 
+        href="/contact" 
+        class="btn-tactile inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#00f2fe]/40 bg-[#00f2fe]/10 text-[#00f2fe] hover:bg-[#00f2fe] hover:text-[#050505] font-bold uppercase tracking-wider transition-all self-start md:self-auto"
+      >
+        <span>Inspect Dispatch Channels</span>
+        <span>&rarr;</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const range = document.getElementById('altitudeRange');
+    const display = document.getElementById('altitudeDisplay');
+    const o2El = document.getElementById('telemetryO2');
+    const pressEl = document.getElementById('telemetryPressure');
+    const waterEl = document.getElementById('telemetryWater');
+    const boilEl = document.getElementById('telemetryBoil');
+
+    // AMS Inputs
+    const headache = document.getElementById('sympHeadache');
+    const gi = document.getElementById('sympGI');
+    const fatigue = document.getElementById('sympFatigue');
+    const dizziness = document.getElementById('sympDizziness');
+    const scoreBadge = document.getElementById('amsScoreBadge');
+    const triageBox = document.getElementById('triageAdvisoryBox');
+    const triageTitle = document.getElementById('triageTitle');
+    const triageText = document.getElementById('triageText');
+
+    function updatePhysics(h) {
+      // Barometric formula: P = 1013.25 * (1 - 0.0065*h/288.15)^5.2559
+      const p = 1013.25 * Math.pow(1 - (0.0065 * h) / 288.15, 5.2559);
+      const o2 = (p / 1013.25) * 100;
+      const water = Math.min(5.5, Math.max(3.0, 3.0 + ((h - 1500) / 1000) * 0.45));
+      const boil = 100 - (h / 300);
+
+      if (display) {
+        display.innerHTML = `${h.toLocaleString()}m <span class="text-xs text-silver/60 font-normal">(${Math.round(h * 3.28084).toLocaleString()} ft)</span>`;
+      }
+      if (o2El) o2El.textContent = `${o2.toFixed(1)}%`;
+      if (pressEl) pressEl.textContent = `${Math.round(p)} hPa`;
+      if (waterEl) waterEl.textContent = `${water.toFixed(1)} L`;
+      if (boilEl) boilEl.textContent = `${boil.toFixed(1)}°C`;
+    }
+
+    range?.addEventListener('input', (e) => {
+      const h = parseInt(e.target.value, 10);
+      updatePhysics(h);
+    });
+
+    function evaluateAMS() {
+      const hVal = parseInt(headache?.value || '0', 10);
+      const gVal = parseInt(gi?.value || '0', 10);
+      const fVal = parseInt(fatigue?.value || '0', 10);
+      const dVal = parseInt(dizziness?.value || '0', 10);
+
+      const total = hVal + gVal + fVal + dVal;
+
+      if (scoreBadge) {
+        if (total === 0) {
+          scoreBadge.textContent = `${total} / 12 (Safe)`;
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        } else if (total < 3) {
+          scoreBadge.textContent = `${total} / 12 (Mild Strain)`;
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30';
+        } else if (total < 6) {
+          scoreBadge.textContent = `${total} / 12 (AMS Alert)`;
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30';
+        } else {
+          scoreBadge.textContent = `${total} / 12 (Severe AMS / Evacuate)`;
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        }
+      }
+
+      if (triageBox && triageTitle && triageText) {
+        if (total === 0) {
+          triageBox.className = 'p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 flex items-start gap-3.5';
+          triageTitle.className = 'font-bold text-emerald-400 uppercase tracking-wider';
+          triageTitle.textContent = 'Clinical Triage: Optimal Physiology';
+          triageText.textContent = 'Zero acute mountain symptoms recorded. Maintain hydration pace and proceed with standard ascent schedule.';
+        } else if (total < 3) {
+          triageBox.className = 'p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 flex items-start gap-3.5';
+          triageTitle.className = 'font-bold text-amber-400 uppercase tracking-wider';
+          triageTitle.textContent = 'Clinical Triage: Mild Hypoxia Staging';
+          triageText.textContent = 'Mild fatigue or light symptoms observed. Rest at current camp datum, consume hot electrolyte fluids, and audit pulse oximeter saturation.';
+        } else if (total < 6) {
+          triageBox.className = 'p-4 rounded-xl border border-orange-500/20 bg-orange-500/5 flex items-start gap-3.5';
+          triageTitle.className = 'font-bold text-orange-400 uppercase tracking-wider';
+          triageTitle.textContent = 'Clinical Triage: Acute Mountain Sickness Confirmed';
+          triageText.textContent = 'DO NOT ASCEND FURTHER. Halt movement, administer medical oxygen if saturation drops below 75%, and prepare for descending 300 to 500 meters.';
+        } else {
+          triageBox.className = 'p-4 rounded-xl border border-rose-500/20 bg-rose-500/5 flex items-start gap-3.5';
+          triageTitle.className = 'font-bold text-rose-400 uppercase tracking-wider';
+          triageTitle.textContent = 'Clinical Triage: Emergency Immediate Descent Protocol';
+          triageText.textContent = 'CRITICAL EMERGENCY: Severe AMS / suspected HAPE or HACE. Immediate assisted descent to lower camp. Activate Gamow hyperbaric bag and alert SDRF / ITBP rescue relay.';
+        }
+      }
+    }
+
+    [headache, gi, fatigue, dizziness].forEach((el) => {
+      el?.addEventListener('change', evaluateAMS);
+    });
+
+    // Run initial calculation
+    if (range) updatePhysics(parseInt(range.value, 10));
+    evaluateAMS();
+  });
+</script>
