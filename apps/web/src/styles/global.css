@@ -13,12 +13,24 @@
   --color-ink: #e8eef2;
   --color-ink-dim: #a9b8c0;
   --color-brand: #00f2fe;
-  --color-brand-deep: #0ea5e9;
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
+
+  /* Emil Kowalski Motion Easing Tokens */
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer utilities {
+  .btn-tactile {
+    transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), background-color 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease, box-shadow 200ms ease;
+    will-change: transform;
+  }
+  .btn-tactile:active {
+    transform: scale(0.975) translateY(1px);
+  }
+
   .alpine-glass {
     @apply backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-2xl shadow-2xl;
   }
@@ -52,3 +64,19 @@
     background-position: center;
   }
 }
+
+:focus-visible {
+  outline: 2px solid #00f2fe;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

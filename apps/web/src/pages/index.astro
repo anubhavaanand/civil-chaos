@@ -100,20 +100,22 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
           Small-batch Himalayan journeys limited to 12-15 trekkers. 100% NIM and WFR certified local leadership, transparent pricing, and zero weather penalties.
         </p>
 
-        <!-- Dual High-Contrast CTAs in Glacier & Obsidian Style -->
+        <!-- Dual High-Contrast CTAs with Button-in-Button Tactile Feedback -->
         <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
           <a 
             href="#treks" 
-            class="px-8 py-4 rounded-sm bg-[#00f2fe] hover:bg-white text-[#050505] font-bold text-sm uppercase tracking-widest transition-all shadow-[0_0_25px_rgba(0,242,254,0.35)] hover:scale-105 active:scale-[0.98] flex items-center gap-2"
+            class="group relative inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#00f2fe] text-[#050505] font-bold text-xs font-mono uppercase tracking-widest btn-tactile shadow-[0_0_25px_rgba(0,242,254,0.35)] hover:bg-white"
           >
             <span>Explore Expeditions</span>
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
+            <span class="w-7 h-7 rounded-full bg-black/10 flex items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:scale-105 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </span>
           </a>
           <a 
             href="#interactive-map" 
-            class="px-8 py-4 rounded-sm border border-white/20 bg-white/5 backdrop-blur-md text-white hover:border-[#00f2fe] hover:text-[#00f2fe] font-bold text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-[0.98]"
+            class="px-7 py-3.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-white hover:border-[#00f2fe] hover:text-[#00f2fe] font-bold text-xs font-mono uppercase tracking-widest btn-tactile"
           >
             Regional Telemetry
           </a>
