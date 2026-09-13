@@ -1,0 +1,258 @@
+---
+interface FilterOption {
+  value: string;
+  label: string;
+  count?: number;
+}
+
+interface FilterGroup {
+  id: string;
+  label: string;
+  icon: string;
+  options: FilterOption[];
+}
+
+const filterGroups: FilterGroup[] = [
+  {
+    id: 'difficulty',
+    label: 'Difficulty',
+    icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>`,
+    options: [
+      { value: 'easy', label: 'Easy', count: 2 },
+      { value: 'moderate', label: 'Moderate', count: 5 },
+      { value: 'difficult', label: 'Difficult', count: 2 },
+      { value: 'extreme', label: 'Extreme', count: 1 },
+    ],
+  },
+  {
+    id: 'altitude',
+    label: 'Altitude Band',
+    icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>`,
+    options: [
+      { value: '3000-4000', label: '3-4km', count: 4 },
+      { value: '4000-5000', label: '4-5km', count: 4 },
+      { value: '5000+', label: '5km+', count: 2 },
+    ],
+  },
+  {
+    id: 'region',
+    label: 'Region',
+    icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
+    options: [
+      { value: 'garhwal', label: 'Garhwal', count: 6 },
+      { value: 'kumaon', label: 'Kumaon', count: 1 },
+      { value: 'himachal', label: 'Himachal', count: 3 },
+    ],
+  },
+  {
+    id: 'duration',
+    label: 'Duration',
+    icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+    options: [
+      { value: 'short', label: '3-5 days', count: 4 },
+      { value: 'medium', label: '6-8 days', count: 4 },
+      { value: 'long', label: '9+ days', count: 2 },
+    ],
+  },
+];
+---
+
+<div class="double-bezel-outer">
+  <div class="double-bezel-inner p-5">
+    {/* Filter Matrix Header */}
+    <div class="mb-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-glacier/10 ring-1 ring-glacier/20">
+          <svg class="h-4 w-4 text-glacier" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-display text-sm font-bold text-ink">Expedition Filters</h3>
+          <p class="text-[11px] text-ink-dim">Refine your search across {filterGroups.length} dimensions</p>
+        </div>
+      </div>
+      <button
+        id="clearFilters"
+        class="btn-tactile rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-ink-dim hover:border-glacier/30 hover:bg-glacier/5 hover:text-glacier"
+      >
+        Clear All
+      </button>
+    </div>
+
+    {/* Filter Groups */}
+    <div class="space-y-4">
+      {filterGroups.map((group) => (
+        <div class="filter-group" data-group={group.id}>
+          {/* Group Label */}
+          <div class="mb-2.5 flex items-center gap-2">
+            <span class="text-ink-dim" set:html={group.icon} />
+            <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-dim">{group.label}</span>
+            <span class="ml-auto rounded bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-ink-dim">
+              {group.options.filter(o => o.count && o.count > 0).length} options
+            </span>
+          </div>
+          
+          {/* Segmented Pills */}
+          <div class="flex flex-wrap gap-2">
+            {group.options.map((option) => (
+              <button
+                class="filter-pill btn-tactile group relative flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2 transition-all duration-150 hover:border-glacier/30 hover:bg-glacier/[0.06]"
+                data-group={group.id}
+                data-value={option.value}
+                aria-pressed="false"
+              >
+                {/* Inner highlight dot */}
+                <span class="absolute left-1.5 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-glacier opacity-0 transition-[opacity] duration-150 group-hover:opacity-100" />
+                
+                {/* Label */}
+                <span class="font-body text-xs font-medium text-ink-dim transition-[color] duration-150 group-hover:text-ink">
+                  {option.label}
+                </span>
+                
+                {/* Count Badge */}
+                {option.count !== undefined && (
+                  <span class="rounded-md bg-white/5 px-1.5 py-0.5 font-mono text-[9px] font-bold text-ink-dim transition-[background-color,color] duration-150 group-hover:bg-glacier/10 group-hover:text-glacier">
+                    {option.count}
+                  </span>
+                )}
+                
+                {/* Active state indicator (hidden by default, shown via JS) */}
+                <span class="active-indicator absolute -right-1 -top-1 h-2 w-2 rounded-full bg-glacier opacity-0 transition-[opacity] duration-150" />
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Active Filters Summary */}
+    <div class="mt-5 flex items-center gap-3 border-t border-white/5 pt-4">
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">Active:</span>
+        <span id="activeCount" class="rounded-full bg-glacier/15 px-2 py-0.5 font-mono text-[10px] font-bold text-glacier">0</span>
+      </div>
+      <div id="activeTags" class="flex flex-wrap gap-1.5">
+        {/* Active filter tags will be injected here */}
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">Showing</span>
+        <span id="resultCount" class="font-mono text-sm font-bold text-ink">10</span>
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">treks</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Filter Matrix State & Logic
+  interface FilterState {
+    [groupId: string]: Set<string>;
+  }
+
+  const state: FilterState = {};
+  const pills = document.querySelectorAll('.filter-pill');
+  const clearBtn = document.getElementById('clearFilters');
+  const activeCount = document.getElementById('activeCount');
+  const activeTags = document.getElementById('activeTags');
+  const resultCount = document.getElementById('resultCount');
+
+  // Initialize state
+  document.querySelectorAll('.filter-group').forEach((group) => {
+    const groupId = group.getAttribute('data-group');
+    if (groupId) state[groupId] = new Set();
+  });
+
+  const updateUI = () => {
+    let totalActive = 0;
+    const tags: string[] = [];
+
+    Object.entries(state).forEach(([groupId, values]) => {
+      values.forEach((val) => {
+        totalActive++;
+        const pill = document.querySelector(`.filter-pill[data-group="${groupId}"][data-value="${val}"]`);
+        const label = pill?.querySelector('span:nth-child(2)')?.textContent ?? val;
+        tags.push(`${label}`);
+      });
+    });
+
+    if (activeCount) activeCount.textContent = totalActive.toString();
+    if (resultCount) {
+      // Simulate filtered count (in real app, this would filter the trek list)
+      const base = 10;
+      const filtered = Math.max(1, base - totalActive * 2);
+      resultCount.textContent = filtered.toString();
+    }
+
+    // Render active tags
+    if (activeTags) {
+      activeTags.innerHTML = tags
+        .map(
+          (tag) => `
+          <span class="inline-flex items-center gap-1 rounded-md border border-glacier/20 bg-glacier/10 px-2 py-0.5 font-mono text-[10px] text-glacier">
+            ${tag}
+            <button class="ml-0.5 rounded hover:bg-glacier/20" aria-label="Remove filter">
+              <svg class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </span>
+        `
+        )
+        .join('');
+    }
+  };
+
+  // Pill click handler
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const group = pill.getAttribute('data-group');
+      const value = pill.getAttribute('data-value');
+      if (!group || !value) return;
+
+      const isActive = state[group]?.has(value);
+      const indicator = pill.querySelector('.active-indicator') as HTMLElement;
+
+      if (isActive) {
+        state[group]?.delete(value);
+        pill.setAttribute('aria-pressed', 'false');
+        pill.classList.remove('border-glacier/40', 'bg-glacier/[0.1]');
+        pill.classList.add('border-white/10', 'bg-white/[0.03]');
+        if (indicator) indicator.style.opacity = '0';
+      } else {
+        state[group]?.add(value);
+        pill.setAttribute('aria-pressed', 'true');
+        pill.classList.add('border-glacier/40', 'bg-glacier/[0.1]');
+        pill.classList.remove('border-white/10', 'bg-white/[0.03]');
+        if (indicator) indicator.style.opacity = '1';
+      }
+
+      updateUI();
+    });
+  });
+
+  // Clear all handler
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      Object.keys(state).forEach((key) => state[key].clear());
+      pills.forEach((pill) => {
+        pill.setAttribute('aria-pressed', 'false');
+        pill.classList.remove('border-glacier/40', 'bg-glacier/[0.1]');
+        pill.classList.add('border-white/10', 'bg-white/[0.03]');
+        const indicator = pill.querySelector('.active-indicator') as HTMLElement;
+        if (indicator) indicator.style.opacity = '0';
+      });
+      updateUI();
+    });
+  }
+
+  // Reduced motion: disable transitions
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    pills.forEach((pill) => {
+      const el = pill as HTMLElement;
+      el.style.transition = 'none';
+      const indicator = pill.querySelector('.active-indicator') as HTMLElement;
+      if (indicator) indicator.style.transition = 'none';
+    });
+  }
+</script>

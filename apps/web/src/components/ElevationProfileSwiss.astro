@@ -1,0 +1,450 @@
+---
+import type { AltitudePoint } from '../data/mock-treks';
+
+interface Waypoint extends AltitudePoint {
+  oxygenSat?: number;
+  campType?: 'base' | 'high' | 'summit' | 'rest';
+  dayNumber?: number;
+}
+
+interface Props {
+  points: Waypoint[];
+  trekName: string;
+  maxAltitudeM: number;
+  totalDays: number;
+}
+
+const { points, trekName, maxAltitudeM, totalDays } = Astro.props;
+
+// SVG dimensions (swiss precision grid)
+const svgWidth = 960;
+const svgHeight = 320;
+const padding = { top: 48, right: 48, bottom: 56, left: 64 };
+
+const minAlt = Math.min(...points.map((p) => p.altitudeM)) - 200;
+const maxAlt = Math.max(...points.map((p) => p.altitudeM), maxAltitudeM) + 150;
+const maxDist = Math.max(...points.map((p) => p.distanceKm));
+
+const getX = (dist: number) => {
+  if (maxDist === 0) return padding.left;
+  return padding.left + (dist / maxDist) * (svgWidth - padding.left - padding.right);
+};
+
+const getY = (alt: number) => {
+  const range = maxAlt - minAlt;
+  if (range === 0) return svgHeight - padding.bottom;
+  return svgHeight - padding.bottom - ((alt - minAlt) / range) * (svgHeight - padding.top - padding.bottom);
+};
+
+// Generate smooth cubic bezier path through points
+const pathData = points.reduce((acc, point, i) => {
+  const x = getX(point.distanceKm);
+  const y = getY(point.altitudeM);
+  if (i === 0) return `M ${x},${y}`;
+  const prev = points[i - 1];
+  const prevX = getX(prev.distanceKm);
+  const prevY = getY(prev.altitudeM);
+  const cpx1 = prevX + (x - prevX) * 0.4;
+  const cpx2 = x - (x - prevX) * 0.4;
+  return `${acc} C ${cpx1},${prevY} ${cpx2},${y} ${x},${y}`;
+}, '');
+
+// Area fill path
+const areaPath = `${pathData} L ${getX(points[points.length - 1].distanceKm)},${svgHeight - padding.bottom} L ${getX(points[0].distanceKm)},${svgHeight - padding.bottom} Z`;
+
+// Altitude grid lines (500m increments)
+const gridLines = [];
+const startAlt = Math.ceil(minAlt / 500) * 500;
+for (let alt = startAlt; alt <= maxAlt; alt += 500) {
+  gridLines.push(alt);
+}
+
+// Oxygen saturation reference zones
+const o2Zones = [
+  { y: getY(5500), label: 'Death Zone', color: '#ef4444', o2: '<50%' },
+  { y: getY(4500), label: 'Severe Hypoxia', color: '#f97316', o2: '50-60%' },
+  { y: getY(3500), label: 'Moderate Hypoxia', color: '#eab308', o2: '60-75%' },
+  { y: getY(2500), label: 'Mild Hypoxia', color: '#22c55e', o2: '75-90%' },
+];
+---
+
+<div class="double-bezel-outer">
+  <div class="double-bezel-inner p-6">
+    {/* Header: Trek name + Max altitude badge */}
+    <div class="mb-6 flex items-start justify-between">
+      <div>
+        <p class="mb-1 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-dim">Swiss Elevation Profile</p>
+        <h3 class="font-display text-xl font-bold text-ink">{trekName}</h3>
+        <p class="mt-1 text-sm text-ink-dim">{totalDays} days / {points[points.length - 1].distanceKm} km total distance</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="rounded-full border border-glacier/30 bg-glacier/10 px-3 py-1.5 font-mono text-xs font-bold text-glacier">
+          Peak {maxAltitudeM.toLocaleString()}m
+        </div>
+        <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-xs text-ink-dim">
+          {points.length} waypoints
+        </div>
+      </div>
+    </div>
+
+    {/* Main SVG Chart */}
+    <div class="w-full overflow-x-auto pb-2">
+      <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} class="h-auto w-full min-w-[700px] select-none" role="img" aria-label={`Elevation profile for ${trekName}`}>
+        <defs>
+          {/* Elevation gradient fill */}
+          <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.35" />
+            <stop offset="60%" stop-color="#14b8a6" stop-opacity="0.08" />
+            <stop offset="100%" stop-color="#14b8a6" stop-opacity="0" />
+          </linearGradient>
+          {/* Oxygen zone gradients */}
+          <linearGradient id="o2Death" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ef4444" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient id="o2Severe" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f97316" stop-opacity="0.08" />
+            <stop offset="100%" stop-color="#f97316" stop-opacity="0" />
+          </linearGradient>
+          {/* Scrubber track gradient */}
+          <linearGradient id="scrubTrack" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#00f2fe" stop-opacity="0" />
+            <stop offset="10%" stop-color="#00f2fe" stop-opacity="1" />
+            <stop offset="90%" stop-color="#00f2fe" stop-opacity="1" />
+            <stop offset="100%" stop-color="#00f2fe" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+
+        {/* Altitude grid lines */}
+        {gridLines.map((alt) => (
+          <g>
+            <line
+              x1={padding.left}
+              y1={getY(alt)}
+              x2={svgWidth - padding.right}
+              y2={getY(alt)}
+              stroke="#ffffff"
+              stroke-opacity="0.06"
+              stroke-dasharray="4 6"
+              stroke-width="1"
+            />
+            <text
+              x={padding.left - 10}
+              y={getY(alt) + 4}
+              text-anchor="end"
+              fill="#64748b"
+              font-size="10"
+              font-family="Inter, sans-serif"
+            >
+              {alt.toLocaleString()}m
+            </text>
+          </g>
+        ))}
+
+        {/* Oxygen saturation zones (subtle background bands) */}
+        {o2Zones.map((zone, i) => {
+          const nextY = i < o2Zones.length - 1 ? o2Zones[i + 1].y : svgHeight - padding.bottom;
+          return (
+            <rect
+              x={padding.left}
+              y={zone.y}
+              width={svgWidth - padding.left - padding.right}
+              height={nextY - zone.y}
+              fill={zone.color}
+              fill-opacity="0.04"
+              rx="0"
+            />
+          );
+        })}
+
+        {/* Elevation area fill */}
+        <path d={areaPath} fill="url(#elevGrad)" />
+
+        {/* Elevation line (stroke) */}
+        <path
+          d={pathData}
+          fill="none"
+          stroke="#14b8a6"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        {/* Scrubber interaction line (vertical guide) */}
+        <line
+          id="scrubGuide"
+          x1={getX(points[0].distanceKm)}
+          y1={padding.top}
+          x2={getX(points[0].distanceKm)}
+          y2={svgHeight - padding.bottom}
+          stroke="#00f2fe"
+          stroke-width="1"
+          stroke-opacity="0"
+          stroke-dasharray="3 3"
+          class="transition-[stroke-opacity] duration-150"
+        />
+
+        {/* Waypoint markers */}
+        {points.map((p, i) => {
+          const cx = getX(p.distanceKm);
+          const cy = getY(p.altitudeM);
+          const isSummit = p.campType === 'summit';
+          const o2Pct = p.oxygenSat ?? Math.round(100 - (p.altitudeM / 100) * 2.5);
+          const markerR = isSummit ? 6 : 4.5;
+          return (
+            <g
+              class="waypoint-group cursor-pointer"
+              data-index={i}
+              data-x={cx}
+              data-y={cy}
+              data-alt={p.altitudeM}
+              data-dist={p.distanceKm}
+              data-o2={o2Pct}
+              data-label={p.label ?? ''}
+              data-day={p.dayNumber ?? i + 1}
+              data-camp={p.campType ?? 'rest'}
+            >
+              {/* Outer pulse ring (visible on hover via CSS) */}
+              <circle
+                cx={cx}
+                cy={cy}
+                r={markerR + 6}
+                fill="none"
+                stroke="#00f2fe"
+                stroke-width="1.5"
+                stroke-opacity="0"
+                class="waypoint-ring"
+              />
+              {/* Inner dot */}
+              <circle
+                cx={cx}
+                cy={cy}
+                r={markerR}
+                fill={isSummit ? '#00f2fe' : '#0f172a'}
+                stroke="#14b8a6"
+                stroke-width="2"
+                class="waypoint-dot"
+              />
+              {/* Summit inner glow */}
+              {isSummit && (
+                <circle cx={cx} cy={cy} r="2.5" fill="#ffffff" fill-opacity="0.9" />
+              )}
+            </g>
+          );
+        })}
+
+        {/* X-axis: Day numbers */}
+        {points.map((p, i) => (
+          <text
+            x={getX(p.distanceKm)}
+            y={svgHeight - padding.bottom + 18}
+            text-anchor="middle"
+            fill="#64748b"
+            font-size="10"
+            font-family="Inter, sans-serif"
+          >
+            D{p.dayNumber ?? i + 1}
+          </text>
+        ))}
+
+        {/* X-axis line */}
+        <line
+          x1={padding.left}
+          y1={svgHeight - padding.bottom}
+          x2={svgWidth - padding.right}
+          y2={svgHeight - padding.bottom}
+          stroke="#ffffff"
+          stroke-opacity="0.15"
+          stroke-width="1"
+        />
+
+        {/* Y-axis label */}
+        <text
+          x="14"
+          y={svgHeight / 2}
+          text-anchor="middle"
+          fill="#475569"
+          font-size="10"
+          font-family="Inter, sans-serif"
+          transform={`rotate(-90, 14, ${svgHeight / 2})`}
+        >
+          Altitude (m)
+        </text>
+
+        {/* X-axis label */}
+        <text
+          x={svgWidth / 2}
+          y={svgHeight - 4}
+          text-anchor="middle"
+          fill="#475569"
+          font-size="10"
+          font-family="Inter, sans-serif"
+        >
+          Day / Distance
+        </text>
+      </svg>
+    </div>
+
+    {/* Telemetry Legend Bar */}
+    <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-white/5 pt-4">
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">{'>'}75% O2</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#eab308]" />
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">60-75% O2</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#f97316]" />
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">50-60% O2</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">{'<'}50% O2 Death Zone</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <span class="inline-block h-2 w-8 rounded-full bg-gradient-to-r from-glacier/0 to-glacier" />
+        <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim">Elevation</span>
+      </div>
+    </div>
+
+    {/* Interactive Tooltip (positioned absolutely, controlled via JS) */}
+    <div
+      id="elevTooltip"
+      class="pointer-events-none fixed z-50 opacity-0 transition-[opacity] duration-150"
+      style="will-change: transform, opacity;"
+    >
+      <div class="double-bezel-outer !p-0.5">
+        <div class="double-bezel-inner !rounded-[14px] px-4 py-3 min-w-[180px]">
+          <div class="mb-2 flex items-center justify-between gap-4">
+            <span class="font-display text-sm font-bold text-ink" id="ttLabel">--</span>
+            <span class="rounded-full bg-glacier/15 px-2 py-0.5 font-mono text-[10px] font-bold text-glacier" id="ttDay">Day --</span>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <p class="font-mono text-[9px] uppercase tracking-wider text-ink-dim">Altitude</p>
+              <p class="font-mono text-sm font-bold text-ink" id="ttAlt">--m</p>
+            </div>
+            <div>
+              <p class="font-mono text-[9px] uppercase tracking-wider text-ink-dim">Distance</p>
+              <p class="font-mono text-sm font-bold text-ink" id="ttDist">--km</p>
+            </div>
+            <div>
+              <p class="font-mono text-[9px] uppercase tracking-wider text-ink-dim">O2 Sat</p>
+              <p class="font-mono text-sm font-bold" id="ttO2">--%</p>
+            </div>
+          </div>
+          <div class="mt-2 flex items-center gap-1.5">
+            <span class="inline-block h-1.5 w-1.5 rounded-full" id="ttCampDot" />
+            <span class="font-mono text-[10px] uppercase tracking-wider text-ink-dim" id="ttCamp">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Interactive scrubber + tooltip logic
+  const svg = document.querySelector('svg[role="img"]') as SVGSVGElement | null;
+  const tooltip = document.getElementById('elevTooltip');
+  const groups = document.querySelectorAll('.waypoint-group');
+  const scrubGuide = document.getElementById('scrubGuide');
+
+  if (svg && tooltip) {
+    const ttLabel = document.getElementById('ttLabel');
+    const ttDay = document.getElementById('ttDay');
+    const ttAlt = document.getElementById('ttAlt');
+    const ttDist = document.getElementById('ttDist');
+    const ttO2 = document.getElementById('ttO2');
+    const ttCamp = document.getElementById('ttCamp');
+    const ttCampDot = document.getElementById('ttCampDot');
+
+    const campColors: Record<string, string> = {
+      base: '#22c55e',
+      rest: '#64748b',
+      high: '#f97316',
+      summit: '#00f2fe',
+    };
+
+    const campLabels: Record<string, string> = {
+      base: 'Base Camp',
+      rest: 'Rest Day',
+      high: 'High Camp',
+      summit: 'Summit Push',
+    };
+
+    const o2Color = (pct: number) => {
+      if (pct >= 75) return '#22c55e';
+      if (pct >= 60) return '#eab308';
+      if (pct >= 50) return '#f97316';
+      return '#ef4444';
+    };
+
+    groups.forEach((g) => {
+      const ring = g.querySelector('.waypoint-ring') as SVGCircleElement;
+      const dot = g.querySelector('.waypoint-dot') as SVGCircleElement;
+
+      g.addEventListener('mouseenter', () => {
+        if (ring) ring.style.strokeOpacity = '0.6';
+        if (dot) {
+          dot.style.transform = 'scale(1.4)';
+          dot.style.transformOrigin = 'center';
+          dot.style.transition = 'transform 120ms cubic-bezier(0.2, 0, 0, 1)';
+        }
+
+        const alt = parseInt(g.getAttribute('data-alt') ?? '0');
+        const dist = parseFloat(g.getAttribute('data-dist') ?? '0');
+        const o2 = parseInt(g.getAttribute('data-o2') ?? '80');
+        const label = g.getAttribute('data-label') ?? 'Waypoint';
+        const day = g.getAttribute('data-day') ?? '--';
+        const camp = g.getAttribute('data-camp') ?? 'rest';
+
+        if (ttLabel) ttLabel.textContent = label;
+        if (ttDay) ttDay.textContent = `Day ${day}`;
+        if (ttAlt) ttAlt.textContent = `${alt.toLocaleString()}m`;
+        if (ttDist) ttDist.textContent = `${dist.toFixed(1)}km`;
+        if (ttO2) {
+          ttO2.textContent = `${o2}%`;
+          ttO2.style.color = o2Color(o2);
+        }
+        if (ttCampDot) ttCampDot.style.backgroundColor = campColors[camp] ?? '#64748b';
+        if (ttCamp) ttCamp.textContent = campLabels[camp] ?? camp;
+
+        // Show scrub guide
+        if (scrubGuide) {
+          scrubGuide.setAttribute('x1', g.getAttribute('data-x') ?? '0');
+          scrubGuide.setAttribute('x2', g.getAttribute('data-x') ?? '0');
+          scrubGuide.style.strokeOpacity = '0.4';
+        }
+
+        tooltip.style.opacity = '1';
+      });
+
+      g.addEventListener('mousemove', (e) => {
+        const me = e as globalThis.MouseEvent;
+        const x = me.clientX + 16;
+        const y = me.clientY - 8;
+        tooltip.style.transform = `translate(${x}px, ${y}px)`;
+      });
+
+      g.addEventListener('mouseleave', () => {
+        if (ring) ring.style.strokeOpacity = '0';
+        if (dot) {
+          dot.style.transform = 'scale(1)';
+        }
+        if (scrubGuide) scrubGuide.style.strokeOpacity = '0';
+        tooltip.style.opacity = '0';
+      });
+    });
+
+    // Reduced motion: disable all transitions
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      groups.forEach((g) => {
+        const dot = g.querySelector('.waypoint-dot') as SVGCircleElement;
+        if (dot) dot.style.transition = 'none';
+      });
+    }
+  }
+</script>
