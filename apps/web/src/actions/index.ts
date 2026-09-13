@@ -1,5 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
+import { SITE_CONFIG } from '../config/site';
 
 export const server = {
   // 1. Direct WhatsApp Booking Request Handler with Honeypot Anti-Bot Filter
@@ -27,7 +28,7 @@ export const server = {
         };
       }
 
-      const agencyWhatsappPhone = '919876543210';
+      const agencyWhatsappPhone = SITE_CONFIG.phoneRaw;
       const datesText = input.batchDates || input.preferredDates || 'Flexible Dates';
 
       const messageText = `Hi! I want to reserve *${input.trekName}* (${datesText}) for ${input.groupSize} trekker(s).\n- Name: ${input.customerName}\n- Mobile: ${input.phone}\n- Booking Type: ${input.bookingType === 'token_deposit' ? '₹2,000 Token Deposit Reservation' : 'Direct Inquiry'}${input.email ? `\n- Email: ${input.email}` : ''}${input.message ? `\n- Note: ${input.message}` : ''}`;

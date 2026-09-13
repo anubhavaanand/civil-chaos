@@ -113,9 +113,13 @@
 </div>
 
 <script>
-  import * as THREE from 'three';
-  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-  import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+  import type * as THREE_TYPE from 'three';
+  let THREE: typeof THREE_TYPE;
+  let GLTFLoader: any;
+  let DRACOLoader: any;
+
+  // Reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Peak Data Repository
   const PEAK_DATA: Record<string, any> = {
@@ -161,19 +165,31 @@
     }
   };
 
-  let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer;
-  let terrainMesh: THREE.Mesh, snowParticles: THREE.Points;
+  let scene: any, camera: any, renderer: any;
+  let terrainMesh: any, snowParticles: any;
   let isSnowing = true;
   let isDragging = false;
   let previousMousePosition = { x: 0, y: 0 };
   let targetCamPos = { x: 12, y: 14, z: 18 };
   let targetLookAt = { x: 4, y: 3.5, z: 2 };
   let currentLookAt = { x: 4, y: 3.5, z: 2 };
-  let dirLight: THREE.DirectionalLight, ambientLight: THREE.AmbientLight;
+  let dirLight: any, ambientLight: any;
+  let isInitialized = false;
 
-  function initThree() {
+  async function initThree() {
     const container = document.getElementById('three-canvas-container');
-    if (!container) return;
+    if (!container || isInitialized) return;
+    isInitialized = true;
+
+    // Dynamically load Three.js and loaders only when scrolled into view
+    const [threeMod, gltfMod, dracoMod] = await Promise.all([
+      import('three'),
+      import('three/examples/jsm/loaders/GLTFLoader.js'),
+      import('three/examples/jsm/loaders/DRACOLoader.js')
+    ]);
+    THREE = threeMod;
+    GLTFLoader = gltfMod.GLTFLoader;
+    DRACOLoader = dracoMod.DRACOLoader;
 
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -358,20 +374,19 @@
 
       loader.load(
         '/models/weisse_wand_mountain_peek_draco.glb',
-        (gltf) => {
+        (gltf: any) => {
           const model = gltf.scene;
 
           // Filter out the external flat skybox dome so custom dynamic atmosphere & snow shine
-          model.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
+          model.traverse((child: any) => {
+            if (child.isMesh) {
               if (child.name && child.name.includes('Material.001')) {
                 child.visible = false;
               } else {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                const mesh = child as THREE.Mesh;
-                if (mesh.material) {
-                  const mat = mesh.material as THREE.MeshStandardMaterial;
+                if (child.material) {
+                  const mat = child.material as THREE_TYPE.MeshStandardMaterial;
                   mat.roughness = 0.85;
                   mat.metalness = 0.05;
                 }
@@ -398,7 +413,7 @@
           }
         },
         undefined,
-        (err) => {
+        (err: any) => {
           console.warn('Real 3D scan fallback to procedural terrain:', err);
         }
       );
@@ -555,8 +570,16 @@
     if (bookBtn) bookBtn.dataset.slug = data.slug;
   }
 
+  let animationFrameId: number | null = null;
+
   function animate() {
-    requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
+
+    // Skip animation frames if reduced motion is preferred
+    if (prefersReducedMotion) {
+      renderer.render(scene, camera);
+      return;
+    }
 
     // Rotate snow particles
     if (isSnowing && snowParticles) {
@@ -584,10 +607,56 @@
     renderer.render(scene, camera);
   }
 
-  // Initialize when DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initThree);
-  } else {
-    initThree();
+  // Cleanup function to dispose Three.js resources
+  function cleanup() {
+    if (animationFrameId !== null) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+
+    if (renderer) {
+      renderer.dispose();
+      renderer.domElement.remove();
+    }
+
+    if (scene) {
+      scene.traverse((object: any) => {
+        if (object && object.isMesh) {
+          object.geometry?.dispose();
+          if (Array.isArray(object.material)) {
+            object.material.forEach((mat: any) => mat.dispose());
+          } else {
+            object.material?.dispose();
+          }
+        }
+      });
+    }
   }
+
+  // Lazy-load Three.js when the 3D Peak Explorer container approaches the viewport
+  function setupLazyLoad() {
+    const container = document.getElementById('three-canvas-container');
+    if (!container) return;
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          initThree();
+        }
+      }, { rootMargin: '300px' });
+      observer.observe(container);
+    } else {
+      initThree();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupLazyLoad);
+  } else {
+    setupLazyLoad();
+  }
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', cleanup);
 </script>
