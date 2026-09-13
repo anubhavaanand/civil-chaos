@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import GlassNav from '../../components/GlassNav.astro';
 import TrekCard from '../../components/TrekCard.astro';
 import DifficultyBadge from '../../components/DifficultyBadge.astro';
+import TrekComparator from '../../components/TrekComparator.astro';
 import WhatsAppFab from '../../components/WhatsAppFab.astro';
 import Footer from '../../components/Footer.astro';
 import { mockTreks } from '../../data/mock-treks';
@@ -299,6 +300,11 @@ const difficultyCounts = {
         <button id="reset-empty-btn" class="btn-tactile bg-[#00f2fe] text-[#050505] font-bold font-mono px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
           Reset All Filters
         </button>
+      </div>
+
+      <!-- Side-by-Side Expedition Decision Matrix -->
+      <div class="mt-20 border-t border-white/10 pt-16">
+        <TrekComparator />
       </div>
 
     </div>

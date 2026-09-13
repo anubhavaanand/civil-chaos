@@ -6,6 +6,7 @@ import InteractiveTopoMap from '../components/InteractiveTopoMap.astro';
 import SacredPeaksLore from '../components/SacredPeaksLore.astro';
 import SocialCarousel from '../components/SocialCarousel.astro';
 import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
+import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
 import { mockTreks } from '../data/mock-treks';
@@ -606,6 +607,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
 
   </main>
 
+  <AudioSoundscape />
   <WhatsAppFab />
   <div id="contact">
     <Footer />
