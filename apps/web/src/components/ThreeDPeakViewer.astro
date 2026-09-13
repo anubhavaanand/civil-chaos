@@ -40,7 +40,7 @@
   </div>
 
   <!-- 3D WebGL Canvas Container -->
-  <div id="three-canvas-container" class="w-full h-[450px] md:h-[550px] relative cursor-grab active:cursor-grabbing">
+  <div id="three-canvas-container" class="w-full h-[450px] md:h-[550px] relative cursor-grab active:cursor-grabbing select-none touch-none">
     <!-- Interactive Overlay HUD -->
     <div id="peak-hud" class="absolute bottom-6 left-6 z-20 max-w-sm p-4 rounded-xl bg-slate-900/90 backdrop-blur-xl border border-cyan-500/30 text-white shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100">
       <div class="flex items-center justify-between gap-2 mb-1">
@@ -160,11 +160,13 @@
     camera.lookAt(currentLookAt.x, currentLookAt.y, currentLookAt.z);
 
     // Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
 
     container.appendChild(renderer.domElement);
 
@@ -189,15 +191,24 @@
     // Create 3D Summit Markers
     createSummitMarkers();
 
-    // Mouse Interaction
-    container.addEventListener('mousedown', (e) => {
+    // Unified Pointer Interaction (Touch + Mouse Orbit via Pointer Events API)
+    container.addEventListener('pointerdown', (e) => {
       isDragging = true;
       previousMousePosition = { x: e.clientX, y: e.clientY };
+      try { container.setPointerCapture(e.pointerId); } catch (_) {}
     });
 
-    window.addEventListener('mouseup', () => { isDragging = false; });
+    container.addEventListener('pointerup', (e) => {
+      isDragging = false;
+      try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+    });
 
-    container.addEventListener('mousemove', (e) => {
+    container.addEventListener('pointercancel', (e) => {
+      isDragging = false;
+      try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+    });
+
+    container.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
       const deltaX = e.clientX - previousMousePosition.x;
       const deltaY = e.clientY - previousMousePosition.y;
@@ -311,7 +322,7 @@
   function loadPhotogrammetryMountain() {
     try {
       const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+      dracoLoader.setDecoderPath('/draco/');
 
       const loader = new GLTFLoader();
       loader.setDRACOLoader(dracoLoader);
