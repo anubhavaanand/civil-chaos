@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream of The Holy Himalayas | Extreme Mountaineering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#050505',
+                        slate: '#0f172a',
+                        silver: '#d4d4d8',
+                        glacier: '#00f2fe',
+                        brand: '#14b8a6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['"SF Pro Display"', '-apple-system', 'Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass {
+            @apply backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-2xl shadow-lg;
+        }
+        
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1522163723043-478ef79a5a22?q=80&w=2674&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .map-bg {
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2674&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Subtle grid pattern overlay */
+        .bg-grid {
+            @apply bg-grid;
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Mandatory scrim behind glass panels over photos */
+        .scrim {
+            @apply bg-black/30;
+        }
+
+        @supports not (backdrop-filter: blur(1px)) {
+            .glass {
+                @apply bg-slate-900/85;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-glacier selection:text-obsidian flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-x-0 border-t-0 bg-obsidian/60">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-white flex items-center justify-center">
+                    <svg class="w-5 h-5 text-obsidian" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13L12 6.5z"/>
+                    </svg>
+                </div>
+                <span class="font-display font-bold tracking-widest text-lg">D.T.H.H.</span>
+            </div>
+            <div class="hidden md:flex items-center gap-10 text-sm font-medium text-silver">
+                <a href="#" class="hover:text-white transition-colors">Expeditions</a>
+                <a href="#" class="hover:text-white transition-colors">Safety Standard</a>
+                <a href="#" class="hover:text-white transition-colors">Equipment</a>
+            </div>
+            <button class="bg-glacier text-obsidian px-6 py-2.5 rounded-sm text-sm font-bold tracking-wide hover:bg-white transition-all">
+                APPLY FOR ROSTER
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen min-h-[800px] flex items-end pb-32 hero-bg">
+        <!-- Heavy Gradient Overlays for Readability -->
+        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/40 to-transparent h-1/2"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/90 to-transparent h-[70%] bottom-0 top-auto"></div>
+        
+        <div class="relative z-10 w-full max-w-7xl mx-auto px-6">
+            <div class="max-w-4xl">
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="h-[2px] w-12 bg-glacier"></span>
+                    <span class="text-glacier font-mono text-sm tracking-widest uppercase font-bold">Elite Alpine Operations</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-display font-extrabold leading-[1.05] tracking-tight mb-8">
+                    CONQUER THE <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-silver to-white/40">DEATH ZONE.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-silver max-w-2xl mb-12 leading-relaxed font-light">
+                    Professional-grade extreme altitude expeditions across the Indian Himalayas. Commanded by IFMGA-certified guides. Military-spec logistics. Zero compromises.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-glacier text-obsidian px-8 py-4 rounded-sm font-bold tracking-widest text-sm hover:bg-white transition-all flex items-center gap-2">
+                        VIEW OBJECTIVES
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Box Conversions -->
+    <section class="py-32 relative bg-obsidian bg-grid">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold tracking-tight mb-4">THE CONVERSION ENGINE</h2>
+                    <p class="text-silver max-w-xl">Curated high-altitude objectives for technical climbers and resilient trekkers. Strictly vetted applications only.</p>
+                </div>
+                <div class="flex items-center gap-3 text-xs font-mono tracking-widest uppercase text-silver">
+                    <div class="w-2 h-2 rounded-full bg-glacier shadow-[0_0_10px_rgba(0,242,254,1)] animate-pulse"></div>
+                    PERMITS OPEN FOR 2027
+                </div>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[340px]">
+                
+                <!-- Trek 1: Large Feature -->
+                <div class="md:col-span-2 lg:col-span-2 row-span-2 glass rounded-lg overflow-hidden group relative flex flex-col justify-end p-8 border-white/10 hover:border-glacier/50 transition-colors">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544198365-f5d60b6d8190?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center scrim opacity-40 group-hover:opacity-50 group-hover:scale-105 transition-all duration-1000"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/70 to-transparent"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-sm text-[10px] font-mono tracking-widest text-glacier border border-glacier/30 uppercase">Garhwal</span>
+                            <span class="bg-red-500/10 backdrop-blur-md text-red-400 px-3 py-1.5 rounded-sm text-[10px] font-mono tracking-widest uppercase border border-red-500/20">Extreme</span>
+                        </div>
+                        <h3 class="text-3xl font-display font-bold mb-3">Mt. Shivling Ascent</h3>
+                        <p class="text-silver text-sm mb-8 max-w-md leading-relaxed">The "Matterhorn of India". A demanding technical ascent requiring advanced ice and rock climbing proficiency. Sustained 70-degree ice sections.</p>
+                        
+                        <!-- Transparent Pricing Card -->
+                        <div class="flex items-center justify-between glass border border-white/10 rounded-md p-5 backdrop-blur-2xl bg-obsidian/60">
+                            <div>
+                                <div class="text-xs text-silver mb-1 font-mono uppercase tracking-wider">Base Package</div>
+                                <div class="text-2xl font-bold font-mono">$4,200 <span class="text-sm text-silver font-sans font-normal">/ person</span></div>
+                            </div>
+                            <button class="bg-white text-obsidian px-6 py-2.5 rounded-sm text-sm font-bold hover:bg-glacier transition-colors">REVIEW SPECS</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trek 2: Standard -->
+                <div class="md:col-span-1 lg:col-span-1 row-span-1 glass rounded-lg relative p-6 flex flex-col justify-between group overflow-hidden border-white/10 hover:border-white/30 transition-colors">
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-[10px] font-mono tracking-widest text-silver uppercase border border-white/10 px-2 py-1 rounded-sm">Kumaon</span>
+                            <svg class="w-5 h-5 text-white/30 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </div>
+                        <h3 class="text-xl font-display font-bold mb-2">Nanda Devi East BC</h3>
+                        <p class="text-xs text-silver font-mono uppercase tracking-wider">21 Days • Strenuous</p>
+                    </div>
+                    <div class="font-mono font-bold text-lg relative z-10 border-t border-white/10 pt-4 mt-4">$1,850</div>
+                </div>
+
+                <!-- Trek 3: Standard -->
+                <div class="md:col-span-1 lg:col-span-1 row-span-1 glass rounded-lg relative p-6 flex flex-col justify-between group overflow-hidden border-white/10 hover:border-white/30 transition-colors">
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-[10px] font-mono tracking-widest text-silver uppercase border border-white/10 px-2 py-1 rounded-sm">Himachal</span>
+                            <svg class="w-5 h-5 text-white/30 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </div>
+                        <h3 class="text-xl font-display font-bold mb-2">Pin Parvati Pass</h3>
+                        <p class="text-xs text-silver font-mono uppercase tracking-wider">14 Days • Difficult</p>
+                    </div>
+                    <div class="font-mono font-bold text-lg relative z-10 border-t border-white/10 pt-4 mt-4">$1,200</div>
+                </div>
+
+                <!-- Trust Badge Box -->
+                <div class="md:col-span-2 lg:col-span-2 row-span-1 glass rounded-lg p-8 flex flex-col justify-center border-glacier/20 bg-glacier/5 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-glacier/10 rounded-full blur-3xl"></div>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 relative z-10">
+                        <div class="w-16 h-16 rounded-full glass flex items-center justify-center border-glacier/40 shrink-0 shadow-[0_0_20px_rgba(0,242,254,0.15)] bg-obsidian">
+                            <svg class="w-8 h-8 text-glacier" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-lg mb-2">IFMGA Certified Operations</h4>
+                            <p class="text-sm text-silver leading-relaxed">Every technical expedition is led by internationally certified mountain guides. 1:2 guide-to-client ratio strictly enforced in the death zone. Unmatched safety protocol.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Placeholder -->
+    <section class="py-24 relative border-t border-white/5 bg-obsidian">
+        <div class="max-w-7xl mx-auto px-6 mb-12">
+            <h2 class="text-3xl md:text-4xl font-display font-bold tracking-tight mb-4">THEATER OF OPERATIONS</h2>
+            <p class="text-silver">Explore our active staging grounds and route topologies across the Indian Himalayas.</p>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative h-[600px] lg:h-[700px]">
+            <!-- Massive Map Background -->
+            <div class="absolute inset-x-6 inset-y-0 rounded-lg map-bg border border-white/10 overflow-hidden">
+                <div class="absolute inset-0 bg-obsidian/60 mix-blend-multiply"></div>
+                <!-- Simulated Topo overlay -->
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA0KSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-60"></div>
+                
+                <!-- Radar Ping / Location Markers -->
+                <div class="absolute top-[40%] left-[30%] flex items-center justify-center">
+                    <div class="absolute w-12 h-12 border border-glacier/50 rounded-full animate-ping"></div>
+                    <div class="w-2.5 h-2.5 bg-glacier rounded-full shadow-[0_0_15px_#00f2fe]"></div>
+                </div>
+                <div class="absolute top-[35%] left-[45%] flex items-center justify-center" style="animation-delay: 1s;">
+                    <div class="absolute w-12 h-12 border border-glacier/50 rounded-full animate-ping"></div>
+                    <div class="w-2.5 h-2.5 bg-glacier rounded-full shadow-[0_0_15px_#00f2fe]"></div>
+                </div>
+            </div>
+            
+            <!-- Glassmorphism Filter Overlay -->
+            <div class="absolute top-8 left-12 glass p-8 rounded-lg w-80 shadow-2xl bg-obsidian/70 border-white/10">
+                <div class="flex items-center gap-2 mb-8">
+                    <div class="w-1 h-4 bg-glacier"></div>
+                    <h3 class="font-bold font-mono tracking-widest text-xs uppercase text-white">Region Telemetry</h3>
+                </div>
+                
+                <div class="space-y-4">
+                    <label class="flex items-center gap-4 cursor-pointer group">
+                        <div class="w-5 h-5 rounded-sm border border-glacier bg-glacier/10 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-glacier rounded-sm shadow-[0_0_5px_#00f2fe]"></div>
+                        </div>
+                        <span class="text-white text-sm font-medium tracking-wide">Garhwal Himalayas</span>
+                    </label>
+                    <label class="flex items-center gap-4 cursor-pointer group">
+                        <div class="w-5 h-5 rounded-sm border border-white/20 flex items-center justify-center group-hover:border-white/50 transition-colors">
+                        </div>
+                        <span class="text-silver group-hover:text-white transition-colors text-sm font-medium tracking-wide">Kumaon Region</span>
+                    </label>
+                    <label class="flex items-center gap-4 cursor-pointer group">
+                        <div class="w-5 h-5 rounded-sm border border-white/20 flex items-center justify-center group-hover:border-white/50 transition-colors">
+                        </div>
+                        <span class="text-silver group-hover:text-white transition-colors text-sm font-medium tracking-wide">Himachal Pradesh</span>
+                    </label>
+                    <label class="flex items-center gap-4 cursor-pointer group">
+                        <div class="w-5 h-5 rounded-sm border border-white/20 flex items-center justify-center group-hover:border-white/50 transition-colors">
+                        </div>
+                        <span class="text-silver group-hover:text-white transition-colors text-sm font-medium tracking-wide">Ladakh & Zanskar</span>
+                    </label>
+                </div>
+                
+                <div class="mt-10 pt-6 border-t border-white/10">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="text-[10px] text-silver mb-1 font-mono uppercase tracking-widest">Active Routes</div>
+                            <div class="text-3xl font-mono font-bold text-white">14</div>
+                        </div>
+                        <svg class="w-6 h-6 text-glacier" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-[#030303] py-16 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded bg-white/10 flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-silver" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13L12 6.5z"/>
+                    </svg>
+                </div>
+                <span class="font-display font-bold tracking-widest text-silver">D.T.H.H.</span>
+            </div>
+            
+            <div class="flex gap-8 text-xs font-mono uppercase tracking-widest text-silver/60">
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Spec</a>
+                <a href="#" class="hover:text-white transition-colors">Secure Contact</a>
+            </div>
+            
+            <div class="text-[10px] text-silver/40 font-mono tracking-widest uppercase">
+                &copy; 2026 DREAM OF THE HOLY HIMALAYAS. <br class="hidden md:block"/>ALL SYSTEMS NOMINAL.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
