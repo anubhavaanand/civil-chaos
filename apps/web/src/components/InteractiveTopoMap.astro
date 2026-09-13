@@ -1,0 +1,789 @@
+---
+// InteractiveTopoMap.astro
+// High-performance 0-dependency native client-side interactive topography engine
+// Built with Dark Alpine Glass aesthetics, WGS84 Cartesian projections, and real-time telemetry HUD
+import { mockTreks } from '../data/mock-treks';
+
+// Basecamp coordinates: Village Mautar, Uttarkashi
+const BASECAMP = {
+  name: "Village Mautar",
+  title: "HQ and Expedition Basecamp",
+  coordinates: [78.4354, 30.7268] as [number, number],
+  altitudeM: 1950,
+  projX: 481.0,
+  projY: 434.8
+};
+
+// Coordinate projection boundaries: Western Himalayas
+const LNG_MIN = 76.8;
+const LNG_MAX = 80.2;
+const LAT_MIN = 29.8;
+const LAT_MAX = 32.6;
+
+const projectCoords = (lng: number, lat: number) => {
+  const x = ((lng - LNG_MIN) / (LNG_MAX - LNG_MIN)) * 1000;
+  const y = ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * 650;
+  return { x: Number(x.toFixed(1)), y: Number(y.toFixed(1)) };
+};
+
+// Map all 10 treks with calculated coordinates and telemetry
+const projectedTreks = mockTreks.map((trek) => {
+  const { x, y } = projectCoords(trek.coordinates[0], trek.coordinates[1]);
+  return {
+    ...trek,
+    projX: x,
+    projY: y
+  };
+});
+---
+
+<section id="interactive-map" class="py-24 relative border-t border-white/5 bg-[#050505] select-none">
+  <div class="max-w-7xl mx-auto px-6 mb-8">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+      <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Vector Topography Engine</span>
+    </div>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <h2 class="text-3xl md:text-5xl font-display font-bold tracking-tight text-white">
+          THEATER OF EXPEDITIONS
+        </h2>
+        <p class="text-silver max-w-2xl text-base sm:text-lg mt-3">
+          Interactive topographic radar covering the Indian Himalayas. Pan, zoom, filter sectors, and inspect active staging routes originating from Basecamp Mautar.
+        </p>
+      </div>
+      
+      <!-- Coordinate Compass HUD Readout -->
+      <div class="hidden lg:flex items-center gap-6 px-5 py-3 rounded-lg border border-white/10 bg-[#0a0f18]/80 backdrop-blur-md">
+        <div>
+          <div class="text-[10px] font-mono text-silver uppercase tracking-widest">Basecamp Sector</div>
+          <div class="text-sm font-mono font-bold text-[#00f2fe]">30°43'36" N, 78°26'07" E</div>
+        </div>
+        <div class="h-8 w-[1px] bg-white/10"></div>
+        <div>
+          <div class="text-[10px] font-mono text-silver uppercase tracking-widest">Elevation Datum</div>
+          <div class="text-sm font-mono font-bold text-white">1,950m MSL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    <div 
+      id="topo-engine-container" 
+      class="relative h-[620px] lg:h-[720px] rounded-xl border border-white/10 bg-[#03060a] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] touch-none"
+      role="region"
+      aria-label="Interactive Himalayan Topography Map"
+    >
+      <!-- Hardware-Accelerated Viewport Wrapper -->
+      <div 
+        id="topo-viewport" 
+        class="absolute inset-0 origin-top-left will-change-transform cursor-grab active:cursor-grabbing"
+      >
+        <!-- Native Procedural Topographic SVG -->
+        <svg 
+          id="topo-svg"
+          viewBox="0 0 1000 650" 
+          class="w-full h-full pointer-events-none"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <!-- Coordinate Grid Pattern -->
+            <pattern id="grid-pattern" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+              <circle cx="100" cy="100" r="1.5" fill="rgba(0, 242, 254, 0.25)" />
+            </pattern>
+
+            <!-- Radial Vignette Mask -->
+            <radialGradient id="topo-vignette" cx="50%" cy="50%" r="70%">
+              <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.08" />
+              <stop offset="60%" stop-color="#03060a" stop-opacity="0.6" />
+              <stop offset="100%" stop-color="#03060a" stop-opacity="0.95" />
+            </radialGradient>
+
+            <!-- Glowing Path Filters -->
+            <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Ambient Backdrop Layer -->
+          <rect width="1000" height="650" fill="#03060a" />
+          <rect width="1000" height="650" fill="url(#grid-pattern)" />
+          <rect width="1000" height="650" fill="url(#topo-vignette)" />
+
+          <!-- Coordinate Lat/Long Grid Lines -->
+          <g stroke="rgba(0, 242, 254, 0.08)" stroke-width="1" stroke-dasharray="3 3">
+            <!-- Latitude lines: 32°N, 31°N, 30°N -->
+            <line x1="0" y1="139.3" x2="1000" y2="139.3" />
+            <line x1="0" y1="371.4" x2="1000" y2="371.4" />
+            <line x1="0" y1="603.6" x2="1000" y2="603.6" />
+
+            <!-- Longitude lines: 77°E, 78°E, 79°E, 80°E -->
+            <line x1="58.8" y1="0" x2="58.8" y2="650" />
+            <line x1="352.9" y1="0" x2="352.9" y2="650" />
+            <line x1="647.1" y1="0" x2="647.1" y2="650" />
+            <line x1="941.2" y1="0" x2="941.2" y2="650" />
+          </g>
+
+          <!-- Tactical Grid Labels -->
+          <g font-family="monospace" font-size="9" fill="rgba(255, 255, 255, 0.3)" letter-spacing="1">
+            <text x="15" y="135">32°00' N (PIR PANJAL / SPITI)</text>
+            <text x="15" y="367">31°00' N (UPPER GARHWAL)</text>
+            <text x="15" y="599">30°00' N (LOWER FOOTHILLS)</text>
+            <text x="65" y="640">77°00' E</text>
+            <text x="360" y="640">78°00' E</text>
+            <text x="655" y="640">79°00' E</text>
+            <text x="945" y="640">80°00' E</text>
+          </g>
+
+          <!-- Topographic Elevation Contour Isolines -->
+          <!-- 2,000m Subalpine Contour Tier -->
+          <path 
+            d="M 20 220 Q 180 200 320 260 T 520 380 T 740 440 T 980 520" 
+            fill="none" 
+            stroke="rgba(0, 242, 254, 0.12)" 
+            stroke-width="1.2" 
+          />
+          <!-- 3,500m Alpine Timberline Tier -->
+          <path 
+            d="M 40 160 Q 210 130 360 210 T 580 320 T 790 390 T 960 460" 
+            fill="none" 
+            stroke="rgba(0, 242, 254, 0.18)" 
+            stroke-width="1.4" 
+          />
+          <!-- 4,500m High Glacial Tier -->
+          <path 
+            d="M 70 110 Q 240 80 410 160 T 630 260 T 830 330 T 970 390" 
+            fill="none" 
+            stroke="rgba(0, 242, 254, 0.25)" 
+            stroke-width="1.6" 
+          />
+          <!-- 5,500m Ridge Crests and Horn Peaks -->
+          <path 
+            d="M 110 70 Q 260 40 460 110 T 690 190 T 870 270 T 980 320" 
+            fill="none" 
+            stroke="rgba(0, 242, 254, 0.35)" 
+            stroke-width="1.8" 
+            stroke-dasharray="8 4"
+          />
+
+          <!-- Regional Massif Formations -->
+          <!-- Garhwal Massif (Nanda Devi / Kamet Sanctuary) -->
+          <path 
+            d="M 640 490 C 690 420 730 400 780 430 C 830 460 880 440 900 500 C 880 550 820 580 760 560 Z" 
+            fill="rgba(0, 242, 254, 0.03)" 
+            stroke="rgba(0, 242, 254, 0.2)" 
+            stroke-width="1" 
+            id="sector-poly-garhwal"
+            class="sector-highlight transition-all duration-500"
+          />
+
+          <!-- Himachal Sector (Kullu / Spiti Divide) -->
+          <path 
+            d="M 80 50 C 140 40 210 60 250 120 C 230 180 180 220 120 190 C 70 160 60 100 80 50 Z" 
+            fill="rgba(0, 242, 254, 0.03)" 
+            stroke="rgba(0, 242, 254, 0.2)" 
+            stroke-width="1" 
+            id="sector-poly-himachal"
+            class="sector-highlight transition-all duration-500"
+          />
+
+          <!-- Route Vectors emanating from Mautar Basecamp to Summits -->
+          <g id="route-vectors" class="pointer-events-none">
+            {projectedTreks.map((trek) => (
+              <path 
+                id={`vector-${trek.slug}`}
+                d={`M ${BASECAMP.projX} ${BASECAMP.projY} Q ${(BASECAMP.projX + trek.projX) / 2} ${Math.min(BASECAMP.projY, trek.projY) - 30} ${trek.projX} ${trek.projY}`}
+                fill="none"
+                stroke="rgba(0, 242, 254, 0.25)"
+                stroke-width="1.5"
+                stroke-dasharray="6 6"
+                data-region={trek.region.toLowerCase()}
+                class="route-vector transition-all duration-500"
+              />
+            ))}
+          </g>
+
+          <!-- Operations Basecamp Node: Village Mautar -->
+          <g id="basecamp-node" transform={`translate(${BASECAMP.projX}, ${BASECAMP.projY})`}>
+            <circle r="18" fill="none" stroke="#00f2fe" stroke-opacity="0.3" stroke-width="1" class="animate-ping" />
+            <circle r="8" fill="#00f2fe" fill-opacity="0.2" stroke="#00f2fe" stroke-width="2" />
+            <polygon points="0,-5 4,0 0,5 -4,0" fill="#00f2fe" />
+            <text x="14" y="4" font-family="monospace" font-size="10" font-weight="bold" fill="#00f2fe" letter-spacing="1">
+              BASECAMP MAUTAR (HQ)
+            </text>
+          </g>
+        </svg>
+
+        <!-- Interactive Summit Pins (HTML Overlay Layer with Accessible Hit Targets) -->
+        <div id="pins-layer" class="absolute inset-0 pointer-events-none">
+          {projectedTreks.map((trek) => {
+            const leftPercent = (trek.projX / 1000) * 100;
+            const topPercent = (trek.projY / 650) * 100;
+            return (
+              <button
+                type="button"
+                id={`pin-${trek.slug}`}
+                data-slug={trek.slug}
+                data-name={trek.name}
+                data-region={trek.region.toLowerCase()}
+                data-altitude={trek.maxAltitudeM}
+                data-difficulty={trek.difficulty}
+                data-lat={trek.coordinates[1]}
+                data-lng={trek.coordinates[0]}
+                data-proj-x={trek.projX}
+                data-proj-y={trek.projY}
+                data-summary={trek.summary}
+                data-hero={trek.heroImage}
+                style={`left: ${leftPercent}%; top: ${topPercent}%;`}
+                class="summit-pin absolute -translate-x-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center pointer-events-auto cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00f2fe] rounded-full transition-transform duration-300"
+                aria-label={`Inspect ${trek.name}, elevation ${trek.maxAltitudeM}m, region ${trek.region}`}
+              >
+                <!-- Animated radar ripple -->
+                <span class="pin-pulse absolute w-8 h-8 rounded-full border border-[#00f2fe]/60 animate-ping pointer-events-none"></span>
+                <!-- Core ping diamond -->
+                <span class="pin-core relative w-3.5 h-3.5 bg-[#00f2fe] rounded-sm rotate-45 shadow-[0_0_12px_#00f2fe] group-hover:scale-125 transition-transform"></span>
+                
+                <!-- Quick Hover Tooltip -->
+                <span class="pin-tooltip absolute bottom-7 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-[#050505]/95 text-[10px] font-mono text-[#00f2fe] border border-[#00f2fe]/40 whitespace-nowrap opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity pointer-events-none backdrop-blur-md shadow-xl z-30">
+                  {trek.name} • {trek.maxAltitudeM}m
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <!-- Tactical Controls: Zoom In / Zoom Out / Reset View -->
+      <div class="absolute bottom-6 right-6 z-30 flex flex-col gap-2">
+        <button 
+          id="btn-zoom-in" 
+          type="button" 
+          title="Zoom In"
+          aria-label="Zoom In"
+          class="w-10 h-10 rounded-lg bg-[#0a0f18]/80 hover:bg-[#00f2fe]/20 text-white hover:text-[#00f2fe] border border-white/10 hover:border-[#00f2fe]/40 backdrop-blur-md flex items-center justify-center font-mono font-bold text-lg transition-colors cursor-pointer shadow-lg active:scale-95"
+        >
+          +
+        </button>
+        <button 
+          id="btn-zoom-out" 
+          type="button" 
+          title="Zoom Out"
+          aria-label="Zoom Out"
+          class="w-10 h-10 rounded-lg bg-[#0a0f18]/80 hover:bg-[#00f2fe]/20 text-white hover:text-[#00f2fe] border border-white/10 hover:border-[#00f2fe]/40 backdrop-blur-md flex items-center justify-center font-mono font-bold text-lg transition-colors cursor-pointer shadow-lg active:scale-95"
+        >
+          −
+        </button>
+        <button 
+          id="btn-zoom-reset" 
+          type="button" 
+          title="Reset Topography View"
+          aria-label="Reset Topography View"
+          class="w-10 h-10 rounded-lg bg-[#0a0f18]/80 hover:bg-[#00f2fe]/20 text-white hover:text-[#00f2fe] border border-white/10 hover:border-[#00f2fe]/40 backdrop-blur-md flex items-center justify-center font-mono text-xs transition-colors cursor-pointer shadow-lg active:scale-95"
+        >
+          ⟲
+        </button>
+      </div>
+
+      <!-- Sector Filter Card (Desktop: Top Left Floating; Mobile: Integrated Bar) -->
+      <div class="absolute top-4 left-4 right-4 sm:right-auto sm:top-6 sm:left-6 z-20 glass p-5 sm:p-6 rounded-xl w-auto sm:w-72 shadow-2xl bg-[#050505]/85 border-white/10 backdrop-blur-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-3.5 bg-[#00f2fe]"></div>
+            <h3 class="font-bold font-mono tracking-widest text-[11px] uppercase text-white">Region Telemetry</h3>
+          </div>
+          <span id="active-sector-tag" class="text-[10px] font-mono text-[#00f2fe] uppercase tracking-wider font-semibold">ALL SECTORS</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-1 gap-2" role="radiogroup" aria-label="Himalayan Sector Filter">
+          <button 
+            type="button" 
+            role="radio" 
+            aria-checked="true"
+            data-sector="all" 
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-[#00f2fe] bg-[#00f2fe]/10 text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+          >
+            <span class="sector-indicator w-2.5 h-2.5 rounded-sm bg-[#00f2fe] shadow-[0_0_6px_#00f2fe]"></span>
+            <span>All Active Sectors</span>
+          </button>
+
+          <button 
+            type="button" 
+            role="radio" 
+            aria-checked="false"
+            data-sector="garhwal" 
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-white/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+          >
+            <span class="sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent"></span>
+            <span>Garhwal Massif</span>
+          </button>
+
+          <button 
+            type="button" 
+            role="radio" 
+            aria-checked="false"
+            data-sector="kumaon" 
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-white/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+          >
+            <span class="sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent"></span>
+            <span>Kumaon Region</span>
+          </button>
+
+          <button 
+            type="button" 
+            role="radio" 
+            aria-checked="false"
+            data-sector="himachal" 
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-white/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+          >
+            <span class="sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent"></span>
+            <span>Himachal Divide</span>
+          </button>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-white/10 flex items-end justify-between">
+          <div>
+            <div class="text-[9px] text-silver font-mono uppercase tracking-widest">Active Routes</div>
+            <div id="active-routes-count" class="text-2xl font-mono font-bold text-white leading-none mt-1">10</div>
+          </div>
+          <div class="text-[10px] font-mono text-silver">
+            Base: <span class="text-[#00f2fe]">Mautar HQ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summit Inspection Telemetry HUD (Desktop: Top Right; Mobile: Responsive Bottom Sheet) -->
+      <div 
+        id="summit-telemetry-hud" 
+        class="absolute bottom-4 left-4 right-4 sm:bottom-auto sm:left-auto sm:top-6 sm:right-6 z-30 glass p-5 sm:p-6 rounded-xl w-auto sm:w-84 shadow-2xl bg-[#050505]/90 border-white/15 backdrop-blur-xl transition-all duration-300 transform translate-y-0"
+        aria-live="polite"
+      >
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f2fe] opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00f2fe]"></span>
+            </span>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-[#00f2fe] font-bold">Summit Telemetry</span>
+          </div>
+          <span id="hud-difficulty" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+            Moderate
+          </span>
+        </div>
+
+        <!-- Summit Metadata -->
+        <div class="mt-3">
+          <h4 id="hud-name" class="font-display font-bold text-lg text-white leading-tight">
+            Kuari Pass Ridge
+          </h4>
+          <p id="hud-sector" class="text-xs font-mono text-silver mt-0.5">
+            Garhwal Himalayas • Chamoli
+          </p>
+        </div>
+
+        <!-- Real-Time Alpine Telemetry Grid -->
+        <div class="grid grid-cols-2 gap-2 my-3 p-3 rounded-lg bg-black/40 border border-white/5 font-mono">
+          <div>
+            <div class="text-[9px] text-silver uppercase">Elevation</div>
+            <div id="hud-altitude" class="text-sm font-bold text-white">3,876m <span class="text-[10px] text-silver font-normal">(12,716ft)</span></div>
+          </div>
+          <div>
+            <div class="text-[9px] text-silver uppercase">Est. O2 Level</div>
+            <div id="hud-oxygen" class="text-sm font-bold text-emerald-400">64% <span class="text-[9px] text-silver font-normal">Sea Lvl</span></div>
+          </div>
+          <div>
+            <div class="text-[9px] text-silver uppercase">Ridge Temp</div>
+            <div id="hud-temp" class="text-sm font-bold text-[#00f2fe]">-1°C <span class="text-[9px] text-silver font-normal">Summit</span></div>
+          </div>
+          <div>
+            <div class="text-[9px] text-silver uppercase">Staging Vector</div>
+            <div id="hud-vector" class="text-sm font-bold text-white">112 km <span class="text-[9px] text-silver font-normal">098° E</span></div>
+          </div>
+        </div>
+
+        <!-- Coordinates Readout -->
+        <div class="text-[10px] font-mono text-silver mb-3 flex items-center justify-between">
+          <span>GPS FIX:</span>
+          <span id="hud-gps" class="text-white font-medium">30°25'12" N, 79°34'12" E</span>
+        </div>
+
+        <!-- Direct Route Action Button -->
+        <a 
+          id="hud-action-link" 
+          href="/treks/kuari-pass" 
+          class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded bg-[#00f2fe] hover:bg-[#00f2fe]/90 text-[#050505] font-mono text-xs font-bold uppercase tracking-wider transition-transform active:scale-95 shadow-[0_0_15px_rgba(0,242,254,0.3)]"
+        >
+          <span>Inspect Expedition Dossier</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Client Engine Script -->
+<script>
+  interface ViewState {
+    x: number;
+    y: number;
+    scale: number;
+    isDragging: boolean;
+    startX: number;
+    startY: number;
+    initialDistance: number;
+  }
+
+  const container = document.getElementById('topo-engine-container') as HTMLElement;
+  const viewport = document.getElementById('topo-viewport') as HTMLElement;
+
+  if (container && viewport) {
+    const state: ViewState = {
+      x: 0,
+      y: 0,
+      scale: 1.0,
+      isDragging: false,
+      startX: 0,
+      startY: 0,
+      initialDistance: 0
+    };
+
+    const MIN_SCALE = 1.0;
+    const MAX_SCALE = 3.5;
+
+    // Basecamp Mautar Coordinates
+    const MAUTAR_LAT = 30.7268;
+    const MAUTAR_LNG = 78.4354;
+
+    // Hardware-accelerated GPU render pass
+    const updateTransform = () => {
+      viewport.style.transform = `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale})`;
+    };
+
+    // Calculate Geodetic Distance via Haversine formula
+    const calcDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+      const R = 6371;
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return Math.round(R * c);
+    };
+
+    // Calculate Cardinal Bearing
+    const calcBearing = (lat1: number, lon1: number, lat2: number, lon2: number): string => {
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const y = Math.sin(dLon) * Math.cos((lat2 * Math.PI) / 180);
+      const x =
+        Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) -
+        Math.sin((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.cos(dLon);
+      let brng = (Math.atan2(y, x) * 180) / Math.PI;
+      brng = (brng + 360) % 360;
+      const cardinals = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+      const index = Math.round(brng / 22.5) % 16;
+      return `${Math.round(brng)}° ${cardinals[index]}`;
+    };
+
+    // Format Decimal Degrees to DMS
+    const formatDMS = (lat: number, lng: number): string => {
+      const formatCoord = (deg: number, pos: string, neg: string) => {
+        const dir = deg >= 0 ? pos : neg;
+        const d = Math.floor(Math.abs(deg));
+        const minFloat = (Math.abs(deg) - d) * 60;
+        const m = Math.floor(minFloat);
+        const s = Math.round((minFloat - m) * 60);
+        return `${d}°${m.toString().padStart(2, '0')}'${s.toString().padStart(2, '0')}" ${dir}`;
+      };
+      return `${formatCoord(lat, 'N', 'S')}, ${formatCoord(lng, 'E', 'W')}`;
+    };
+
+    // Pan Viewport Clamping Boundaries
+    const clampViewport = () => {
+      const rect = container.getBoundingClientRect();
+      const minX = rect.width - rect.width * state.scale;
+      const minY = rect.height - rect.height * state.scale;
+      state.x = Math.min(0, Math.max(minX, state.x));
+      state.y = Math.min(0, Math.max(minY, state.y));
+    };
+
+    // Pointer Event Listeners for Drag & Pan
+    container.addEventListener('pointerdown', (e) => {
+      if ((e.target as HTMLElement).closest('.summit-pin, button, a')) return;
+      state.isDragging = true;
+      state.startX = e.clientX - state.x;
+      state.startY = e.clientY - state.y;
+      container.setPointerCapture(e.pointerId);
+    });
+
+    container.addEventListener('pointermove', (e) => {
+      if (!state.isDragging) return;
+      state.x = e.clientX - state.startX;
+      state.y = e.clientY - state.startY;
+      clampViewport();
+      requestAnimationFrame(updateTransform);
+    });
+
+    const endDrag = (e: PointerEvent) => {
+      if (!state.isDragging) return;
+      state.isDragging = false;
+      try {
+        container.releasePointerCapture(e.pointerId);
+      } catch {}
+    };
+
+    container.addEventListener('pointerup', endDrag);
+    container.addEventListener('pointercancel', endDrag);
+
+    // Mouse Wheel Zoom
+    container.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+      const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, state.scale * zoomFactor));
+
+      if (newScale !== state.scale) {
+        state.x = mouseX - (mouseX - state.x) * (newScale / state.scale);
+        state.y = mouseY - (mouseY - state.y) * (newScale / state.scale);
+        state.scale = newScale;
+        clampViewport();
+        requestAnimationFrame(updateTransform);
+      }
+    }, { passive: false });
+
+    // Touch Pinch-to-Zoom Support
+    container.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+        state.isDragging = false;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        state.initialDistance = Math.hypot(dx, dy);
+      }
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2 && state.initialDistance > 0) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const currentDistance = Math.hypot(dx, dy);
+        const factor = currentDistance / state.initialDistance;
+
+        const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, state.scale * factor));
+        if (newScale !== state.scale) {
+          state.scale = newScale;
+          clampViewport();
+          requestAnimationFrame(updateTransform);
+        }
+        state.initialDistance = currentDistance;
+      }
+    }, { passive: true });
+
+    // Zoom Buttons
+    document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
+      state.scale = Math.min(MAX_SCALE, state.scale * 1.3);
+      clampViewport();
+      requestAnimationFrame(updateTransform);
+    });
+
+    document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
+      state.scale = Math.max(MIN_SCALE, state.scale / 1.3);
+      if (state.scale === MIN_SCALE) {
+        state.x = 0;
+        state.y = 0;
+      }
+      clampViewport();
+      requestAnimationFrame(updateTransform);
+    });
+
+    document.getElementById('btn-zoom-reset')?.addEventListener('click', () => {
+      state.scale = 1.0;
+      state.x = 0;
+      state.y = 0;
+      requestAnimationFrame(updateTransform);
+    });
+
+    // Sector Filter Handler
+    const sectorBtns = document.querySelectorAll('.sector-btn');
+    const pins = document.querySelectorAll('.summit-pin');
+    const vectors = document.querySelectorAll('.route-vector');
+    const routesCount = document.getElementById('active-routes-count');
+    const activeSectorTag = document.getElementById('active-sector-tag');
+
+    const updateSectorFilter = (selectedSector: string) => {
+      let count = 0;
+
+      pins.forEach((pin) => {
+        const pinRegion = pin.getAttribute('data-region') || '';
+        const isMatch = selectedSector === 'all' || pinRegion === selectedSector;
+        const pinEl = pin as HTMLElement;
+        
+        if (isMatch) {
+          count++;
+          pinEl.style.opacity = '1';
+          pinEl.style.pointerEvents = 'auto';
+          pinEl.classList.remove('grayscale');
+        } else {
+          pinEl.style.opacity = '0.15';
+          pinEl.style.pointerEvents = 'none';
+          pinEl.classList.add('grayscale');
+        }
+      });
+
+      vectors.forEach((vec) => {
+        const vecRegion = vec.getAttribute('data-region') || '';
+        const isMatch = selectedSector === 'all' || vecRegion === selectedSector;
+        const vecEl = vec as HTMLElement;
+        vecEl.style.opacity = isMatch ? '1' : '0.1';
+      });
+
+      if (routesCount) routesCount.textContent = count.toString();
+      if (activeSectorTag) activeSectorTag.textContent = selectedSector.toUpperCase();
+
+      // Highlight regional sector polygons
+      const polyGarhwal = document.getElementById('sector-poly-garhwal');
+      const polyHimachal = document.getElementById('sector-poly-himachal');
+
+      if (polyGarhwal) {
+        polyGarhwal.setAttribute('fill-opacity', selectedSector === 'garhwal' ? '0.12' : '0.03');
+        polyGarhwal.setAttribute('stroke', selectedSector === 'garhwal' ? '#00f2fe' : 'rgba(0, 242, 254, 0.2)');
+      }
+      if (polyHimachal) {
+        polyHimachal.setAttribute('fill-opacity', selectedSector === 'himachal' ? '0.12' : '0.03');
+        polyHimachal.setAttribute('stroke', selectedSector === 'himachal' ? '#00f2fe' : 'rgba(0, 242, 254, 0.2)');
+      }
+    };
+
+    sectorBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        sectorBtns.forEach((b) => {
+          b.setAttribute('aria-checked', 'false');
+          b.classList.remove('border-[#00f2fe]', 'bg-[#00f2fe]/10', 'text-white');
+          b.classList.add('border-white/15', 'bg-white/5', 'text-silver');
+          const ind = b.querySelector('.sector-indicator');
+          if (ind) {
+            ind.className = 'sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent';
+          }
+        });
+
+        btn.setAttribute('aria-checked', 'true');
+        btn.classList.add('border-[#00f2fe]', 'bg-[#00f2fe]/10', 'text-white');
+        btn.classList.remove('border-white/15', 'bg-white/5', 'text-silver');
+        const ind = btn.querySelector('.sector-indicator');
+        if (ind) {
+          ind.className = 'sector-indicator w-2.5 h-2.5 rounded-sm bg-[#00f2fe] shadow-[0_0_6px_#00f2fe]';
+        }
+
+        const sector = btn.getAttribute('data-sector') || 'all';
+        updateSectorFilter(sector);
+      });
+    });
+
+    // Summit Pin Inspection Handler
+    const hudName = document.getElementById('hud-name');
+    const hudSector = document.getElementById('hud-sector');
+    const hudAltitude = document.getElementById('hud-altitude');
+    const hudOxygen = document.getElementById('hud-oxygen');
+    const hudTemp = document.getElementById('hud-temp');
+    const hudVector = document.getElementById('hud-vector');
+    const hudGps = document.getElementById('hud-gps');
+    const hudDifficulty = document.getElementById('hud-difficulty');
+    const hudActionLink = document.getElementById('hud-action-link') as HTMLAnchorElement;
+
+    const selectPin = (pin: HTMLElement) => {
+      // Deactivate other pins
+      pins.forEach((p) => {
+        const core = p.querySelector('.pin-core');
+        if (core) {
+          core.classList.remove('scale-150', 'bg-white', 'shadow-[0_0_20px_#ffffff]');
+          core.classList.add('bg-[#00f2fe]');
+        }
+      });
+
+      // Highlight active pin
+      const activeCore = pin.querySelector('.pin-core');
+      if (activeCore) {
+        activeCore.classList.remove('bg-[#00f2fe]');
+        activeCore.classList.add('scale-150', 'bg-white', 'shadow-[0_0_20px_#ffffff]');
+      }
+
+      const slug = pin.getAttribute('data-slug') || '';
+      const name = pin.getAttribute('data-name') || '';
+      const region = pin.getAttribute('data-region') || '';
+      const altitudeM = Number(pin.getAttribute('data-altitude')) || 3800;
+      const difficulty = pin.getAttribute('data-difficulty') || 'moderate';
+      const lat = Number(pin.getAttribute('data-lat')) || 30.0;
+      const lng = Number(pin.getAttribute('data-lng')) || 79.0;
+
+      // Telemetry Calculations
+      const altitudeFt = Math.round(altitudeM * 3.28084);
+      const estTemp = Math.round(14 - 6.5 * ((altitudeM - 1950) / 1000));
+      const estO2 = Math.round(100 * Math.pow(1 - (0.0065 * altitudeM) / 288.15, 5.255));
+      const distanceKm = calcDistanceKm(MAUTAR_LAT, MAUTAR_LNG, lat, lng);
+      const bearing = calcBearing(MAUTAR_LAT, MAUTAR_LNG, lat, lng);
+      const gpsString = formatDMS(lat, lng);
+
+      // Highlight corresponding route vector
+      vectors.forEach((v) => {
+        v.setAttribute('stroke', 'rgba(0, 242, 254, 0.25)');
+        v.setAttribute('stroke-width', '1.5');
+      });
+      const activeVec = document.getElementById(`vector-${slug}`);
+      if (activeVec) {
+        activeVec.setAttribute('stroke', '#00f2fe');
+        activeVec.setAttribute('stroke-width', '2.5');
+      }
+
+      // Update HUD elements
+      if (hudName) hudName.textContent = name;
+      if (hudSector) hudSector.textContent = `${region.toUpperCase()} SECTOR • WESTERN HIMALAYAS`;
+      if (hudAltitude) hudAltitude.innerHTML = `${altitudeM.toLocaleString()}m <span class="text-[10px] text-silver font-normal">(${altitudeFt.toLocaleString()}ft)</span>`;
+      if (hudOxygen) hudOxygen.innerHTML = `${estO2}% <span class="text-[9px] text-silver font-normal">Sea Lvl</span>`;
+      if (hudTemp) hudTemp.innerHTML = `${estTemp}°C <span class="text-[9px] text-silver font-normal">Summit</span>`;
+      if (hudVector) hudVector.innerHTML = `${distanceKm} km <span class="text-[9px] text-silver font-normal">${bearing}</span>`;
+      if (hudGps) hudGps.textContent = gpsString;
+
+      if (hudDifficulty) {
+        hudDifficulty.textContent = difficulty.toUpperCase();
+        if (difficulty === 'easy') {
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30';
+        } else if (difficulty === 'moderate') {
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30';
+        } else {
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-rose-400/20 text-rose-300 border border-rose-400/30';
+        }
+      }
+
+      if (hudActionLink) {
+        hudActionLink.href = `/treks/${slug}`;
+      }
+    };
+
+    pins.forEach((pin) => {
+      const pinEl = pin as HTMLElement;
+      pinEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectPin(pinEl);
+      });
+
+      // Keyboard accessibility
+      pinEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectPin(pinEl);
+        }
+      });
+    });
+
+    // Default select first pin (Kuari Pass)
+    const initialPin = document.querySelector('.summit-pin') as HTMLElement;
+    if (initialPin) selectPin(initialPin);
+  }
+</script>

@@ -14,6 +14,9 @@
         </svg>
         3D Himalayan Peak Explorer
       </h3>
+      <span class="hidden xl:inline-block text-[10px] font-mono text-slate-400 border-l border-white/10 pl-2">
+        3D Scan by Shahriar Shahrabi (CC BY 4.0)
+      </span>
     </div>
 
     <!-- Controls: Lighting & Particles -->
@@ -82,6 +85,8 @@
 
 <script>
   import * as THREE from 'three';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
   // Peak Data Repository
   const PEAK_DATA: Record<string, any> = {
@@ -176,6 +181,7 @@
 
     // Create 3D Himalayan Terrain Mesh
     createHimalayanTerrain();
+    loadPhotogrammetryMountain();
 
     // Create Snowfall Particles
     createSnowParticles();
@@ -300,6 +306,41 @@
     terrainMesh.receiveShadow = true;
     terrainMesh.castShadow = true;
     scene.add(terrainMesh);
+  }
+
+  function loadPhotogrammetryMountain() {
+    try {
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(dracoLoader);
+
+      loader.load(
+        '/models/rugged_mountain_landscape_draco.glb',
+        (gltf) => {
+          const model = gltf.scene;
+          model.scale.set(0.85, 0.85, 0.85);
+          model.position.set(0, -1.2, 0);
+          model.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+          scene.add(model);
+          if (terrainMesh) {
+            terrainMesh.visible = false;
+          }
+        },
+        undefined,
+        (err) => {
+          console.warn('Real 3D scan fallback to procedural terrain:', err);
+        }
+      );
+    } catch (e) {
+      console.warn('GLTFLoader initialization error:', e);
+    }
   }
 
   function createSnowParticles() {

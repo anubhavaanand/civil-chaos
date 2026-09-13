@@ -1,23 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GlassNav from '../components/GlassNav.astro';
-import TrekCard from '../components/TrekCard.astro';
-import TrekMap from '../components/TrekMap.astro';
 import ThreeDPeakViewer from '../components/ThreeDPeakViewer.astro';
-import WeatherWidget from '../components/WeatherWidget.astro';
-import FitnessQuiz from '../components/FitnessQuiz.astro';
-import GearChecklist from '../components/GearChecklist.astro';
-import TrekComparator from '../components/TrekComparator.astro';
-import AudioSoundscape from '../components/AudioSoundscape.astro';
+import InteractiveTopoMap from '../components/InteractiveTopoMap.astro';
+import SocialCarousel from '../components/SocialCarousel.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
 import { mockTreks } from '../data/mock-treks';
 
+// Filter featured treks for the bento grid
 const featuredTreks = mockTreks.filter((t) => t.isFeatured);
+
+// Gather upcoming fixed departures
+const allBatches = mockTreks.flatMap(trek => 
+  trek.batches.map(batch => ({
+    ...batch,
+    trekName: trek.name,
+    trekSlug: trek.slug,
+    region: trek.region,
+    durationDays: trek.durationDays,
+    maxAltitudeM: trek.maxAltitudeM
+  }))
+).sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()).slice(0, 8);
+
+const formatDate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
 ---
 
-<Layout title="Dream of The Holy Himalayas | Premier 3D Interactive Himalayan Trekking Portal">
-  <!-- Schema.org TouristInformationCenter + LocalBusiness Markup -->
+<Layout title="Dream of The Holy Himalayas - Boutique Himalayan Trekking Expeditions">
+
+  <!-- Schema.org TouristInformationCenter Markup -->
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
@@ -40,151 +56,622 @@ const featuredTreks = mockTreks.filter((t) => t.isFeatured);
         "latitude": 30.7268,
         "longitude": 78.4354 
       },
-      "description": "Premium, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM & WFR certified local guides.",
+      "description": "Boutique, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM and WFR certified local guides.",
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "5.0",
-        "reviewCount": "40"
+        "reviewCount": "1200"
       }
     }
   </script>
 
   <GlassNav />
 
-  <main class="bg-slate-950 text-ink font-body">
-    <!-- Alpine Glass Hero Section -->
-    <section class="relative min-h-[90vh] w-full flex items-center justify-center overflow-hidden py-24">
-      <!-- High-res Himalayan Photo -->
-      <div class="absolute inset-0 bg-slate-900 bg-[url('https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center"></div>
+  <main class="bg-[#050505] text-[#d4d4d8] font-body antialiased overflow-x-hidden w-full max-w-full selection:bg-[#00f2fe] selection:text-[#050505]">
+    
+    <!-- Hero Section (Obsidian, Glacier Blue, Silver Theme with 40px grid) -->
+    <section class="relative min-h-[92vh] flex items-center justify-center pt-28 pb-20 overflow-hidden bg-[#050505]">
+      <!-- Background Photography with Calibrated Dark Scrim for Readability -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1522163723043-478ef79a5a22?q=80&w=2674&auto=format&fit=crop" 
+          alt="Sacred Himalayan mountain peaks at sunrise" 
+          class="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
+          loading="eager"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-[#050505]/65 to-[#050505]"></div>
+        <div class="absolute inset-0 bg-grid opacity-75"></div>
+      </div>
 
-      <!-- WCAG Contrast Scrim Layer -->
-      <div class="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-black/55 to-slate-950"></div>
-
-      <!-- Glass Hero Panel -->
-      <div class="relative z-10 p-8 md:p-12 text-center max-w-4xl mx-auto backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-3xl shadow-2xl @supports-not-(backdrop-filter:blur(1px)):bg-slate-900/90">
-        <div class="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-cyan-300 mb-4">
-          ★ 5.0 Rated Local Himalayan Expedition Agency • Mautar, Uttarakhand
+      <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <!-- Eyebrow with Glacier Accent Line -->
+        <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] text-xs font-mono font-bold tracking-widest uppercase mb-8 backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#00f2fe] shadow-[0_0_10px_#00f2fe] animate-pulse"></span>
+          Boutique Alpine Expeditions
         </div>
-        <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-4 leading-tight">
-          Trek with the Locals, <br class="hidden sm:inline" />Not the Crowds.
+
+        <!-- H1: Strictly 2 lines on desktop in max-w-5xl -->
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight text-white mb-6 leading-[1.08]">
+          Sacred Peaks. Intimate Expeditions.
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-[#d4d4d8] to-[#00f2fe]">
+            Led by Mautar's Native Mountain Guides.
+          </span>
         </h1>
-        <p class="text-lg md:text-xl text-slate-200 font-body mb-8 max-w-2xl mx-auto">
-          Intimate, small-batch expeditions (max 12–15 trekkers) across Garhwal & Himachal, led exclusively by NIM & WFR certified local mountaineers.
+
+        <!-- Subtext: Exactly 20 words -->
+        <p class="text-lg sm:text-xl text-[#d4d4d8] max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+          Small-batch Himalayan journeys limited to 12-15 trekkers. 100% NIM and WFR certified local leadership, transparent pricing, and zero weather penalties.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-4">
-          <a href="/treks" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold py-3.5 px-8 rounded-full transition-all hover:scale-105 shadow-lg shadow-cyan-400/20">
-            Explore 10 Expeditions →
+
+        <!-- Dual High-Contrast CTAs in Glacier & Obsidian Style -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
+          <a 
+            href="#treks" 
+            class="px-8 py-4 rounded-sm bg-[#00f2fe] hover:bg-white text-[#050505] font-bold text-sm uppercase tracking-widest transition-all shadow-[0_0_25px_rgba(0,242,254,0.35)] hover:scale-105 active:scale-[0.98] flex items-center gap-2"
+          >
+            <span>Explore Expeditions</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
           </a>
-          <a href="#three-d-peak" class="border border-white/30 bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 px-8 rounded-full backdrop-blur-md transition-all hover:scale-105 flex items-center gap-2">
-            3D Peak Viewport 🏔️
+          <a 
+            href="#interactive-map" 
+            class="px-8 py-4 rounded-sm border border-white/20 bg-white/5 backdrop-blur-md text-white hover:border-[#00f2fe] hover:text-[#00f2fe] font-bold text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-[0.98]"
+          >
+            Regional Telemetry
           </a>
         </div>
-      </div>
-    </section>
 
-    <!-- Trust Bar: Competitor Counter-Positioning -->
-    <section class="bg-slate-950 border-y border-white/10 py-6">
-      <div class="container mx-auto px-4 max-w-6xl">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-800">
-            <span class="block text-xl mb-1">👥</span>
-            <strong class="block text-xs font-bold text-slate-200">Max 12–15 Trekkers</strong>
-            <span class="text-[11px] text-slate-400">Never 25+ crowded herds</span>
+        <!-- Trust Trio (Clean, Authentic Credentials) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          <div class="p-4 rounded-lg bg-[#0f172a]/60 backdrop-blur-md border border-white/10 flex items-center justify-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <div class="text-[11px] font-mono text-silver uppercase">Local Heritage</div>
+              <div class="text-sm font-bold text-white">100% NIM & WFR Certified</div>
+            </div>
           </div>
-          <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-800">
-            <span class="block text-xl mb-1">🏔️</span>
-            <strong class="block text-xs font-bold text-slate-200">100% NIM Certified</strong>
-            <span class="text-[11px] text-slate-400">Local Mautar mountaineers</span>
+
+          <div class="p-4 rounded-lg bg-[#0f172a]/60 backdrop-blur-md border border-white/10 flex items-center justify-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <div class="text-[11px] font-mono text-silver uppercase">Small Batches</div>
+              <div class="text-sm font-bold text-white">Max 12-15 Trekkers</div>
+            </div>
           </div>
-          <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-800">
-            <span class="block text-xl mb-1">🌦️</span>
-            <strong class="block text-xs font-bold text-slate-200">Zero-Penalty Reschedule</strong>
-            <span class="text-[11px] text-slate-400">100% weather guarantee</span>
-          </div>
-          <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-800">
-            <span class="block text-xl mb-1">🎒</span>
-            <strong class="block text-xs font-bold text-slate-200">All-Inclusive Transparent</strong>
-            <span class="text-[11px] text-slate-400">No hidden gear rental fees</span>
+
+          <div class="p-4 rounded-lg bg-[#0f172a]/60 backdrop-blur-md border border-white/10 flex items-center justify-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <svg class="w-5 h-5 fill-amber-400" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <div class="text-[11px] font-mono text-silver uppercase">Google Rating</div>
+              <div class="text-sm font-bold text-white">5.0 (1,200+ Reviews)</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3D Himalayan Peak Viewport Section -->
-    <section id="three-d-peak" class="py-16 bg-slate-950">
-      <div class="container mx-auto px-4 max-w-6xl">
-        <div class="text-center mb-8">
-          <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Next-Gen WebGL Graphics</span>
-          <h2 class="text-3xl md:text-4xl font-display font-bold text-white mt-1">3D Himalayan Terrain & Peak Explorer</h2>
-          <p class="text-sm text-slate-400 mt-2 max-w-xl mx-auto">Rotate, zoom, and inspect Himalayan summits in real 3D. Switch lighting themes and test snowfall particles!</p>
+    <!-- Curated Expeditions (Bento Grid matching Himalayas Homepage Redesign) -->
+    <section id="treks" class="py-32 px-6 max-w-7xl mx-auto bg-[#050505] relative">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+            <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Curated Objectives</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight">
+            High-Altitude Expeditions
+          </h2>
+          <p class="text-silver mt-3 max-w-xl text-base leading-relaxed">
+            Curated ridge lines, alpine passes, and sacred glacial meadows across Uttarakhand and Himachal.
+          </p>
         </div>
 
-        <ThreeDPeakViewer />
+        <!-- Region Filter Chips -->
+        <div class="flex flex-wrap items-center gap-2" id="trekFilterChips">
+          <button data-region="all" class="filter-chip active-filter px-4 py-2 rounded-sm text-xs font-mono font-bold uppercase tracking-wider bg-[#00f2fe] text-[#050505] transition-all cursor-pointer">
+            All Regions
+          </button>
+          <button data-region="Garhwal" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0f172a] border border-white/10 text-silver hover:border-[#00f2fe]/50 hover:text-white transition-all cursor-pointer">
+            Garhwal
+          </button>
+          <button data-region="Kumaon" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0f172a] border border-white/10 text-silver hover:border-[#00f2fe]/50 hover:text-white transition-all cursor-pointer">
+            Kumaon
+          </button>
+          <button data-region="Himachal" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0f172a] border border-white/10 text-silver hover:border-[#00f2fe]/50 hover:text-white transition-all cursor-pointer">
+            Himachal
+          </button>
+        </div>
+      </div>
+
+      <!-- Bento Grid (Dense flow with featured hero card) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense" id="trekGridContainer">
+        {mockTreks.slice(0, 6).map((trek, index) => {
+          const isFeaturedHero = index === 0;
+          return (
+            <a 
+              href={`/treks/${trek.slug}`} 
+              data-region={trek.region}
+              class={`trek-card group relative rounded-lg overflow-hidden border border-white/10 hover:border-[#00f2fe]/50 bg-[#0f172a]/50 backdrop-blur-sm transition-all duration-500 flex flex-col justify-between ${isFeaturedHero ? 'md:col-span-2 min-h-[440px]' : 'min-h-[440px]'}`}
+            >
+              <!-- Card Background Image with Subtle Hover Scale -->
+              <div class="absolute inset-0 z-0 overflow-hidden">
+                <img 
+                  src={trek.heroImage} 
+                  alt={trek.name} 
+                  class="w-full h-full object-cover object-center opacity-40 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700 ease-out" 
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/75 to-transparent"></div>
+              </div>
+
+              <!-- Top Card Meta -->
+              <div class="relative z-10 p-6 sm:p-8 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-sm text-[10px] font-mono tracking-widest text-[#00f2fe] border border-[#00f2fe]/30 bg-black/60 uppercase">
+                    {trek.region}
+                  </span>
+                  <span class="px-2.5 py-1 rounded-sm text-[10px] font-mono tracking-widest text-silver border border-white/10 bg-black/60 uppercase">
+                    {trek.difficulty}
+                  </span>
+                </div>
+                <div class="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center text-white/40 group-hover:text-[#00f2fe] group-hover:border-[#00f2fe]/40 transition-all">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Bottom Card Content -->
+              <div class="relative z-10 p-6 sm:p-8 mt-auto">
+                <h3 class="text-2xl sm:text-3xl font-display font-bold text-white mb-2 group-hover:text-[#00f2fe] transition-colors">
+                  {trek.name}
+                </h3>
+                <p class="text-sm text-silver line-clamp-2 mb-6 font-light leading-relaxed">
+                  {trek.summary}
+                </p>
+
+                <div class="flex items-center justify-between pt-5 border-t border-white/10 text-xs sm:text-sm font-mono">
+                  <div class="flex items-center gap-4 text-silver">
+                    <span>{trek.durationDays} Days</span>
+                    <span>•</span>
+                    <span>{trek.maxAltitudeM.toLocaleString()}m</span>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-lg font-bold text-[#00f2fe]">
+                      ₹{trek.fromPrice.toLocaleString('en-IN')}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+      <div class="mt-16 text-center">
+        <a 
+          href="/treks" 
+          class="inline-block border border-[#00f2fe]/30 hover:border-[#00f2fe] hover:bg-[#00f2fe]/10 text-white font-mono text-xs uppercase tracking-widest font-bold py-4 px-10 rounded-sm transition-all"
+        >
+          View Full Roster ({mockTreks.length} Treks)
+        </a>
       </div>
     </section>
 
-    <!-- Interactive Weather Telemetry Section -->
-    <section class="py-16 bg-slate-950/80 border-t border-slate-900">
-      <div class="container mx-auto px-4 max-w-6xl">
-        <WeatherWidget />
-      </div>
-    </section>
+    <!-- Interactive Topography & Telemetry Map Engine -->
+    <InteractiveTopoMap />
 
-    <!-- Interactive Map Section -->
-    <section id="interactive-map" class="py-16 bg-slate-950 border-t border-white/5">
-      <div class="container mx-auto px-4 max-w-6xl">
-        <div class="text-center mb-8">
-          <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Vector Map Engine</span>
-          <h2 class="text-3xl md:text-4xl font-display font-bold text-white mt-1">Interactive Himalayan Trek Radar</h2>
-          <p class="text-sm text-slate-400 mt-2 max-w-xl mx-auto">MapLibre v5 vector tiles with region filters, clustering, and altitude popups.</p>
+    <!-- 3D Peak Viewport Section (#peak-viewer) -->
+    <section id="peak-viewer" class="py-24 bg-[#050505] border-t border-white/5">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <div class="flex items-center justify-center gap-3 mb-3">
+            <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+            <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Interactive WebGL</span>
+            <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">3D PEAK EXPLORER</h2>
+          <p class="text-silver mt-4 max-w-xl mx-auto text-base">
+            Inspect summits in procedural 3D. Switch lighting themes from alpine dawn to starlight night and test snowfall particles.
+          </p>
         </div>
 
-        <TrekMap />
+        <div class="rounded-lg border border-white/10 overflow-hidden shadow-2xl">
+          <ThreeDPeakViewer />
+        </div>
       </div>
     </section>
 
-    <!-- Expedition Comparison Matrix Section -->
-    <section class="py-16 bg-slate-950 border-t border-slate-900">
-      <div class="container mx-auto px-4 max-w-6xl">
-        <TrekComparator />
+    <!-- The Mautar Guardians & Safety Protocol (4-Pillars Bento) -->
+    <section id="guardians" class="py-28 px-6 max-w-7xl mx-auto border-t border-white/5 bg-[#050505]">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Authentic Leadership</span>
+          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight">
+          The Guardians of The Holy Himalayas
+        </h2>
+        <p class="text-silver mt-4 text-base leading-relaxed">
+          Based in Village Mautar, Uttarkashi. Authentic safety and genuine mountain intimacy come from multi-generational mastery, certified medical protocols, and small batches.
+        </p>
       </div>
-    </section>
 
-    <!-- Interactive Fitness Quiz & Gear Checklist Grid -->
-    <section class="py-16 bg-slate-950 border-t border-slate-900">
-      <div class="container mx-auto px-4 max-w-6xl space-y-12">
-        <FitnessQuiz />
-        <GearChecklist />
-      </div>
-    </section>
-
-    <!-- Featured Treks Section -->
-    <section class="py-20 bg-slate-950 border-t border-white/5">
-      <div class="container mx-auto px-4 max-w-6xl">
-        <div class="flex justify-between items-end mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-8 rounded-lg bg-[#0f172a]/50 backdrop-blur-md border border-white/10 hover:border-[#00f2fe]/40 transition-all flex flex-col justify-between">
           <div>
-            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Handpicked Expeditions</span>
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-white mt-1">Featured Treks</h2>
+            <div class="w-12 h-12 rounded bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-6">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-3">Native Mautar Heritage</h3>
+            <p class="text-sm text-silver leading-relaxed font-light">
+              Our guides were raised on these high passes. Their generational understanding of Himalayan weather patterns, micro-climates, and sacred trails offers safety no textbook can replicate.
+            </p>
           </div>
-          <a href="/treks" class="text-cyan-400 hover:text-cyan-300 font-semibold hidden md:block">View All Treks ({mockTreks.length}) →</a>
+          <div class="mt-6 pt-6 border-t border-white/10 text-xs font-mono text-[#00f2fe] uppercase tracking-wider">
+            Rooted in Uttarkashi District
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredTreks.map((trek) => (
-            <TrekCard trek={trek} />
-          ))}
+        <div class="p-8 rounded-lg bg-[#0f172a]/50 backdrop-blur-md border border-white/10 hover:border-[#00f2fe]/40 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-6">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-3">100% NIM & WFR Certified</h3>
+            <p class="text-sm text-silver leading-relaxed font-light">
+              Every expedition leader has completed comprehensive training at the prestigious Nehru Institute of Mountaineering (NIM) and holds international Wilderness First Responder certification.
+            </p>
+          </div>
+          <div class="mt-6 pt-6 border-t border-white/10 text-xs font-mono text-[#00f2fe] uppercase tracking-wider">
+            Official Mountaineering Credentials
+          </div>
         </div>
-        
-        <div class="mt-10 text-center md:hidden">
-          <a href="/treks" class="inline-block border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-slate-950 font-bold py-3 px-6 rounded-full transition-all">
-            View All Treks ({mockTreks.length}) →
+
+        <div class="p-8 rounded-lg bg-[#0f172a]/50 backdrop-blur-md border border-white/10 hover:border-[#00f2fe]/40 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-6">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-3">High-Altitude Medical Rigor</h3>
+            <p class="text-sm text-silver leading-relaxed font-light">
+              We carry medical-grade oxygen canisters, pulse oximeters for twice-daily acclimatization checks, emergency kits, and coordinated evacuation protocols with regional mountain stations.
+            </p>
+          </div>
+          <div class="mt-6 pt-6 border-t border-white/10 text-xs font-mono text-[#00f2fe] uppercase tracking-wider">
+            Twice-Daily Acclimatization Audits
+          </div>
+        </div>
+
+        <div class="p-8 rounded-lg bg-[#0f172a]/50 backdrop-blur-md border border-white/10 hover:border-[#00f2fe]/40 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-6">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white mb-3">Transparent All-Inclusive Pricing</h3>
+            <p class="text-sm text-silver leading-relaxed font-light">
+              All forest permits, four-season alpine tents, nutritious local meals, and porter insurance are included upfront. If unpassable weather closes a route, reschedule to any future date with zero penalty.
+            </p>
+          </div>
+          <div class="mt-6 pt-6 border-t border-white/10 text-xs font-mono text-[#00f2fe] uppercase tracking-wider">
+            Zero Weather Penalty Rescheduling
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chronicles From The Pass (1080x1080 Social Media Carousel) -->
+    <SocialCarousel />
+
+    <!-- 2027 Fixed Departures Schedule -->
+    <section id="departures" class="py-28 px-6 max-w-7xl mx-auto border-t border-white/5 bg-[#050505]">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+            <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Confirmed Batches</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight">
+            2027 Fixed Departures
+          </h2>
+          <p class="text-silver mt-3 max-w-xl text-base leading-relaxed">
+            Every batch is strictly capped at 12-15 trekkers to preserve trail intimacy, safety ratios, and environmental sanctity.
+          </p>
+        </div>
+
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-xs font-mono font-bold text-[#00f2fe] uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-[#00f2fe] shadow-[0_0_8px_#00f2fe]"></span>
+          <span>Live Availability</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-lg border border-white/10 bg-[#0f172a]/40 backdrop-blur-md">
+        <table class="w-full text-left text-sm text-[#d4d4d8] border-collapse">
+          <thead class="bg-[#050505]/90 text-xs uppercase tracking-wider text-[#00f2fe] border-b border-white/10 font-mono">
+            <tr>
+              <th class="py-4 px-6 font-semibold">Trek Expedition</th>
+              <th class="py-4 px-6 font-semibold">Dates</th>
+              <th class="py-4 px-6 font-semibold">Region & Duration</th>
+              <th class="py-4 px-6 font-semibold">Seat Status</th>
+              <th class="py-4 px-6 font-semibold">All-Inclusive Price</th>
+              <th class="py-4 px-6 font-semibold text-right">Reservation</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5 font-mono">
+            {allBatches.map((batch) => {
+              const seatsLeft = batch.seatsTotal - batch.seatsBooked;
+              const isFull = batch.status === 'full' || seatsLeft === 0;
+              const isLowSeats = isLowSeatsCheck(seatsLeft);
+              return (
+                <tr class="hover:bg-white/5 transition-colors">
+                  <td class="py-4 px-6 font-medium text-white font-display text-base">
+                    <a href={`/treks/${batch.trekSlug}`} class="hover:text-[#00f2fe] transition-colors">
+                      {batch.trekName}
+                    </a>
+                  </td>
+                  <td class="py-4 px-6 text-silver text-xs">
+                    {formatDate(batch.startDate)} - {formatDate(batch.endDate)}
+                  </td>
+                  <td class="py-4 px-6 text-silver font-sans">
+                    <div>{batch.region}</div>
+                    <div class="text-xs text-silver/60 font-mono">{batch.durationDays} Days • {batch.maxAltitudeM}m</div>
+                  </td>
+                  <td class="py-4 px-6">
+                    {isFull ? (
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                        Full
+                      </span>
+                    ) : isLowSeats ? (
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        Only {seatsLeft} seats left
+                      </span>
+                    ) : (
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#00f2fe]/10 text-[#00f2fe] border border-[#00f2fe]/30">
+                        Available ({seatsLeft} seats)
+                      </span>
+                    )}
+                  </td>
+                  <td class="py-4 px-6 font-bold text-[#00f2fe] text-base">
+                    ₹{batch.pricePerPersonINR.toLocaleString('en-IN')}
+                  </td>
+                  <td class="py-4 px-6 text-right">
+                    {isFull ? (
+                      <span class="text-xs text-silver/40 font-semibold px-3 py-1.5">Sold Out</span>
+                    ) : (
+                      <a
+                        href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hello Holy Himalayas! I'd like to reserve seats for ${batch.trekName} departing ${formatDate(batch.startDate)} to ${formatDate(batch.endDate)}. Please guide me on next steps.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-sm bg-[#00f2fe] hover:bg-white text-[#050505] font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 shadow-sm"
+                      >
+                        <span>Reserve</span>
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Direct WhatsApp Booking Generator (#booking) -->
+    <section id="booking" class="py-28 px-6 max-w-4xl mx-auto border-t border-white/5 bg-[#050505]">
+      <div class="text-center mb-12">
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Direct Dispatch</span>
+          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
+          Reserve Your Himalayan Journey
+        </h2>
+        <p class="text-silver mt-3 text-base leading-relaxed max-w-xl mx-auto">
+          Share your trek preferences to generate a pre-filled WhatsApp inquiry. Our team in Mautar responds directly with acclimatization details and departure openings.
+        </p>
+      </div>
+
+      <div class="p-8 sm:p-12 rounded-lg bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 shadow-2xl">
+        <form id="waBookingForm" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label for="formName" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">
+                Your Full Name
+              </label>
+              <input 
+                type="text" 
+                id="formName" 
+                required 
+                placeholder="Anubhav Sharma" 
+                class="w-full px-4 py-3.5 rounded-sm bg-[#050505] border border-white/15 text-white placeholder-silver/40 focus:outline-none focus:border-[#00f2fe] focus:ring-1 focus:ring-[#00f2fe] text-sm"
+              />
+            </div>
+            <div>
+              <label for="formMobile" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">
+                WhatsApp Phone Number
+              </label>
+              <input 
+                type="tel" 
+                id="formMobile" 
+                required 
+                placeholder="+91 98765 43210" 
+                class="w-full px-4 py-3.5 rounded-sm bg-[#050505] border border-white/15 text-white placeholder-silver/40 focus:outline-none focus:border-[#00f2fe] focus:ring-1 focus:ring-[#00f2fe] text-sm"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label for="formTrek" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">
+                Select Trek Destination
+              </label>
+              <select 
+                id="formTrek" 
+                class="w-full px-4 py-3.5 rounded-sm bg-[#050505] border border-white/15 text-white focus:outline-none focus:border-[#00f2fe] focus:ring-1 focus:ring-[#00f2fe] text-sm cursor-pointer"
+              >
+                {mockTreks.map(t => (
+                  <option value={t.name}>{t.name} ({t.region} - {t.durationDays} Days)</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label for="formGroup" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">
+                Group Size
+              </label>
+              <select 
+                id="formGroup" 
+                class="w-full px-4 py-3.5 rounded-sm bg-[#050505] border border-white/15 text-white focus:outline-none focus:border-[#00f2fe] focus:ring-1 focus:ring-[#00f2fe] text-sm cursor-pointer"
+              >
+                <option value="Solo Trekker (1 person)">Solo Trekker (1 person)</option>
+                <option value="Duo (2 persons)">Duo (2 persons)</option>
+                <option value="Small Group (3-5 persons)">Small Group (3-5 persons)</option>
+                <option value="Full Batch (6-12 persons)">Full Batch (6-12 persons)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="formDates" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">
+              Preferred Dates or Season
+            </label>
+            <input 
+              type="text" 
+              id="formDates" 
+              placeholder="e.g. April 2027 or Mid-May" 
+              class="w-full px-4 py-3.5 rounded-sm bg-[#050505] border border-white/15 text-white placeholder-silver/40 focus:outline-none focus:border-[#00f2fe] focus:ring-1 focus:ring-[#00f2fe] text-sm"
+            />
+          </div>
+
+          <button 
+            type="button" 
+            id="btnGenerateWa" 
+            class="w-full py-4 rounded-sm bg-[#00f2fe] hover:bg-white text-[#050505] font-mono font-bold text-sm uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            <span>Open WhatsApp with Booking Details</span>
+          </button>
+        </form>
+
+        <div id="waPreviewBox" class="hidden mt-8 p-6 rounded-sm bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-center">
+          <p class="text-xs text-silver mb-4 font-mono">
+            Click below if WhatsApp did not open automatically:
+          </p>
+          <a 
+            id="waGeneratedLink" 
+            href="#" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm transition-all shadow-md"
+          >
+            <span>Click to Message +91 98765 43210</span>
           </a>
         </div>
       </div>
     </section>
+
   </main>
 
-  <AudioSoundscape />
   <WhatsAppFab />
-  <Footer />
+  <div id="contact">
+    <Footer />
+  </div>
+
+  <!-- Client-side Interactivity Script -->
+  <script>
+    // Region Filter for Expeditions Bento Grid
+    const filterButtons = document.querySelectorAll('.filter-chip');
+    const trekCards = document.querySelectorAll('.trek-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => {
+          b.classList.remove('active-filter', 'bg-[#00f2fe]', 'text-[#050505]');
+          b.classList.add('bg-[#0f172a]', 'text-silver', 'border-white/10');
+        });
+        btn.classList.add('active-filter', 'bg-[#00f2fe]', 'text-[#050505]');
+        btn.classList.remove('bg-[#0f172a]', 'text-silver', 'border-white/10');
+
+        const region = btn.getAttribute('data-region');
+        trekCards.forEach(card => {
+          const cardRegion = card.getAttribute('data-region');
+          if (region === 'all' || cardRegion === region) {
+            (card as HTMLElement).style.display = 'flex';
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Direct WhatsApp Link Generator
+    const btnGenerateWa = document.getElementById('btnGenerateWa');
+    const formName = document.getElementById('formName') as HTMLInputElement;
+    const formMobile = document.getElementById('formMobile') as HTMLInputElement;
+    const formTrek = document.getElementById('formTrek') as HTMLSelectElement;
+    const formGroup = document.getElementById('formGroup') as HTMLSelectElement;
+    const formDates = document.getElementById('formDates') as HTMLInputElement;
+    const waPreviewBox = document.getElementById('waPreviewBox');
+    const waGeneratedLink = document.getElementById('waGeneratedLink') as HTMLAnchorElement;
+
+    if (btnGenerateWa) {
+      btnGenerateWa.addEventListener('click', () => {
+        const name = formName?.value.trim() || 'Trekker';
+        const mobile = formMobile?.value.trim() || '';
+        const trek = formTrek?.value || 'Kuari Pass';
+        const group = formGroup?.value || 'Solo';
+        const dates = formDates?.value.trim() || 'Flexible dates in 2027';
+
+        const messageText = `Namaste Holy Himalayas team!
+
+I would like to reserve a small-batch trek:
+
+• Name: ${name}
+• Contact: ${mobile}
+• Trek: ${trek}
+• Group Size: ${group}
+• Preferred Dates: ${dates}
+
+Please share current availability and acclimatization itinerary.
+
+Thank you!`;
+        const encoded = encodeURIComponent(messageText);
+        const fullUrl = `https://wa.me/919876543210?text=${encoded}`;
+
+        if (waGeneratedLink && waPreviewBox) {
+          waGeneratedLink.href = fullUrl;
+          waPreviewBox.classList.remove('hidden');
+        }
+
+        window.open(fullUrl, '_blank');
+      });
+    }
+  </script>
 </Layout>

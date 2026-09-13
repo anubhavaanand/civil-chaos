@@ -1,0 +1,230 @@
+---
+// SocialCarousel.astro
+// Three-card 1080x1080 square social media carousel
+// Connected headline series: "onwards." -> "to the next one." -> "looking ahead."
+---
+
+<section class="py-28 px-6 max-w-7xl mx-auto border-t border-white/5 bg-[#050505] relative">
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <div>
+      <div class="flex items-center gap-3 mb-3">
+        <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+        <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Field Dispatches</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight">
+        Chronicles From The Pass
+      </h2>
+      <p class="text-silver mt-3 max-w-xl text-base leading-relaxed">
+        Three connected moments captured live across our Himalayan journeys. Swipe or scroll through the expedition sequence.
+      </p>
+    </div>
+
+    <!-- Carousel Controls & Loop Indicator -->
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-[#0f172a] border border-white/10 text-xs font-mono text-silver">
+        <span id="carouselActiveIdx" class="text-[#00f2fe] font-bold">01</span>
+        <span>/</span>
+        <span>03</span>
+      </div>
+      <button 
+        id="carouselPrevBtn" 
+        class="w-10 h-10 rounded-sm bg-[#0f172a] hover:bg-white/10 border border-white/15 text-white flex items-center justify-center transition-all hover:border-[#00f2fe]/40 cursor-pointer"
+        aria-label="Previous card"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <button 
+        id="carouselNextBtn" 
+        class="w-10 h-10 rounded-sm bg-[#0f172a] hover:bg-white/10 border border-white/15 text-white flex items-center justify-center transition-all hover:border-[#00f2fe]/40 cursor-pointer"
+        aria-label="Next card"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll-Snap Track -->
+  <div 
+    id="socialCarouselTrack" 
+    class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6 pt-2 no-scrollbar"
+    style="scrollbar-width: none; -ms-overflow-style: none;"
+  >
+    <!-- Card 01: "onwards." -->
+    <div class="carousel-panel snap-center shrink-0 w-[88vw] sm:w-[380px] md:w-[410px] aspect-square rounded-2xl overflow-hidden relative border border-white/10 hover:border-[#00f2fe]/50 transition-all duration-500 bg-[#0f172a] group shadow-2xl flex flex-col justify-between p-7 sm:p-9">
+      <!-- Background Image with Scrim -->
+      <img 
+        src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1080&q=80" 
+        alt="Kuari pass ridge expedition" 
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-45 group-hover:scale-105 group-hover:opacity-55 transition-all duration-700 ease-out"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/75 via-transparent to-[#050505]/95"></div>
+
+      <!-- Top Header -->
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#00f2fe] uppercase">
+          <span>⛰️</span>
+          <span>D.T.H.H.</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-sm bg-black/60 border border-white/15 text-[11px] font-mono text-silver">
+          01 / 03
+        </div>
+      </div>
+
+      <!-- Bottom Content: Display Headline & Story Caption -->
+      <div class="relative z-10 mt-auto">
+        <div class="text-[11px] font-mono text-[#00f2fe] tracking-widest uppercase mb-2">Phase One • The Push</div>
+        <h3 class="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-3">
+          onwards.
+        </h3>
+        <p class="text-xs sm:text-sm text-silver font-light leading-relaxed mb-6 line-clamp-3">
+          Breaking trail through fresh powder at 3,880 meters along the Kuari Pass ridge before the first sunlight touches Nanda Devi sanctuary.
+        </p>
+
+        <!-- Affordance -->
+        <button 
+          data-goto="1" 
+          class="carousel-goto-btn flex items-center gap-2 text-xs font-mono font-bold text-[#00f2fe] hover:text-white transition-colors cursor-pointer group/btn"
+        >
+          <span>Next Dispatch</span>
+          <span class="transform group-hover/btn:translate-x-1 transition-transform">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 02: "to the next one." -->
+    <div class="carousel-panel snap-center shrink-0 w-[88vw] sm:w-[380px] md:w-[410px] aspect-square rounded-2xl overflow-hidden relative border border-white/10 hover:border-[#00f2fe]/50 transition-all duration-500 bg-[#0f172a] group shadow-2xl flex flex-col justify-between p-7 sm:p-9">
+      <!-- Background Image with Scrim -->
+      <img 
+        src="https://images.unsplash.com/photo-1464822759026-fc5c48b9d62f?w=1080&q=80" 
+        alt="Himalayan mountain pass journey" 
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-45 group-hover:scale-105 group-hover:opacity-55 transition-all duration-700 ease-out"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/75 via-transparent to-[#050505]/95"></div>
+
+      <!-- Top Header -->
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#00f2fe] uppercase">
+          <span>⛰️</span>
+          <span>D.T.H.H.</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-sm bg-black/60 border border-white/15 text-[11px] font-mono text-silver">
+          02 / 03
+        </div>
+      </div>
+
+      <!-- Bottom Content: Display Headline & Story Caption -->
+      <div class="relative z-10 mt-auto">
+        <div class="text-[11px] font-mono text-[#00f2fe] tracking-widest uppercase mb-2">Phase Two • The Valley</div>
+        <h3 class="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-3">
+          to the next one.
+        </h3>
+        <p class="text-xs sm:text-sm text-silver font-light leading-relaxed mb-6 line-clamp-3">
+          Regrouping in Village Mautar. Sourcing local supplies, tuning gear, and receiving quiet blessings from community elders before ascending into Har Ki Dun.
+        </p>
+
+        <!-- Affordance -->
+        <button 
+          data-goto="2" 
+          class="carousel-goto-btn flex items-center gap-2 text-xs font-mono font-bold text-[#00f2fe] hover:text-white transition-colors cursor-pointer group/btn"
+        >
+          <span>Final Dispatch</span>
+          <span class="transform group-hover/btn:translate-x-1 transition-transform">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 03: "looking ahead." -->
+    <div class="carousel-panel snap-center shrink-0 w-[88vw] sm:w-[380px] md:w-[410px] aspect-square rounded-2xl overflow-hidden relative border border-white/10 hover:border-[#00f2fe]/50 transition-all duration-500 bg-[#0f172a] group shadow-2xl flex flex-col justify-between p-7 sm:p-9">
+      <!-- Background Image with Scrim -->
+      <img 
+        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1080&q=80" 
+        alt="Looking ahead to 2027 Himalayan summits" 
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-45 group-hover:scale-105 group-hover:opacity-55 transition-all duration-700 ease-out"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/75 via-transparent to-[#050505]/95"></div>
+
+      <!-- Top Header -->
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#00f2fe] uppercase">
+          <span>⛰️</span>
+          <span>D.T.H.H.</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-sm bg-black/60 border border-white/15 text-[11px] font-mono text-silver">
+          03 / 03
+        </div>
+      </div>
+
+      <!-- Bottom Content: Display Headline & Story Caption -->
+      <div class="relative z-10 mt-auto">
+        <div class="text-[11px] font-mono text-[#00f2fe] tracking-widest uppercase mb-2">Phase Three • The Horizon</div>
+        <h3 class="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-3">
+          looking ahead.
+        </h3>
+        <p class="text-xs sm:text-sm text-silver font-light leading-relaxed mb-6 line-clamp-3">
+          Gazing out across the Swargarohini massif. Preparing our small-batch 12-trekker teams for the 2027 fixed departures season.
+        </p>
+
+        <!-- Loop Affordance (Loops back to start) -->
+        <button 
+          data-goto="0" 
+          class="carousel-goto-btn inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-[#00f2fe]/15 border border-[#00f2fe]/30 text-xs font-mono font-bold text-[#00f2fe] hover:bg-[#00f2fe] hover:text-[#050505] transition-all cursor-pointer shadow-[0_0_10px_rgba(0,242,254,0.15)]"
+        >
+          <span>Loop Series</span>
+          <span>↺</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const track = document.getElementById('socialCarouselTrack');
+  const prevBtn = document.getElementById('carouselPrevBtn');
+  const nextBtn = document.getElementById('carouselNextBtn');
+  const activeIdx = document.getElementById('carouselActiveIdx');
+  const panels = document.querySelectorAll('.carousel-panel');
+  const gotoButtons = document.querySelectorAll('.carousel-goto-btn');
+
+  if (track) {
+    const getCardWidth = () => {
+      const firstPanel = panels[0] as HTMLElement;
+      return (firstPanel ? firstPanel.offsetWidth : 380) + 24; // width + gap
+    };
+
+    prevBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      const maxScrollLeft = track.scrollWidth - track.clientWidth;
+      if (track.scrollLeft >= maxScrollLeft - 10) {
+        // Loop around to start
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+      }
+    });
+
+    gotoButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetIndex = parseInt(btn.getAttribute('data-goto') || '0', 10);
+        const cardWidth = getCardWidth();
+        track.scrollTo({ left: targetIndex * cardWidth, behavior: 'smooth' });
+      });
+    });
+
+    // Update active index indicator based on scroll
+    track.addEventListener('scroll', () => {
+      const cardWidth = getCardWidth();
+      const currentIdx = Math.round(track.scrollLeft / cardWidth) + 1;
+      const clampedIdx = Math.min(Math.max(currentIdx, 1), 3);
+      if (activeIdx) {
+        activeIdx.textContent = `0${clampedIdx}`;
+      }
+    }, { passive: true });
+  }
+</script>

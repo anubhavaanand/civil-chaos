@@ -3,28 +3,52 @@
 @import "@fontsource/inter";
 
 @theme {
+  --color-obsidian: #050505;
+  --color-slate: #0f172a;
+  --color-silver: #d4d4d8;
+  --color-glacier: #00f2fe;
+  --color-glacier-deep: #00b4d8;
   --color-glass: rgb(255 255 255 / 0.10);
   --color-glass-border: rgb(255 255 255 / 0.20);
   --color-ink: #e8eef2;
   --color-ink-dim: #a9b8c0;
-  --color-brand: #14b8a6;
-  --color-brand-deep: #0f766e;
+  --color-brand: #00f2fe;
+  --color-brand-deep: #0ea5e9;
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
 }
 
 @layer utilities {
   .alpine-glass {
-    @apply backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-2xl shadow-lg;
+    @apply backdrop-blur-md backdrop-saturate-150 bg-white/5 border border-white/10 rounded-2xl shadow-2xl;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
   
   @supports not (backdrop-filter: blur(1px)) {
-    .alpine-glass {
-      @apply bg-slate-900/85;
+    .alpine-glass, .glass {
+      @apply bg-[#0b111a]/95;
     }
   }
 
   .dark-scrim {
-    @apply bg-black/30;
+    @apply bg-black/40;
+  }
+
+  .bg-grid {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  .map-bg {
+    background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2674&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
   }
 }
