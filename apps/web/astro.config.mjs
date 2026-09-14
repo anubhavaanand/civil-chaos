@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
@@ -8,9 +8,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://dreamoftheholyhimalayas.com',
   output: 'static',
-  adapter: node({
-    mode: 'standalone',
-  }),
+  adapter: cloudflare(),
+
+
   vite: {
     plugins: [tailwindcss()],
   },
