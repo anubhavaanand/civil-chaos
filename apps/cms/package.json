@@ -11,6 +11,7 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "strapi": "strapi",
+    "seed": "node scripts/seed.mjs",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
@@ -18,8 +19,10 @@
     "@strapi/database": "5.53.0",
     "@strapi/plugin-cloud": "5.53.0",
     "@strapi/plugin-users-permissions": "5.53.0",
+    "@strapi/provider-upload-cloudinary": "^5.53.0",
     "@strapi/strapi": "5.53.0",
     "better-sqlite3": "12.8.0",
+    "pg": "^8.13.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.30.3",
