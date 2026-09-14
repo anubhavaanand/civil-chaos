@@ -27,39 +27,7 @@
 
 ---
 
-## 🏔 Features & Aesthetics
 
-<table align="center">
-  <tr>
-    <td width="50%">
-      <h3>💎 Alpine Glass UI</h3>
-      <p>Dark mode natively. Neon teal topographical accents, frosted glass components, and hardware-accelerated CSS animations. Built entirely on Tailwind v4.</p>
-    </td>
-    <td width="50%">
-      <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/alpine_glass_ui.jpg" alt="Dark UI Concept" style="border-radius: 8px;">
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/topo_map_ui.jpg" alt="3D Topography Concept" style="border-radius: 8px;">
-    </td>
-    <td width="50%">
-      <h3>🌍 3D Peak Telemetry</h3>
-      <p>An interactive <code>Three.js</code> viewport that dynamically loads GLTF meshes of Himalayan summits based on the selected trek, displaying altitude, temperature, and GPS coordinates.</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <h3>🗺 Interactive MapLibre Engine</h3>
-      <p>Custom <code>MapLibre GL JS</code> integration with MapTiler's <code>terrain-rgb-v2</code>. Renders the Himalayas in exaggerated 3D with atmospheric fog and custom vector tracking.</p>
-    </td>
-    <td width="50%">
-      <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/topo_map_ui.jpg" alt="Map Interface Concept" style="border-radius: 8px;">
-    </td>
-  </tr>
-</table>
-
----
 
 ## 🏗 System Architecture
 
