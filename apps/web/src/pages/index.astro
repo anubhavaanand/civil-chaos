@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import GlassNav from '../components/GlassNav.astro';
 import ThreeDPeakViewer from '../components/ThreeDPeakViewer.astro';
-import InteractiveTopoMap from '../components/InteractiveTopoMap.astro';
+import MapLibreTrekMap from '../components/MapLibreTrekMap.astro';
 import SacredPeaksLore from '../components/SacredPeaksLore.astro';
 import SocialCarousel from '../components/SocialCarousel.astro';
 import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
@@ -275,7 +275,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
     </section>
 
     <!-- Interactive Topography & Telemetry Map Engine -->
-    <InteractiveTopoMap treks={treks} />
+    <MapLibreTrekMap treks={treks} />
 
     <!-- 3D Peak Viewport Section (#peak-viewer) -->
     <section id="peak-viewer" class="py-24 bg-[#050505] border-t border-white/5">
