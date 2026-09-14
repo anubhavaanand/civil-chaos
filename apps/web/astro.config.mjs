@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // The @astrojs/node adapter enables server functions (actions, API routes) on Cloudflare
 export default defineConfig({
   site: 'https://dreamoftheholyhimalayas.com',
-  output: 'static',
+  output: 'hybrid',
   adapter: cloudflare(),
 
 
