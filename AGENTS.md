@@ -1,6 +1,6 @@
-# AGENTS.md — Project Rules (read this first)
+# AGENTS.md  -  Project Rules (read this first)
 
-Project: **Dream of The Holy Himalayas** — trekking agency website (Uttarakhand, India)
+Project: **Dream of The Holy Himalayas**  -  trekking agency website (Uttarakhand, India)
 Owner agency site (single company, NOT a marketplace). Urgent: ship a working prototype fast.
 
 ## What this project is
@@ -22,9 +22,9 @@ Detailed specs live in `/docs/*.md` (this file only summarizes + sets guardrails
 ## Hard rules / guardrails
 1. NEVER commit secrets. Env vars only (see ARCHITECTURE.md). Add `.env` to `.gitignore` on sight.
 2. Do NOT introduce a payment gateway, auth system, or GraphQL. Phase 1 is deliberately small.
-3. Do NOT add SSR to static marketing pages. Render mode: `output: 'hybrid'` — prerender everything EXCEPT the booking action endpoint and webhook receiver.
-4. All content must be editable in Strapi — never hard-code trek names, prices, dates, or itineraries in the frontend.
-5. Strapi writes from the frontend go ONLY through the Astro booking action (server-side token) — the public Strapi API is read-only.
+3. Do NOT add SSR to static marketing pages. Render mode: `output: 'hybrid'`  -  prerender everything EXCEPT the booking action endpoint and webhook receiver.
+4. All content must be editable in Strapi  -  never hard-code trek names, prices, dates, or itineraries in the frontend.
+5. Strapi writes from the frontend go ONLY through the Astro booking action (server-side token)  -  the public Strapi API is read-only.
 6. Booking schema changes must stay backward-compatible (Phase 2 Razorpay adds fields, never rewrites).
 7. Keep commits atomic and phase-scoped (foundation / content / map / booking / polish).
 8. Run `npm run check` (astro check) and build before declaring any task done.

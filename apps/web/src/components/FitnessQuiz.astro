@@ -215,15 +215,16 @@
     }
 
     if (treksList) {
+      const checkIcon = `<svg class="w-4 h-4 text-[#00f2fe] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
       if (finalScore >= 80) {
         treksList.innerHTML = `
-          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Roopkund Glacial Ridge (15,750 ft):</strong> High altitude challenge unlocked!</li>
-          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Kedarkantha Winter Summit (12,500 ft):</strong> Full speed ahead.</li>
+          <li class="flex items-center gap-2">${checkIcon} <strong class="text-cyan-300">Roopkund Glacial Ridge (15,750 ft):</strong> High altitude challenge unlocked!</li>
+          <li class="flex items-center gap-2">${checkIcon} <strong class="text-cyan-300">Kedarkantha Winter Summit (12,500 ft):</strong> Full speed ahead.</li>
         `;
       } else {
         treksList.innerHTML = `
-          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Kedarkantha Winter Trek (12,500 ft):</strong> Best introductory snow trek.</li>
-          <li class="flex items-center gap-2">✅ <strong class="text-cyan-300">Har Ki Dun Valley (11,768 ft):</strong> Beautiful gradual ascent.</li>
+          <li class="flex items-center gap-2">${checkIcon} <strong class="text-cyan-300">Kedarkantha Winter Trek (12,500 ft):</strong> Best introductory snow trek.</li>
+          <li class="flex items-center gap-2">${checkIcon} <strong class="text-cyan-300">Har Ki Dun Valley (11,768 ft):</strong> Beautiful gradual ascent.</li>
         `;
       }
     }

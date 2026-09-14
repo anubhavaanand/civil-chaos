@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "booking_requests",
+  "info": {
+    "singularName": "booking-request",
+    "pluralName": "booking-requests",
+    "displayName": "Booking Request",
+    "description": "Climber booking inquiries captured by Astro Actions"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "trek": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::trek.trek"
+    },
+    "batch": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::batch.batch"
+    },
+    "package": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::package.package"
+    },
+    "customerName": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email"
+    },
+    "groupSize": {
+      "type": "integer",
+      "default": 1
+    },
+    "message": {
+      "type": "text"
+    },
+    "preferredDates": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "new",
+        "contacted",
+        "confirmed",
+        "closed"
+      ],
+      "default": "new"
+    },
+    "sourceIp": {
+      "type": "string"
+    },
+    "honeypot": {
+      "type": "string"
+    }
+  }
+}

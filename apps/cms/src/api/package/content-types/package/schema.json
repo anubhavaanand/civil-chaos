@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "packages",
+  "info": {
+    "singularName": "package",
+    "pluralName": "packages",
+    "displayName": "Package",
+    "description": "Expedition pricing and inclusions tiers"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "trek": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::trek.trek",
+      "inversedBy": "packages"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "priceINR": {
+      "type": "integer",
+      "required": true
+    },
+    "durationDays": {
+      "type": "integer"
+    },
+    "inclusionsOverride": {
+      "type": "richtext"
+    },
+    "isPopular": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

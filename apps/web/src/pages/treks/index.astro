@@ -6,28 +6,30 @@ import DifficultyBadge from '../../components/DifficultyBadge.astro';
 import TrekComparator from '../../components/TrekComparator.astro';
 import WhatsAppFab from '../../components/WhatsAppFab.astro';
 import Footer from '../../components/Footer.astro';
-import { mockTreks } from '../../data/mock-treks';
+import { getTreks } from '../../lib/strapi';
+
+const treks = await getTreks();
 
 // Pre-calculate filter category counts
 const regionCounts = {
-  all: mockTreks.length,
-  Garhwal: mockTreks.filter(t => t.region === 'Garhwal').length,
-  Kumaon: mockTreks.filter(t => t.region === 'Kumaon').length,
-  Himachal: mockTreks.filter(t => t.region === 'Himachal').length
+  all: treks.length,
+  Garhwal: treks.filter(t => t.region === 'Garhwal').length,
+  Kumaon: treks.filter(t => t.region === 'Kumaon').length,
+  Himachal: treks.filter(t => t.region === 'Himachal').length
 };
 
 const altitudeCounts = {
-  all: mockTreks.length,
-  sub4k: mockTreks.filter(t => t.maxAltitudeM < 4000).length,
-  mid4k: mockTreks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
-  above5k: mockTreks.filter(t => t.maxAltitudeM > 5000).length
+  all: treks.length,
+  sub4k: treks.filter(t => t.maxAltitudeM < 4000).length,
+  mid4k: treks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
+  above5k: treks.filter(t => t.maxAltitudeM > 5000).length
 };
 
 const difficultyCounts = {
-  all: mockTreks.length,
-  easy: mockTreks.filter(t => t.difficulty === 'easy').length,
-  moderate: mockTreks.filter(t => t.difficulty === 'moderate').length,
-  difficult: mockTreks.filter(t => t.difficulty === 'difficult').length
+  all: treks.length,
+  easy: treks.filter(t => t.difficulty === 'easy').length,
+  moderate: treks.filter(t => t.difficulty === 'moderate').length,
+  difficult: treks.filter(t => t.difficulty === 'difficult').length
 };
 ---
 
@@ -57,7 +59,7 @@ const difficultyCounts = {
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-[#00f2fe] shadow-[0_0_8px_#00f2fe] animate-pulse"></span>
             <span class="text-silver uppercase tracking-wider">Matching Routes:</span>
-            <span id="active-routes-count" class="font-bold text-[#00f2fe] text-sm">{mockTreks.length}</span>
+            <span id="active-routes-count" class="font-bold text-[#00f2fe] text-sm">{treks.length}</span>
           </div>
         </div>
       </div>
@@ -203,7 +205,7 @@ const difficultyCounts = {
 
       <!-- VIEW 1: Bento Cards Grid -->
       <div id="treks-bento-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {mockTreks.map((trek) => (
+        {treks.map((trek) => (
           <div
             class="trek-item-wrapper transition-all duration-300"
             data-slug={trek.slug}
@@ -235,7 +237,7 @@ const difficultyCounts = {
               </tr>
             </thead>
             <tbody class="divide-y divide-white/5">
-              {mockTreks.map((trek) => (
+              {treks.map((trek) => (
                 <tr 
                   class="trek-matrix-row hover:bg-white/[0.04] transition-colors"
                   data-slug={trek.slug}

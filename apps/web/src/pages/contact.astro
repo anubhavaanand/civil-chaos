@@ -3,8 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import GlassNav from '../components/GlassNav.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
-import { mockTreks } from '../data/mock-treks';
+import { getTreks } from '../lib/strapi';
 import { SITE_CONFIG } from '../config/site';
+
+const treks = await getTreks();
 
 // Direct comms channels
 const channels = [
@@ -115,7 +117,7 @@ const channels = [
                     id="contactTrek"
                     class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-3 py-2.5 text-xs text-white outline-none transition-all font-mono cursor-pointer"
                   >
-                    {mockTreks.map((t) => (
+                    {treks.map((t) => (
                       <option value={t.name}>{t.name} ({t.region})</option>
                     ))}
                     <option value="Custom Expedition">Custom Alpine Route</option>

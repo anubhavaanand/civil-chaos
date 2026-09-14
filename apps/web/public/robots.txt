@@ -1,0 +1,7 @@
+# robots.txt for Dream of The Holy Himalayas
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_actions/
+
+Sitemap: https://dreamoftheholyhimalayas.com/sitemap-index.xml

@@ -1,0 +1,117 @@
+{
+  "kind": "collectionType",
+  "collectionName": "treks",
+  "info": {
+    "singularName": "trek",
+    "pluralName": "treks",
+    "displayName": "Trek",
+    "description": "Himalayan expedition routes and details"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "region": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::region.region",
+      "inversedBy": "treks"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "difficulty": {
+      "type": "enumeration",
+      "enum": [
+        "easy",
+        "moderate",
+        "difficult"
+      ],
+      "required": true,
+      "default": "moderate"
+    },
+    "durationDays": {
+      "type": "integer",
+      "required": true
+    },
+    "maxAltitudeM": {
+      "type": "integer",
+      "required": true
+    },
+    "trekDistanceKm": {
+      "type": "decimal"
+    },
+    "bestSeasons": {
+      "type": "json"
+    },
+    "startPoint": {
+      "type": "string"
+    },
+    "coordinates": {
+      "type": "json"
+    },
+    "heroGallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "itinerary": {
+      "type": "component",
+      "repeatable": true,
+      "component": "trek.itinerary"
+    },
+    "inclusions": {
+      "type": "richtext"
+    },
+    "exclusions": {
+      "type": "richtext"
+    },
+    "howToReach": {
+      "type": "richtext"
+    },
+    "googleMapsEmbedUrl": {
+      "type": "string"
+    },
+    "faq": {
+      "type": "component",
+      "repeatable": true,
+      "component": "trek.faq"
+    },
+    "batches": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::batch.batch",
+      "mappedBy": "trek"
+    },
+    "packages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::package.package",
+      "mappedBy": "trek"
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

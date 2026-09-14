@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "batches",
+  "info": {
+    "singularName": "batch",
+    "pluralName": "batches",
+    "displayName": "Batch",
+    "description": "Dated expedition departures"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "trek": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::trek.trek",
+      "inversedBy": "batches"
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date",
+      "required": true
+    },
+    "seatsTotal": {
+      "type": "integer",
+      "default": 12
+    },
+    "seatsBooked": {
+      "type": "integer",
+      "default": 0
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "open",
+        "full",
+        "cancelled"
+      ],
+      "default": "open"
+    },
+    "pricePerPersonINR": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

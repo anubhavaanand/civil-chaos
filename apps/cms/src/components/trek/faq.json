@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_trek_faqs",
+  "info": {
+    "displayName": "FAQ",
+    "icon": "question",
+    "description": "Trek frequently asked questions"
+  },
+  "options": {},
+  "attributes": {
+    "q": {
+      "type": "string",
+      "required": true
+    },
+    "a": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

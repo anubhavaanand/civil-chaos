@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "regions",
+  "info": {
+    "singularName": "region",
+    "pluralName": "regions",
+    "displayName": "Region",
+    "description": "Himalayan geographic sectors"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "uttarakhand",
+        "himachal_pradesh"
+      ],
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "mapBounds": {
+      "type": "json"
+    },
+    "treks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::trek.trek",
+      "mappedBy": "region"
+    }
+  }
+}

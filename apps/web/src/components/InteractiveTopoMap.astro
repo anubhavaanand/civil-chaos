@@ -2,7 +2,15 @@
 // InteractiveTopoMap.astro
 // High-performance 0-dependency native client-side interactive topography engine
 // Built with Dark Alpine Glass aesthetics, WGS84 Cartesian projections, and real-time telemetry HUD
-import { mockTreks } from '../data/mock-treks';
+import { getTreks } from '../lib/strapi';
+import type { Trek } from '../data/mock-treks';
+
+interface Props {
+  treks?: Trek[];
+}
+
+const { treks: propTreks } = Astro.props;
+const treks = propTreks || (await getTreks());
 
 // Basecamp coordinates: Village Mautar, Uttarkashi
 const BASECAMP = {
@@ -26,8 +34,8 @@ const projectCoords = (lng: number, lat: number) => {
   return { x: Number(x.toFixed(1)), y: Number(y.toFixed(1)) };
 };
 
-// Map all 10 treks with calculated coordinates and telemetry
-const projectedTreks = mockTreks.map((trek) => {
+// Map all treks with calculated coordinates and telemetry
+const projectedTreks = treks.map((trek) => {
   const { x, y } = projectCoords(trek.coordinates[0], trek.coordinates[1]);
   return {
     ...trek,

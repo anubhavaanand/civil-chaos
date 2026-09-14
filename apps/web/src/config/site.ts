@@ -5,6 +5,8 @@ export const SITE_CONFIG = {
   name: "Dream of The Holy Himalayas",
   shortName: "Holy Himalayas",
   tagline: "Small-Batch Himalayan Expeditions",
+  url: "https://dreamoftheholyhimalayas.com",
+  canonicalUrl: "https://dreamoftheholyhimalayas.com",
   basecamp: "Village Mautar, District Uttarkashi, Uttarakhand 249128",
   phoneDisplay: "+91 98765 43210",
   phoneRaw: "919876543210",

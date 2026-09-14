@@ -1,6 +1,7 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
 import { SITE_CONFIG } from '../config/site';
+import { fetchStrapi } from '../lib/strapi';
 
 export const server = {
   // 1. Direct WhatsApp Booking Request Handler with Honeypot Anti-Bot Filter
@@ -34,6 +35,27 @@ export const server = {
       const messageText = `Hi! I want to reserve *${input.trekName}* (${datesText}) for ${input.groupSize} trekker(s).\n- Name: ${input.customerName}\n- Mobile: ${input.phone}\n- Booking Type: ${input.bookingType === 'token_deposit' ? '₹2,000 Token Deposit Reservation' : 'Direct Inquiry'}${input.email ? `\n- Email: ${input.email}` : ''}${input.message ? `\n- Note: ${input.message}` : ''}`;
 
       const whatsappUrl = `https://wa.me/${agencyWhatsappPhone}?text=${encodeURIComponent(messageText)}`;
+
+      // Asynchronously record into Strapi CMS CRM (fail-soft, non-blocking)
+      try {
+        fetchStrapi('/booking-requests', {
+          method: 'POST',
+          body: JSON.stringify({
+            data: {
+              customerName: input.customerName,
+              phone: input.phone,
+              email: input.email || undefined,
+              groupSize: input.groupSize,
+              preferredDates: datesText,
+              message: input.message || undefined,
+              status: 'new',
+              honeypot: input.company || ''
+            }
+          })
+        }).catch(() => {});
+      } catch {
+        // Continue silently if CMS is offline
+      }
 
       return {
         ok: true,

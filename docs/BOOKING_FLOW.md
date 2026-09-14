@@ -1,4 +1,4 @@
-# BOOKING_FLOW — request-to-WhatsApp booking (Phase 1, no payments)
+# BOOKING_FLOW  -  request-to-WhatsApp booking (Phase 1, no payments)
 
 ## User flow
 1. Trek page → "Request Booking" CTA → opens BookingModal (or `/treks/[slug]#book`) with: name, Indian mobile (required), email (optional), group size, preferred batch dropdown (from open batches) or free-text dates, message.
@@ -14,7 +14,7 @@
 - On Strapi 5xx → 503 response that STILL hands the user the raw WhatsApp deep link (booking never dies).
 
 ## WhatsApp deep link format
-`https://wa.me/{siteSetting.whatsappNumber}?text=Hi! I want to book *{trekName}* ({batchDates|preferredDates}), group of {n}. — {customerName}`
+`https://wa.me/{siteSetting.whatsappNumber}?text=Hi! I want to book *{trekName}* ({batchDates|preferredDates}), group of {n}.  -  {customerName}`
 URL-encode; keep under WhatsApp limits.
 
 ## Email notification (backup/record)

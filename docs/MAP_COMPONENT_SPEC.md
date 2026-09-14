@@ -1,10 +1,10 @@
-# MAP_COMPONENT_SPEC — homepage interactive trek map
+# MAP_COMPONENT_SPEC  -  homepage interactive trek map
 
 ## Goal
 The hero moment: a Himalayan map of the agency's treks. Clustered markers → click marker/cluster → popup card (photo, name, difficulty, from-price) → CTA to trek page. Region chips (Garhwal / Kumaon / Himachal / All) fly the map to region bounds and filter markers.
 
 ## Library & tiles
-MapLibre GL JS (latest v5). Style: MapTiler "outdoor"/"topo" (free key, 100k loads/mo). NO Google Maps key, NO self-hosted tiles yet. Attribution visible (OSM + MapTiler) — legally required.
+MapLibre GL JS (latest v5). Style: MapTiler "outdoor"/"topo" (free key, 100k loads/mo). NO Google Maps key, NO self-hosted tiles yet. Attribution visible (OSM + MapTiler)  -  legally required.
 
 ## Data
 At build time, generate `src/data/treks-geojson.json` from Strapi:
@@ -14,7 +14,7 @@ At build time, generate `src/data/treks-geojson.json` from Strapi:
 ```
 Region boundaries (click-zones + outlines): download India admin level-1 GeoJSON from **datameet/maps** or **GADM**, keep ONLY Uttarakhand + Himachal Pradesh features, commit trimmed file `src/data/region-boundaries.json` (~< 100KB). Do NOT ship all-India boundaries.
 
-## Component behavior (`<TrekMap client:visible />` — lazy, see below)
+## Component behavior (`<TrekMap client:visible />`  -  lazy, see below)
 - Source `treks` with `cluster: true, clusterMaxZoom: 7, clusterRadius: 42`
 - Layers: `clusters` (circle, sized by point_count: 20/30/40px), `cluster-count` (text), `unclustered-point` (teal mountain-marker via MapLibre marker or styled circle + icon font)
 - Cluster click → zoom to `clusterExpansionZoom`. Point click → popup: 16:9 thumb, name, difficulty badge (Easy=green/Moderate=amber/Difficult=red), "N days · from ₹X", button "View trek →" → `/treks/{slug}`

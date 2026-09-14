@@ -1,4 +1,4 @@
-# DATABASE_SCHEMA — Strapi 5 content types
+# DATABASE_SCHEMA  -  Strapi 5 content types
 
 Naming: singular PascalCase types, kebab-case APIs. All APIs prefixed `/api/`.
 Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all.
@@ -28,7 +28,7 @@ Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all
 | trekDistanceKm | decimal | |
 | bestSeasons | enum multiple | dec_feb \| mar_apr \| may_jun \| jul_aug \| sep_oct \| nov |
 | startPoint | string (town) | e.g. "Joshimath" |
-| coordinates | json | {"lat":30.42,"lng":79.57} — map marker |
+| coordinates | json | {"lat":30.42,"lng":79.57}  -  map marker |
 | heroGallery | media (multiple) | ordered |
 | itinerary | component repeatable: { day: integer, title: string, details: richtext, altitudeM: integer } | |
 | inclusions | richtext | |
@@ -41,7 +41,7 @@ Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all
 | isFeatured | boolean | homepage boost |
 | seo | component: { metaTitle, metaDescription } | |
 
-## Batch  (`/api/batches`) — a dated departure
+## Batch  (`/api/batches`)  -  a dated departure
 | field | type | notes |
 |---|---|---|
 | trek | relation N:1 → trek | |
@@ -50,7 +50,7 @@ Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all
 | status | enum | open \| full \| cancelled |
 | pricePerPersonINR | integer | Phase 1 price lives on batch (date-based pricing) |
 
-## Package  (`/api/packages`) — pricing tiers of one trek
+## Package  (`/api/packages`)  -  pricing tiers of one trek
 | field | type | notes |
 |---|---|---|
 | trek | relation N:1 → trek | |
@@ -60,7 +60,7 @@ Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all
 | inclusionsOverride | richtext | optional delta vs trek-level |
 | isPopular | boolean | |
 
-## BookingRequest  (`/api/booking-requests`) — written ONLY by the Astro action
+## BookingRequest  (`/api/booking-requests`)  -  written ONLY by the Astro action
 | field | type | notes |
 |---|---|---|
 | trek | relation N:1 → trek | |

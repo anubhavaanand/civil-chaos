@@ -9,12 +9,14 @@ import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
 import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
-import { mockTreks } from '../data/mock-treks';
+import { getTreks } from '../lib/strapi';
 import { actions } from 'astro:actions';
 import { SITE_CONFIG } from '../config/site';
 
+const treks = await getTreks();
+
 // Gather upcoming fixed departures
-const allBatches = mockTreks.flatMap(trek => 
+const allBatches = treks.flatMap(trek => 
   trek.batches.map(batch => ({
     ...batch,
     trekName: trek.name,
@@ -199,7 +201,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
 
       <!-- Bento Grid (Dense flow with featured hero card) -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-dense" id="trekGridContainer">
-        {mockTreks.slice(0, 6).map((trek, index) => {
+        {treks.slice(0, 6).map((trek, index) => {
           const isFeaturedHero = index === 0;
           return (
             <a 
@@ -267,13 +269,13 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
           href="/treks" 
           class="inline-block border border-[#00f2fe]/30 hover:border-[#00f2fe] hover:bg-[#00f2fe]/10 text-white font-mono text-xs uppercase tracking-widest font-bold py-4 px-10 rounded-sm transition-all"
         >
-          View Full Roster ({mockTreks.length} Treks)
+          View Full Roster ({treks.length} Treks)
         </a>
       </div>
     </section>
 
     <!-- Interactive Topography & Telemetry Map Engine -->
-    <InteractiveTopoMap />
+    <InteractiveTopoMap treks={treks} />
 
     <!-- 3D Peak Viewport Section (#peak-viewer) -->
     <section id="peak-viewer" class="py-24 bg-[#050505] border-t border-white/5">
@@ -551,7 +553,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
                 name="trekName"
                 class="w-full px-4 py-3.5 rounded-sm bg-[#050505] border border-white/15 text-white focus:outline-none focus:border-[#00f2fe] focus:ring-1 focus:ring-[#00f2fe] text-sm cursor-pointer"
               >
-                {mockTreks.map(t => (
+                {treks.map(t => (
                   <option value={t.name} data-slug={t.slug}>{t.name} ({t.region} - {t.durationDays} Days)</option>
                 ))}
               </select>

@@ -1,0 +1,47 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site Setting",
+    "description": "Global agency metadata, address, and credentials"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "agencyName": {
+      "type": "string",
+      "default": "Dream of The Holy Himalayas"
+    },
+    "phone": {
+      "type": "string",
+      "default": "+91 98765 43210"
+    },
+    "whatsappNumber": {
+      "type": "string",
+      "default": "919876543210"
+    },
+    "email": {
+      "type": "email",
+      "default": "contact@holyhimalayas.com"
+    },
+    "address": {
+      "type": "string",
+      "default": "Village Mautar, District Uttarkashi, Uttarakhand 249128"
+    },
+    "googleBusinessUrl": {
+      "type": "string"
+    },
+    "socialLinks": {
+      "type": "json"
+    },
+    "homepageHeroMedia": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images", "videos"]
+    }
+  }
+}

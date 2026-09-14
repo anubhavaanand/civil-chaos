@@ -1,4 +1,4 @@
-# FRONTEND_DESIGN_SPEC — pages, design system, SEO
+# FRONTEND_DESIGN_SPEC  -  pages, design system, SEO
 
 ## Routes
 | route | render | content |
@@ -20,7 +20,7 @@ Tailwind v4 theme tokens (`@theme`):
 --font-display: "Space Grotesk", sans;  --font-body: "Inter", sans;
 ```
 Glass recipe: `backdrop-blur-md backdrop-saturate-150 bg-white/10 border border-white/20 rounded-2xl shadow-lg`.
-**Contrast trap (mandatory)**: over bright snow/sky photos, white glass text fails WCAG. EVERY glass panel over imagery must sit on a fixed dark scrim layer `bg-black/30` between photo and glass. Audit contrast against the busiest area of real hero photos (not solid mockups) — body text ≥ 4.5:1.
+**Contrast trap (mandatory)**: over bright snow/sky photos, white glass text fails WCAG. EVERY glass panel over imagery must sit on a fixed dark scrim layer `bg-black/30` between photo and glass. Audit contrast against the busiest area of real hero photos (not solid mockups)  -  body text ≥ 4.5:1.
 **Fallback**: `@supports not (backdrop-filter: blur(1px))` → replace glass with `bg-slate-900/85` solid panel (older Safari / low-end Android GPUs).
 Global look: full-bleed Himalayan photography, glass nav (sticky, blurs on scroll), generous whitespace, large type, teal accent, subtle scroll-reveal (CSS-only; no heavy animation libs).
 
@@ -31,7 +31,7 @@ GlassNav · TrekCard (image, difficulty badge, days, altitude, from-price) · Ba
 Cloudinary fetch via Strapi media; use `f_auto,q_auto,w_800/1600` transforms; LQIP blur-up via Astro image or Cloudinary `e_blur:1000` placeholder; lazy-load below fold; every image has alt text from CMS.
 
 ## SEO (per page)
-- URLs/keywords exactly: `/treks/kuari-pass-trek` targeting "Kuari Pass trek 2027", "Kuari Pass trek cost", "Kuari Pass itinerary", "Kuari Pass best time" — in H1, title, meta, first 100 words.
+- URLs/keywords exactly: `/treks/kuari-pass-trek` targeting "Kuari Pass trek 2027", "Kuari Pass trek cost", "Kuari Pass itinerary", "Kuari Pass best time"  -  in H1, title, meta, first 100 words.
 - Schema on trek page: `TouristTrip` (name, description, provider, itinerary as ItemList, touristType) + nested `Product` with `Offer` (priceINR, availability from batch status, priceCurrency INR).
 - Homepage: `Organization` + `LocalBusiness` schema (name, aggregateRating 5.0, address Mautar, Uttarakhand).
 - sitemap.xml generated at build from trek/region slugs; robots.txt; canonical URLs; OG images = trek hero (1200×630).

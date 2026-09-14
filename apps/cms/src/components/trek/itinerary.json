@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_trek_itineraries",
+  "info": {
+    "displayName": "Itinerary",
+    "icon": "calendar",
+    "description": "Day-by-day expedition schedule"
+  },
+  "options": {},
+  "attributes": {
+    "day": {
+      "type": "integer",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "details": {
+      "type": "richtext"
+    },
+    "altitudeM": {
+      "type": "integer"
+    }
+  }
+}

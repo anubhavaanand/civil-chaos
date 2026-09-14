@@ -1,9 +1,9 @@
-# PRD — Dream of The Holy Himalayas Website
+# PRD  -  Dream of The Holy Himalayas Website
 
 ## Problem
-The agency ("Dream of The Holy Himalayas", Mautar, Uttarakhand — 5.0★, 40 Google reviews) has no website. Customers discover treks via WhatsApp/word-of-mouth; catalogs, prices and itineraries live in chats. A competing site (trekupindia.com) loads broken chunk errors. We ship a fast, trustworthy, bookable catalog site first.
+The agency ("Dream of The Holy Himalayas", Mautar, Uttarakhand  -  5.0★, 40 Google reviews) has no website. Customers discover treks via WhatsApp/word-of-mouth; catalogs, prices and itineraries live in chats. A competing site (trekupindia.com) loads broken chunk errors. We ship a fast, trustworthy, bookable catalog site first.
 
-## Goal (Phase 1 — this build)
+## Goal (Phase 1  -  this build)
 A trekker anywhere can: land on the site → see an interactive Himalayan map → pick a trek → read gallery + itinerary + cost + how-to-reach → submit a booking request → agency gets it on WhatsApp. The agency can edit ALL content (treks, prices, dates, photos) in Strapi without a developer.
 
 ## Non-goals (Phase 1)
@@ -11,11 +11,11 @@ A trekker anywhere can: land on the site → see an interactive Himalayan map �
 - User accounts / login
 - Marketplace of other agencies
 - All-India trek directory (map is scoped to UK + HP)
-- Reviews engine (Phase 2 — we already have Google reviews to embed)
+- Reviews engine (Phase 2  -  we already have Google reviews to embed)
 
 ## Users
-1. **Trekker (customer)** — browses on mobile (60%+), wants price, dates, difficulty, photos, "how do I reach", and a fast way to say "I'm in".
-2. **Agency admin (non-technical)** — updates treks/batches/photos in Strapi admin; gets booking notifications on WhatsApp.
+1. **Trekker (customer)**  -  browses on mobile (60%+), wants price, dates, difficulty, photos, "how do I reach", and a fast way to say "I'm in".
+2. **Agency admin (non-technical)**  -  updates treks/batches/photos in Strapi admin; gets booking notifications on WhatsApp.
 
 ## Phase 1 features (MoSCoW)
 **Must**
@@ -33,7 +33,7 @@ A trekker anywhere can: land on the site → see an interactive Himalayan map �
 - Google Reviews embed on homepage (existing 5.0★)
 
 **Could (only if time allows)**
-- Hindi/English toggle — structure ready, content Phase 2 `[DECISION-1]`
+- Hindi/English toggle  -  structure ready, content Phase 2 `[DECISION-1]`
 - Group-discount pricing display
 
 ## Phase 2 (documented, not built)

@@ -19,7 +19,7 @@ Repo: monorepo `apps/web` (Astro 5, output: 'hybrid') + `apps/cms` (Strapi 5). `
 - **Strapi 5 REST** (not GraphQL): caching simplicity, per-field permissions, one client surface. Public API read-only; writes only via booking action using a server-side token.
 - **Hybrid rendering**: everything prerendered EXCEPT the booking action endpoint and the Strapi webhook receiver.
 - **MapLibre GL + MapTiler free tier** (100k map loads/mo). No Google Maps key needed for the homepage map. Google Maps used ONLY as per-trek-page embed (free).
-- **Render for Strapi** (not Railway): free tier has persistent disk — Railway's ephemeral FS loses `/uploads` on every deploy. Media anyway goes to Cloudinary; disk is belt-and-suspenders.
+- **Render for Strapi** (not Railway): free tier has persistent disk  -  Railway's ephemeral FS loses `/uploads` on every deploy. Media anyway goes to Cloudinary; disk is belt-and-suspenders.
 - **Neon** free Postgres, **Cloudinary** free tier (25GB) for images.
 
 ## Revalidation flow

@@ -1,3 +1,8 @@
+"""
+update_slug.py - Early Scaffolding Utility
+Purpose: Historical utility script used during early sprint scaffolding to generate apps/web/src/pages/treks/[slug].astro.
+Note: Production development maintains [slug].astro directly within Astro. Running this script will overwrite [slug].astro with an older template lacking AltitudeAcclimatizationLab.
+"""
 import sys
 
 content = """---
