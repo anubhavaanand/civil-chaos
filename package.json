@@ -20,5 +20,8 @@
     "@astrojs/node": "^11.1.5",
     "maplibre-gl": "^6.9.0",
     "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "astro": "^5.18.2"
   }
 }
