@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?q=80&w=2000&auto=format&fit=crop" alt="Himalayan Peaks Banner" style="width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 20px;">
+  <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/himalayas_banner.jpg" alt="Himalayan Peaks Banner" style="width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 20px;">
 
   <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/apps/web/public/favicon.svg" width="80" height="80" alt="Holy Himalayas Logo">
   
@@ -36,12 +36,12 @@
       <p>Dark mode natively. Neon teal topographical accents, frosted glass components, and hardware-accelerated CSS animations. Built entirely on Tailwind v4.</p>
     </td>
     <td width="50%">
-      <img src="https://images.unsplash.com/photo-1522163182402-834f871fd851?q=80&w=600&auto=format&fit=crop" alt="Dark UI Concept" style="border-radius: 8px;">
+      <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/alpine_glass_ui.jpg" alt="Dark UI Concept" style="border-radius: 8px;">
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <img src="https://images.unsplash.com/photo-1623910271015-c26569a941ea?q=80&w=600&auto=format&fit=crop" alt="3D Topography Concept" style="border-radius: 8px;">
+      <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/topo_map_ui.jpg" alt="3D Topography Concept" style="border-radius: 8px;">
     </td>
     <td width="50%">
       <h3>🌍 3D Peak Telemetry</h3>
@@ -54,7 +54,7 @@
       <p>Custom <code>MapLibre GL JS</code> integration with MapTiler's <code>terrain-rgb-v2</code>. Renders the Himalayas in exaggerated 3D with atmospheric fog and custom vector tracking.</p>
     </td>
     <td width="50%">
-      <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=600&auto=format&fit=crop" alt="Map Interface Concept" style="border-radius: 8px;">
+      <img src="https://raw.githubusercontent.com/anubhavaanand/civil-chaos/main/docs/images/topo_map_ui.jpg" alt="Map Interface Concept" style="border-radius: 8px;">
     </td>
   </tr>
 </table>
