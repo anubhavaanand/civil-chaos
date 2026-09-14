@@ -130,6 +130,7 @@
       diff: 'Easy-Moderate',
       desc: 'Pinnacle 360° winter snow peak offering breathtaking views of Swargarohini & Black Peak ranges.',
       slug: 'kedarkantha',
+      modelPath: '/models/kedarkantha.glb',
       camPos: { x: 12, y: 14, z: 18 },
       targetPos: { x: 4, y: 3.5, z: 2 }
     },
@@ -140,6 +141,7 @@
       diff: 'Moderate',
       desc: 'Cradle of ancient Himalayan folklore surrounded by alpine pine glades and glaciers.',
       slug: 'har-ki-dun',
+      modelPath: '/models/har-ki-dun.glb',
       camPos: { x: -14, y: 10, z: 16 },
       targetPos: { x: -5, y: 2, z: -2 }
     },
@@ -553,6 +555,9 @@
 
     targetCamPos = data.camPos;
     targetLookAt = data.targetPos;
+    if ((window as any).loadPeakModel) {
+       (window as any).loadPeakModel(data.modelPath || '/models/weisse_wand_mountain_peek_draco.glb');
+    }
 
     // Update HUD
     const hudTitle = document.getElementById('hud-title');
