@@ -51,7 +51,7 @@ const { treks } = Astro.props;
   async function loadMapLibre() {
     try {
       // Dynamically import MapLibre
-      const maplibregl = (await import('maplibre-gl')).default;
+      const maplibregl = await import('maplibre-gl');
       await import('maplibre-gl/dist/maplibre-gl.css');
 
       const treksData = container?.dataset.treks;
@@ -122,13 +122,15 @@ const { treks } = Astro.props;
             .addTo(map);
         });
 
-        // Add subtle fog/atmosphere for realism
-        map.setFog({
-          'color': 'rgba(5, 5, 5, 0.9)',
-          'high-color': 'rgba(0, 242, 254, 0.1)',
-          'horizon-blend': 0.1,
-          'space-color': 'rgba(0, 0, 0, 1)'
-        });
+        // Add subtle fog/atmosphere for realism if supported
+        if (typeof (map as any).setFog === 'function') {
+          (map as any).setFog({
+            'color': 'rgba(5, 5, 5, 0.9)',
+            'high-color': 'rgba(0, 242, 254, 0.1)',
+            'horizon-blend': 0.1,
+            'space-color': 'rgba(0, 0, 0, 1)'
+          });
+        }
       });
 
     } catch (err) {
