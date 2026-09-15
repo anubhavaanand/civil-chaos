@@ -102,7 +102,35 @@ All interactive cards, modals, and telemetry readouts employ the double-bezel co
 
 ---
 
-## 7. Explicit Anti-Patterns (Banned Design Slop)
+## 7. Seamless Cross-Page Transitions & Morphing Hero
+
+To eliminate jarring hard page jumps and deliver the fluid tactile continuity of a native app, all page navigation leverages the **View Transitions API** with strict shared element choreography:
+
+### Shared Element Transition Mapping
+When an explorer transitions from the Homepage or Catalog into an Expedition Detail route (`/treks/[slug]`), key visual anchors must morph seamlessly across routes:
+
+1. **Hero Photography (`transition:name: hero-image-[slug]`):**
+   - **Source (Trek Card):** Bounded rounded rectangle (`rounded-lg`, aspect-ratio 16:10).
+   - **Destination (Route Detail):** Expands smoothly into full-viewport widescreen banner (`min-h-[60vh]`) with calibrated dark scrim floor.
+   - **Physics:** 320ms spring interpolation (`cubic-bezier(0.16, 1, 0.3, 1)`).
+
+2. **Expedition Title (`transition:name: hero-title-[slug]`):**
+   - The route name morphs smoothly from `1.25rem` card heading into `clamp(2.5rem, 5vw, 4rem)` display title without flickering or repainting.
+
+3. **Altitude & Difficulty Telemetry (`transition:name: telemetry-[slug]`):**
+   - The altitude pill (`3,810m`) and difficulty badge glide into the fixed expedition sticky HUD bar.
+
+4. **Persistent Navigation Dock (`transition:name: main-navigation`):**
+   - Anchored with `transition:persist`. The top glass navbar never unmounts, blurs, or jerks during cross-page routing.
+
+### Transition Timing & Choreography
+- **Exit Animation (`::view-transition-old(root)`):** `220ms cubic-bezier(0.2, 0, 0, 1)` gentle opacity decay and `-0.5%` scale reduction.
+- **Entry Animation (`::view-transition-new(root)`):** `320ms cubic-bezier(0.16, 1, 0.3, 1)` fade-in with a `+4px` upward translation settle.
+- **Reduced Motion Compliance:** `@media (prefers-reduced-motion: reduce)` immediately cancels spatial morphs and reverts to instant cut.
+
+---
+
+## 8. Explicit Anti-Patterns (Banned Design Slop)
 
 The following conventions are strictly prohibited across all generated screens:
 
@@ -114,3 +142,36 @@ The following conventions are strictly prohibited across all generated screens:
 6. **No 3-Column Equal Card Clichés:** Standard three equal-sized cards in a row are banned. Use asymmetric bento grids or horizontal technical matrices.
 7. **No AI Copywriting Clichés:** Words like "Elevate", "Seamless", "Unleash", "Next-Gen", "Bespoke Journey" are banned. Use authentic Himalayan terminology ("Staging Window", "Alpine Ridge", "High Pass Traverse", "Acclimatization Profile").
 8. **No Filler UI Navigation:** Floating bounce arrows, "Scroll to explore" badges, and pulsating down-chevrons are banned.
+
+---
+
+## 9. Google Stitch Web Workflow & Command Recipes
+
+When prompting in Google Stitch Web ([labs.google/stitch](https://labs.google/stitch)), apply the following structured commands to force Stitch to adhere to this design language:
+
+### Step 1: Initialize Stitch Project Design System
+Paste the contents of this `DESIGN.md` into your Stitch project's **Design System** or **Custom Instructions** tab so all generated screens inherit these tokens automatically.
+
+### Recipe A: Homepage Hero & Asymmetric 3D Viewport
+> "Generate an austere, dark-mode alpine expedition homepage for Dream of The Holy Himalayas based on our DESIGN.md. 
+> Layout: Asymmetric split. Left column features a tight, geometric headline in Space Grotesk ('SACRED PEAKS. INTIMATE EXPEDITIONS.'), a mono status pill for Mautar HQ (1,950m), and a tactile primary dispatch button in Glacier Cyan (#00F2FE). 
+> Right column: Interactive 3D peak telemetry viewport with dark slate double-bezel framing, snow particle overlay, and altitude waypoint HUD. 
+> Styling: Obsidian bedrock (#050505), frosted glass panels with dark scrim, 1px white border lines (8% opacity). No emojis, no purple glows, no centered hero text."
+
+### Recipe B: Route Detail with Morphing Hero & Elevation HUD
+> "Generate an expedition detail screen for the Kedarkantha Winter Push (3,810m) adhering to DESIGN.md. 
+> Top: Full-bleed widescreen mountain ridge image with transition:name anchor 'hero-image-kedarkantha' under an optical dark scrim. 
+> Main content: Left 65% column showcases day-by-day technical itinerary logs with altitude profiles and campsite waypoints. Right 35% column features a double-bezel medical readiness checklist and fixed departure batch availability table. 
+> Bottom: Fixed sticky telemetry bar with elevation, difficulty tag, and WhatsApp booking trigger. Enforce Swiss typographic spacing and single-accent Glacier Cyan."
+
+### Recipe C: Regional Expedition Catalog Matrix
+> "Generate a technical expedition catalog screen for Himalayan treks across Garhwal, Kumaon, and Himachal. 
+> Header: Regional filter tabs with active Glacier Cyan underline. 
+> Grid: 2-column dominant asymmetric bento grid. The lead card is a double-width hero expedition with integrated route coordinates, followed by single-column technical cards. 
+> Card details: High-pass photography, difficulty badge, duration in days, and 'Starts from INR' in monospace font. Ensure each card is framed with our 1px whisper border and tactile hover physics."
+
+### Recipe D: High-Alpine Booking Drawer Modal
+> "Generate a focused booking request drawer dialog for Himalayan expeditions. 
+> Backdrop: 75% obsidian scrim with 12px background blur. 
+> Form: Double-bezel container with inputs for climber name, WhatsApp telephone, batch date picker, and fitness grade selector. 
+> Bottom: Summary of zero-penalty weather guarantee and direct dispatch CTA button in Glacier Cyan (#00F2FE). Keep inputs minimal with uppercase monospace labels above each field."
