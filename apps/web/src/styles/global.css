@@ -22,6 +22,16 @@
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+    letter-spacing: -0.025em;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
 @layer utilities {
   .btn-tactile {
     transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), background-color 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease, box-shadow 200ms ease;
