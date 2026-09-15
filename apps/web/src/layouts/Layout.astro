@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -28,6 +29,7 @@ const {
     <meta property="og:image" content={ogImage} />
     
     <title>{title}</title>
+    <ViewTransitions fallback="animate" />
     <slot name="head" />
   </head>
   <body class="bg-slate-950 text-ink font-body min-h-screen">
