@@ -23,9 +23,12 @@
 - [x] about.html
 
 ## 5. The Roadmap (Backlog)
-- **High Priority**: Overhaul Homepage Hero & Map overlay using premium Stitch design.
-- **Medium Priority**: Redesign the Trek Detail itinerary timeline and Booking Modal.
-- **Low Priority**: Add Altitude Acclimatization Lab interactive widget.
+- [x] **High Priority**: Overhaul Homepage Hero & Map overlay using premium Stitch design.
+- [x] **High Priority**: Migrate Expedition Catalog & Filter Matrix (treks/index.astro) to Himalayan Light theme.
+- [x] **Medium Priority**: Redesign the Trek Detail itinerary timeline and Booking Modal.
+- [x] **Low Priority**: Add Altitude Acclimatization Lab interactive widget.
+- [ ] **Next Iteration**: Redesign Alpine Heritage & Guides page (about.astro).
+- [ ] **Pending**: Redesign Field Communications & Relay Desk page (contact.astro).
 
 ## 6. Creative Freedom Guidelines
 Focus on glassmorphism interfaces layered over high-quality mountain documentary photography. Emphasize trust (reviews, transparency) and easy access to the WhatsApp booking flow.
