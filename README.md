@@ -21,21 +21,32 @@
   </p>
 
   <p align="center">
-    <i>HQ: Village Mautar, Uttarkashi, Uttarakhand</i>
+    <i>Proprietary in-house platform of Dream of The Holy Himalayas — HQ: Village Mautar, Uttarkashi, Uttarakhand</i>
   </p>
 </div>
 
 <br />
 
-> **Dream of The Holy Himalayas** is a premium, high-performance web platform built for a boutique trekking agency. Designed to shatter the traditional "budget tour operator" aesthetic, this platform utilizes a bespoke **Alpine Glass** design system, cinematic dark-mode interfaces, interactive 3D topography, and real-time telemetry HUDs.
+> **Dream of The Holy Himalayas** is the proprietary booking and storytelling platform of a boutique Himalayan trekking agency. Designed to shatter the traditional "budget tour operator" aesthetic, it pairs a bespoke **Alpine Glass** design system with interactive 3D topography, live trek telemetry HUDs, and a fully CMS-driven content pipeline — every trek, price, and batch is managed by the agency team without a single code deploy.
 
 ---
 
+## ✦ Platform Highlights
 
+| | |
+|---|---|
+| 🏔 **Immersive 3D Terrain** | Draco-compressed GLB mountain models with procedural snowfall, lazy-loaded only when in viewport |
+| 🗺 **Interactive Trek Map** | MapLibre GL + MapTiler terrain DEM, trekkable routes with elevation-exaggerated profiles |
+| 📱 **Telemetry-Style Storytelling** | Altitude acclimatization lab, fitness readiness quiz, live batch-seat availability |
+| 🔒 **Secure Booking Relay** | Bot-hardened form → server-side Strapi write → instant WhatsApp deep link to basecamp |
+| ✍️ **Zero-Deploy Content** | All trek data, pricing, itineraries, FAQs, and SEO metadata editable in Strapi admin |
+| ⚡ **Edge-Fast Delivery** | Astro hybrid rendering on Cloudflare Pages; marketing pages ship pure HTML, near-zero JS |
+
+---
 
 ## 🏗 System Architecture
 
-The platform operates on a decoupled edge-architecture, ensuring lightning-fast static delivery with secure, serverless data fetching.
+A decoupled edge architecture: lightning-fast static delivery with secure, serverless data fetching.
 
 ```mermaid
 graph TD;
@@ -56,9 +67,9 @@ graph TD;
     end
 ```
 
-### 🔀 Secure Booking Flow (Phase 1)
+### 🔀 Secure Booking Flow
 
-All Strapi write operations are routed securely through an Astro Server Action, completely hiding the Strapi API tokens from the client browser.
+All CMS writes are routed through an Astro Server Action with honeypot checks and per-IP rate limiting — the Strapi token never touches a browser.
 
 ```mermaid
 sequenceDiagram
@@ -80,57 +91,47 @@ sequenceDiagram
 
 ---
 
-## 🚀 Local Development
-
-### Prerequisites
-* Node.js 20+
-* NPM Workspace Support
-
-### 1. Installation
-Clone the repository and install dependencies from the root directory:
-```bash
-git clone https://github.com/anubhavaanand/civil-chaos.git
-cd civil-chaos
-npm install
-```
-
-### 2. Environment Setup
-You will need to configure environment variables for both the frontend and the CMS. 
-```bash
-cp apps/web/.env.example apps/web/.env
-cp apps/cms/.env.example apps/cms/.env
-```
-
-### 3. Running the Stack
-The frontend and CMS run as separate processes — use two terminals:
-```bash
-npm run dev                             # Astro frontend → http://localhost:4321
-npm run develop --workspace=apps/cms    # Strapi → http://localhost:1337/admin
-```
-
----
-
-## 🗂 Project Layout
+## 🗂 Inside the Repository
 
 ```
-apps/web      Astro 4 frontend (hybrid output, Cloudflare Pages)
-apps/cms      Strapi 5 headless CMS (Render + Neon Postgres)
-docs/         Specs: PRD, architecture, schema, API contract, design system
+civil-chaos/
+├── apps/
+│   ├── web/                  # Astro 4 frontend — hybrid render, Cloudflare Pages
+│   │   ├── src/
+│   │   │   ├── pages/        # Home, About, Contact, Trek catalog & detail routes
+│   │   │   ├── components/   # Alpine Glass UI: map, 3D viewer, telemetry, booking
+│   │   │   ├── actions/      # Serverless booking endpoint (validation + rate limit)
+│   │   │   ├── lib/          # Strapi client, Zod response schemas
+│   │   │   └── styles/       # Design tokens & glass system
+│   │   ├── public/           # GLB terrain models, expedition photography, favicons
+│   │   └── tests/            # Playwright E2E for the booking journey
+│   └── cms/                  # Strapi 5 headless CMS — Render + Neon Postgres
+│       ├── src/api/          # Content types: Trek, Batch, Package, Region, Booking, Settings
+│       └── scripts/          # Database seeding for reproducible environments
+├── docs/                     # Engineering specs (see below)
+├── DESIGN.md                 # Alpine Glass design-system contract
+├── AGENTS.md                 # Project guardrails & locked architectural decisions
+├── render.yaml               # CMS infrastructure-as-code (Render blueprint)
+└── package.json              # npm workspaces orchestrating web + cms
 ```
+
+### 📐 Engineering Standards
+
+Every subsystem is spec-driven:
 
 | Spec | Covers |
 |---|---|
 | [docs/PRD.md](docs/PRD.md) | Goals, scope, users, phases |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, infra, env vars, deploy |
-| [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) | Strapi content types |
-| [docs/API_CONTRACT.md](docs/API_CONTRACT.md) | REST endpoints, webhooks |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, infra, env vars, deploy topology |
+| [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) | Strapi content types & relations |
+| [docs/API_CONTRACT.md](docs/API_CONTRACT.md) | REST endpoints, webhooks, error semantics |
 | [docs/MAP_COMPONENT_SPEC.md](docs/MAP_COMPONENT_SPEC.md) | Interactive trek map |
 | [docs/FRONTEND_DESIGN_SPEC.md](docs/FRONTEND_DESIGN_SPEC.md) | Pages & Alpine Glass design system |
-| [docs/BOOKING_FLOW.md](docs/BOOKING_FLOW.md) | Booking validation & notifications |
-
-Contributions welcome from contracted collaborators — see [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](../../issues/new/choose).
+| [docs/BOOKING_FLOW.md](docs/BOOKING_FLOW.md) | Booking validation & notification flow |
 
 ---
+
 <p align="center">
-  <i>Proprietary software — see <a href="LICENSE">LICENSE</a>. All rights reserved by Dream of The Holy Himalayas.</i>
+  <i>🔒 This repository is a public showcase of proprietary software.</i><br/>
+  <i>All rights reserved by Dream of The Holy Himalayas — see <a href="LICENSE">LICENSE</a>.</i>
 </p>
