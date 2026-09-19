@@ -17,6 +17,10 @@
   </p>
 
   <p align="center">
+    <a href="https://civil-chaos.pages.dev"><img src="https://img.shields.io/badge/%F0%9F%94%BA_Live-civil--chaos.pages.dev-F4A261?style=for-the-badge" alt="Live site" /></a>
+  </p>
+
+  <p align="center">
     <i>HQ: Village Mautar, Uttarkashi, Uttarakhand</i>
   </p>
 </div>
@@ -98,14 +102,35 @@ cp apps/cms/.env.example apps/cms/.env
 ```
 
 ### 3. Running the Stack
-Run the entire monorepo concurrently:
+The frontend and CMS run as separate processes — use two terminals:
 ```bash
-npm run dev
+npm run dev                             # Astro frontend → http://localhost:4321
+npm run develop --workspace=apps/cms    # Strapi → http://localhost:1337/admin
 ```
-* **Astro Frontend:** [http://localhost:4321](http://localhost:4321)
-* **Strapi Admin Panel:** [http://localhost:1337/admin](http://localhost:1337/admin)
+
+---
+
+## 🗂 Project Layout
+
+```
+apps/web      Astro 4 frontend (hybrid output, Cloudflare Pages)
+apps/cms      Strapi 5 headless CMS (Render + Neon Postgres)
+docs/         Specs: PRD, architecture, schema, API contract, design system
+```
+
+| Spec | Covers |
+|---|---|
+| [docs/PRD.md](docs/PRD.md) | Goals, scope, users, phases |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, infra, env vars, deploy |
+| [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) | Strapi content types |
+| [docs/API_CONTRACT.md](docs/API_CONTRACT.md) | REST endpoints, webhooks |
+| [docs/MAP_COMPONENT_SPEC.md](docs/MAP_COMPONENT_SPEC.md) | Interactive trek map |
+| [docs/FRONTEND_DESIGN_SPEC.md](docs/FRONTEND_DESIGN_SPEC.md) | Pages & Alpine Glass design system |
+| [docs/BOOKING_FLOW.md](docs/BOOKING_FLOW.md) | Booking validation & notifications |
+
+Contributions welcome from contracted collaborators — see [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](../../issues/new/choose).
 
 ---
 <p align="center">
-  <i>Proprietary software. All rights reserved by Dream of The Holy Himalayas.</i>
+  <i>Proprietary software — see <a href="LICENSE">LICENSE</a>. All rights reserved by Dream of The Holy Himalayas.</i>
 </p>
