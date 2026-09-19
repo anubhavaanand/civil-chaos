@@ -36,6 +36,12 @@ Detailed specs live in `/docs/*.md` (this file only summarizes + sets guardrails
 - WhatsApp deep-link = primary booking notification; email = backup/record
 - Map scope: Uttarakhand + Himachal Pradesh only (not all-India)
 
+## Current Project State (Phase 1 Backend Complete)
+- ✅ **Strapi CMS**: Live at `civil-chaos.onrender.com`. All schemas created.
+- ✅ **Neon DB**: Fully seeded (10 treks, 3 regions, 23 batches, 11 packages). Public read permissions are enabled.
+- ✅ **Astro Frontend**: Live at `civil-chaos.pages.dev`. E2E Playwright tests implemented in `apps/web/tests/booking.spec.ts`.
+- **Current Focus**: Frontend UI/UX (Google Stitch), booking action wiring, map integration.
+
 ## Commands
 - Web: `npm run dev` / `npm run build` / `npm run check` (in `apps/web`)
 - CMS: `npm run develop` / `npm run build` (in `apps/cms`)

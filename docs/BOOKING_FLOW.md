@@ -23,6 +23,9 @@ Strapi lifecycle `afterCreate` → Resend (or SMTP) to agency email: new-booking
 ## Admin workflow (document for the agency)
 Strapi admin → Booking Requests: mark new → contacted → confirmed/closed. Phase 2 adds payment status here.
 
+## Automated Testing (Playwright)
+✅ **Completed**: The booking form flow (opening modal, date selection, phone validation, honeypot) is fully covered by automated End-to-End Playwright tests in `apps/web/tests/booking.spec.ts`.
+
 ## Spam/abuse stance
 No CAPTCHA (conversion killer). Honeypot + IP rate limit + server-side phone validation covers ~95% of bots. Monitor after launch; add Cloudflare Turnstile later ONLY if real spam observed.
 
