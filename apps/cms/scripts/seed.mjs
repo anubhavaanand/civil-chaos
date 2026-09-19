@@ -143,6 +143,7 @@ async function main() {
     }
     const regionKey = (trek.region || 'Garhwal').toLowerCase();
     const regionId = regionMap[regionKey];
+    const isFeatured = trek.slug === 'kuari-pass' || trek.slug === 'kedarkantha' || trek.slug === 'bali-pass';
 
     const trekPayload = {
       name: trek.name,
@@ -156,7 +157,8 @@ async function main() {
       startPoint: trek.startPoint,
       coordinates: trek.coordinates ? { lng: trek.coordinates[0], lat: trek.coordinates[1] } : null,
       bestSeasons: trek.bestSeasons,
-      isFeatured: trek.slug === 'kuari-pass' || trek.slug === 'kedarkantha' || trek.slug === 'bali-pass',
+      isFeatured,
+      popularity: isFeatured ? 100 : Math.max(1, treks.length - treks.indexOf(trek)),
       itinerary: (trek.itinerary || []).map(item => ({
         day: item.day,
         title: item.title,
