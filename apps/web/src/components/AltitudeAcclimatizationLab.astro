@@ -15,31 +15,31 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
   <div class="double-bezel-inner p-6 sm:p-8 bg-[#0a0f18]/95 backdrop-blur-2xl">
     
     <!-- Header Row -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/10">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-[#0F172A]/10">
       <div>
         <div class="flex items-center gap-2 mb-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
-          <span class="text-[10px] font-mono text-[#00f2fe] uppercase tracking-widest font-bold">Himalayan Medical Protocol</span>
+          <span class="text-[10px] font-mono text-[#EA580C] uppercase tracking-widest font-bold">Himalayan Medical Protocol</span>
         </div>
-        <h3 class="text-2xl font-display font-bold text-white">High-Altitude Physiology & Acclimatization Lab</h3>
-        <p class="text-xs text-silver mt-1 font-light">Interactive barometric telemetry and Lake Louise AMS (Acute Mountain Sickness) clinical screener.</p>
+        <h3 class="text-2xl font-display font-bold text-[#0F172A]">High-Altitude Physiology & Acclimatization Lab</h3>
+        <p class="text-xs text-[#94A3B8] mt-1 font-light">Interactive barometric telemetry and Lake Louise AMS (Acute Mountain Sickness) clinical screener.</p>
       </div>
 
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 font-mono text-xs text-silver self-start sm:self-auto">
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#0F172A]/10 bg-[#0F172A]/5 font-mono text-xs text-[#94A3B8] self-start sm:self-auto">
         <span>Target:</span>
-        <span class="text-[#00f2fe] font-bold">{trekName}</span>
+        <span class="text-[#EA580C] font-bold">{trekName}</span>
       </div>
     </div>
 
     <!-- Interactive Elevation Scrubber -->
-    <div class="mb-8 p-5 rounded-xl bg-[#050505]/80 border border-white/10">
+    <div class="mb-8 p-5 rounded-xl bg-[#F9FAFB]/80 border border-[#0F172A]/10">
       <div class="flex items-center justify-between mb-3 font-mono text-xs">
-        <label for="altitudeRange" class="uppercase text-silver font-bold tracking-wider">
+        <label for="altitudeRange" class="uppercase text-[#94A3B8] font-bold tracking-wider">
           Simulated Ascent Datum (Meters MSL)
         </label>
-        <span id="altitudeDisplay" class="text-lg font-bold text-[#00f2fe]">
+        <span id="altitudeDisplay" class="text-lg font-bold text-[#EA580C]">
           {initialAltitudeM.toLocaleString()}m 
-          <span class="text-xs text-silver/60 font-normal">({Math.round(initialAltitudeM * 3.28084).toLocaleString()} ft)</span>
+          <span class="text-xs text-[#94A3B8] font-normal">({Math.round(initialAltitudeM * 3.28084).toLocaleString()} ft)</span>
         </span>
       </div>
 
@@ -50,10 +50,10 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
         max="5500" 
         step="50" 
         value={initialAltitudeM}
-        class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00f2fe]"
+        class="w-full h-2 bg-[#0F172A]/10 rounded-lg appearance-none cursor-pointer accent-[#EA580C]"
       />
 
-      <div class="flex justify-between font-mono text-[10px] text-silver/50 mt-2">
+      <div class="flex justify-between font-mono text-[10px] text-[#94A3B8]/50 mt-2">
         <span>1,500m (Valley)</span>
         <span>1,950m (Mautar HQ)</span>
         <span>3,800m (Kedarkantha)</span>
@@ -66,44 +66,44 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       
       <!-- Oxygen Concentration -->
-      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
-        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Effective Oxygen</div>
-        <div id="telemetryO2" class="text-2xl font-mono font-bold text-white">63.8%</div>
-        <p class="text-[11px] text-silver/70 mt-1 font-mono">Relative to Sea Level</p>
+      <div class="p-4 rounded-xl border border-[#0F172A]/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-[#94A3B8] tracking-wider mb-1">Effective Oxygen</div>
+        <div id="telemetryO2" class="text-2xl font-mono font-bold text-[#0F172A]">63.8%</div>
+        <p class="text-[11px] text-[#94A3B8]/70 mt-1 font-mono">Relative to Sea Level</p>
       </div>
 
       <!-- Barometric Pressure -->
-      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
-        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Air Pressure</div>
-        <div id="telemetryPressure" class="text-2xl font-mono font-bold text-white">646 hPa</div>
-        <p class="text-[11px] text-silver/70 mt-1 font-mono">Standard 1013 hPa</p>
+      <div class="p-4 rounded-xl border border-[#0F172A]/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-[#94A3B8] tracking-wider mb-1">Air Pressure</div>
+        <div id="telemetryPressure" class="text-2xl font-mono font-bold text-[#0F172A]">646 hPa</div>
+        <p class="text-[11px] text-[#94A3B8]/70 mt-1 font-mono">Standard 1013 hPa</p>
       </div>
 
       <!-- Hydration Advisory -->
-      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
-        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Daily Hydration</div>
-        <div id="telemetryWater" class="text-2xl font-mono font-bold text-[#00f2fe]">4.2 L</div>
-        <p class="text-[11px] text-silver/70 mt-1 font-mono">Minimum Required</p>
+      <div class="p-4 rounded-xl border border-[#0F172A]/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-[#94A3B8] tracking-wider mb-1">Daily Hydration</div>
+        <div id="telemetryWater" class="text-2xl font-mono font-bold text-[#EA580C]">4.2 L</div>
+        <p class="text-[11px] text-[#94A3B8]/70 mt-1 font-mono">Minimum Required</p>
       </div>
 
       <!-- Water Boiling Point -->
-      <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
-        <div class="text-[10px] font-mono uppercase text-silver/60 tracking-wider mb-1">Boiling Point</div>
-        <div id="telemetryBoil" class="text-2xl font-mono font-bold text-white">87.5°C</div>
-        <p class="text-[11px] text-silver/70 mt-1 font-mono">Affects Digestion & Heat</p>
+      <div class="p-4 rounded-xl border border-[#0F172A]/10 bg-white/[0.03]">
+        <div class="text-[10px] font-mono uppercase text-[#94A3B8] tracking-wider mb-1">Boiling Point</div>
+        <div id="telemetryBoil" class="text-2xl font-mono font-bold text-[#0F172A]">87.5°C</div>
+        <p class="text-[11px] text-[#94A3B8]/70 mt-1 font-mono">Affects Digestion & Heat</p>
       </div>
 
     </div>
 
     <!-- Lake Louise Acute Mountain Sickness (AMS) Interactive Clinical Diagnostic -->
-    <div class="p-6 rounded-2xl border border-white/10 bg-[#050505]/90 mb-8">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-5 border-b border-white/10">
+    <div class="p-6 rounded-2xl border border-[#0F172A]/10 bg-[#F9FAFB]/90 mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-5 border-b border-[#0F172A]/10">
         <div>
-          <h4 class="text-sm font-mono font-bold text-white uppercase tracking-wider">Lake Louise AMS Clinical Screener (2018 Consensus)</h4>
-          <p class="text-[11px] text-silver font-light mt-0.5">Self-evaluate altitude symptom severity before or during high moraine crossings.</p>
+          <h4 class="text-sm font-mono font-bold text-[#0F172A] uppercase tracking-wider">Lake Louise AMS Clinical Screener (2018 Consensus)</h4>
+          <p class="text-[11px] text-[#94A3B8] font-light mt-0.5">Self-evaluate altitude symptom severity before or during high moraine crossings.</p>
         </div>
         <div class="flex items-center gap-2 font-mono text-xs">
-          <span class="text-silver">AMS Clinical Score:</span>
+          <span class="text-[#94A3B8]">AMS Clinical Score:</span>
           <span id="amsScoreBadge" class="px-2.5 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 / 12 (Safe)</span>
         </div>
       </div>
@@ -113,8 +113,8 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
         
         <!-- Headache -->
         <div>
-          <label for="sympHeadache" class="block text-xs font-mono font-bold text-silver mb-1.5">Headache</label>
-          <select id="sympHeadache" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+          <label for="sympHeadache" class="block text-xs font-mono font-bold text-[#94A3B8] mb-1.5">Headache</label>
+          <select id="sympHeadache" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-[#0F172A] outline-none font-mono">
             <option value="0">0: None</option>
             <option value="1">1: Mild headache</option>
             <option value="2">2: Moderate headache</option>
@@ -124,8 +124,8 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
 
         <!-- Gastrointestinal -->
         <div>
-          <label for="sympGI" class="block text-xs font-mono font-bold text-silver mb-1.5">Gastrointestinal</label>
-          <select id="sympGI" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+          <label for="sympGI" class="block text-xs font-mono font-bold text-[#94A3B8] mb-1.5">Gastrointestinal</label>
+          <select id="sympGI" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-[#0F172A] outline-none font-mono">
             <option value="0">0: Normal appetite</option>
             <option value="1">1: Poor appetite / nausea</option>
             <option value="2">2: Moderate nausea / vomiting</option>
@@ -135,8 +135,8 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
 
         <!-- Fatigue / Weakness -->
         <div>
-          <label for="sympFatigue" class="block text-xs font-mono font-bold text-silver mb-1.5">Fatigue / Weakness</label>
-          <select id="sympFatigue" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+          <label for="sympFatigue" class="block text-xs font-mono font-bold text-[#94A3B8] mb-1.5">Fatigue / Weakness</label>
+          <select id="sympFatigue" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-[#0F172A] outline-none font-mono">
             <option value="0">0: Normal energy</option>
             <option value="1">1: Mild tiredness</option>
             <option value="2">2: Moderate weakness</option>
@@ -146,8 +146,8 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
 
         <!-- Dizziness / Lightheadedness -->
         <div>
-          <label for="sympDizziness" class="block text-xs font-mono font-bold text-silver mb-1.5">Dizziness</label>
-          <select id="sympDizziness" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-white outline-none font-mono">
+          <label for="sympDizziness" class="block text-xs font-mono font-bold text-[#94A3B8] mb-1.5">Dizziness</label>
+          <select id="sympDizziness" class="ams-input w-full bg-[#0a0f18] border border-white/15 rounded-lg px-3 py-2 text-xs text-[#0F172A] outline-none font-mono">
             <option value="0">0: None</option>
             <option value="1">1: Mild dizziness</option>
             <option value="2">2: Moderate vertigo</option>
@@ -164,7 +164,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
         </svg>
         <div class="text-xs font-mono">
           <div id="triageTitle" class="font-bold text-emerald-400 uppercase tracking-wider">Clinical Triage: Optimal Physiology</div>
-          <p id="triageText" class="text-silver/90 mt-1 font-light font-body leading-relaxed">
+          <p id="triageText" class="text-[#94A3B8]/90 mt-1 font-light font-body leading-relaxed">
             Zero significant acute mountain symptoms recorded. Maintain hydration pace of 4+ liters/day and proceed with standard ascent schedule.
           </p>
         </div>
@@ -173,7 +173,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
     </div>
 
     <!-- Emergency Staging & Evacuation Protocol Footer -->
-    <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-xs">
+    <div class="p-5 rounded-xl border border-[#0F172A]/10 bg-white/[0.02] flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-xs">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -181,14 +181,14 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
           </svg>
         </div>
         <div>
-          <span class="text-white font-bold block">Uttarkashi Emergency Rescue Chain</span>
-          <span class="text-silver/60 text-[11px]">SDRF Uttarakhand &middot; Matli Helipad IAF Evacuation &middot; ITBP 12th Bn Liaison</span>
+          <span class="text-[#0F172A] font-bold block">Uttarkashi Emergency Rescue Chain</span>
+          <span class="text-[#94A3B8] text-[11px]">SDRF Uttarakhand &middot; Matli Helipad IAF Evacuation &middot; ITBP 12th Bn Liaison</span>
         </div>
       </div>
 
       <a 
         href="/contact" 
-        class="btn-tactile inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#00f2fe]/40 bg-[#00f2fe]/10 text-[#00f2fe] hover:bg-[#00f2fe] hover:text-[#050505] font-bold uppercase tracking-wider transition-all self-start md:self-auto"
+        class="btn-tactile inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#EA580C]/40 bg-[#EA580C]/10 text-[#EA580C] hover:bg-[#EA580C] hover:text-[#050505] font-bold uppercase tracking-wider transition-all self-start md:self-auto"
       >
         <span>Inspect Dispatch Channels</span>
         <span>&rarr;</span>
@@ -225,7 +225,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
       const boil = 100 - (h / 300);
 
       if (display) {
-        display.innerHTML = `${h.toLocaleString()}m <span class="text-xs text-silver/60 font-normal">(${Math.round(h * 3.28084).toLocaleString()} ft)</span>`;
+        display.innerHTML = `${h.toLocaleString()}m <span class="text-xs text-[#94A3B8] font-normal">(${Math.round(h * 3.28084).toLocaleString()} ft)</span>`;
       }
       if (o2El) o2El.textContent = `${o2.toFixed(1)}%`;
       if (pressEl) pressEl.textContent = `${Math.round(p)} hPa`;
@@ -252,7 +252,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
           scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
         } else if (total < 3) {
           scoreBadge.textContent = `${total} / 12 (Mild Strain)`;
-          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30';
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-whitember-500/20 text-amber-400 border border-amber-500/30';
         } else if (total < 6) {
           scoreBadge.textContent = `${total} / 12 (AMS Alert)`;
           scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30';
@@ -269,7 +269,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
           triageTitle.textContent = 'Clinical Triage: Optimal Physiology';
           triageText.textContent = 'Zero acute mountain symptoms recorded. Maintain hydration pace and proceed with standard ascent schedule.';
         } else if (total < 3) {
-          triageBox.className = 'p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 flex items-start gap-3.5';
+          triageBox.className = 'p-4 rounded-xl border border-amber-500/20 bg-whitember-500/5 flex items-start gap-3.5';
           triageTitle.className = 'font-bold text-amber-400 uppercase tracking-wider';
           triageTitle.textContent = 'Clinical Triage: Mild Hypoxia Staging';
           triageText.textContent = 'Mild fatigue or light symptoms observed. Rest at current camp datum, consume hot electrolyte fluids, and audit pulse oximeter saturation.';

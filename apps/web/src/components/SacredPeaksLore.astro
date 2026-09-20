@@ -4,23 +4,23 @@
 // Oral traditions, spiritual legends, and alpine folklore preserved by Village Mautar elders
 ---
 
-<section id="sacred-peaks" class="py-24 bg-[#050505] border-t border-white/5 relative overflow-hidden">
+<section id="sacred-peaks" class="py-24 bg-[#F9FAFB] border-t border-[#0F172A]/10 relative overflow-hidden">
   <!-- Subtle Ambient Glow -->
-  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#00f2fe]/5 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#EA580C]/5 blur-[120px] rounded-full pointer-events-none"></div>
 
   <div class="max-w-7xl mx-auto px-6 relative z-10">
     
     <!-- Eyebrow & Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-8 border-b border-[#0F172A]/10">
       <div>
         <div class="flex items-center gap-3 mb-3">
-          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
-          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Oral Traditions of Devbhoomi</span>
+          <span class="h-[2px] w-8 bg-[#EA580C]"></span>
+          <span class="text-[#EA580C] font-mono text-xs tracking-widest uppercase font-bold">Oral Traditions of Devbhoomi</span>
         </div>
-        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-[#0F172A] tracking-tight">
           SACRED PEAKS & ALPINE LORE
         </h2>
-        <p class="text-silver mt-3 max-w-2xl text-base font-light leading-relaxed">
+        <p class="text-[#94A3B8] mt-3 max-w-2xl text-base font-light leading-relaxed">
           In Garhwali heritage, mountains are living deities, not conquerable trophies. Explore the sacred folklore, celestial myths, and oral histories safeguarded by Mautar elders.
         </p>
       </div>
@@ -28,10 +28,10 @@
       <!-- Sacred Chime Ambient Audio Trigger -->
       <button 
         id="btn-temple-chime" 
-        class="btn-tactile inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:border-[#00f2fe]/50 hover:bg-[#00f2fe]/10 text-white font-mono text-xs transition-all self-start md:self-auto"
+        class="btn-tactile inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:border-[#EA580C]/50 hover:bg-[#EA580C]/10 text-[#0F172A] font-mono text-xs transition-all self-start md:self-auto"
         title="Harmonic Tibetan singing bowl pulse"
       >
-        <svg class="w-4 h-4 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="w-4 h-4 text-[#EA580C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         <span id="chime-label">Play Temple Bell</span>
@@ -41,7 +41,7 @@
     <!-- Interactive Peak Selection Ribbon -->
     <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none" role="tablist">
       <button 
-        class="peak-lore-btn active-lore-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all shrink-0 border border-[#00f2fe] bg-[#00f2fe] text-[#050505]"
+        class="peak-lore-btn active-lore-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all shrink-0 border border-[#EA580C] bg-[#EA580C] text-[#050505]"
         data-peak-id="nanda-devi"
         role="tab"
         aria-selected="true"
@@ -49,7 +49,7 @@
         Nanda Devi
       </button>
       <button 
-        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-[#0F172A]/10 bg-white/5 text-ink hover:border-white/30"
         data-peak-id="shivling"
         role="tab"
         aria-selected="false"
@@ -57,7 +57,7 @@
         Mt. Shivling
       </button>
       <button 
-        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-[#0F172A]/10 bg-white/5 text-ink hover:border-white/30"
         data-peak-id="swargarohini"
         role="tab"
         aria-selected="false"
@@ -65,7 +65,7 @@
         Swargarohini
       </button>
       <button 
-        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-[#0F172A]/10 bg-white/5 text-ink hover:border-white/30"
         data-peak-id="trishul"
         role="tab"
         aria-selected="false"
@@ -73,7 +73,7 @@
         Mt. Trishul
       </button>
       <button 
-        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-[#0F172A]/10 bg-white/5 text-ink hover:border-white/30"
         data-peak-id="chaukhamba"
         role="tab"
         aria-selected="false"
@@ -81,7 +81,7 @@
         Chaukhamba
       </button>
       <button 
-        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-white/10 bg-white/5 text-ink hover:border-white/30"
+        class="peak-lore-btn px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all shrink-0 border border-[#0F172A]/10 bg-white/5 text-ink hover:border-white/30"
         data-peak-id="bandarpunch"
         role="tab"
         aria-selected="false"
@@ -96,7 +96,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           <!-- Visual Portal -->
-          <div class="lg:col-span-6 relative rounded-2xl overflow-hidden border border-white/10 aspect-[4/3] shadow-2xl group">
+          <div class="lg:col-span-6 relative rounded-2xl overflow-hidden border border-[#0F172A]/10 aspect-[4/3] shadow-2xl group">
             <img 
               id="lore-image" 
               src="https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=1600&auto=format&fit=crop" 
@@ -106,19 +106,19 @@
             <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent"></div>
             
             <div class="absolute top-4 left-4">
-              <span id="lore-tag" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#050505]/80 backdrop-blur-md border border-white/15 font-mono text-[11px] text-[#00f2fe] font-bold uppercase tracking-wider">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#00f2fe] animate-pulse"></span>
+              <span id="lore-tag" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F9FAFB]/80 backdrop-blur-md border border-white/15 font-mono text-[11px] text-[#EA580C] font-bold uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#EA580C] animate-pulse"></span>
                 <span id="lore-subtitle">Patron Goddess of Uttarakhand</span>
               </span>
             </div>
 
-            <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-[#050505]/85 backdrop-blur-md border border-white/10 flex items-center justify-between font-mono text-xs">
+            <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-[#F9FAFB]/85 backdrop-blur-md border border-[#0F172A]/10 flex items-center justify-between font-mono text-xs">
               <div>
-                <span class="text-silver/60 text-[10px] block uppercase tracking-wider">Peak Elevation</span>
-                <span id="lore-elev" class="text-white font-bold text-sm">7,816m (25,643 ft)</span>
+                <span class="text-[#94A3B8]/60 text-[10px] block uppercase tracking-wider">Peak Elevation</span>
+                <span id="lore-elev" class="text-[#0F172A] font-bold text-sm">7,816m (25,643 ft)</span>
               </div>
               <div class="text-right">
-                <span class="text-silver/60 text-[10px] block uppercase tracking-wider">Sanctuary Status</span>
+                <span class="text-[#94A3B8]/60 text-[10px] block uppercase tracking-wider">Sanctuary Status</span>
                 <span id="lore-status" class="text-emerald-400 font-bold">Legally Protected Biosphere</span>
               </div>
             </div>
@@ -127,27 +127,27 @@
           <!-- Mythological Editorial Content -->
           <div class="lg:col-span-6 flex flex-col justify-between">
             <div>
-              <div class="flex items-center gap-2 mb-2 font-mono text-xs text-[#00f2fe]">
+              <div class="flex items-center gap-2 mb-2 font-mono text-xs text-[#EA580C]">
                 <span id="lore-sanskrit">आनन्ददा देवी · The Bliss-Giving Divine Mother</span>
               </div>
-              <h3 id="lore-title" class="text-2xl sm:text-4xl font-display font-black text-white tracking-tight mb-4">
+              <h3 id="lore-title" class="text-2xl sm:text-4xl font-display font-black text-[#0F172A] tracking-tight mb-4">
                 Nanda Devi
               </h3>
-              <p id="lore-body" class="text-silver text-sm sm:text-base leading-relaxed font-light mb-6">
+              <p id="lore-body" class="text-[#94A3B8] text-sm sm:text-base leading-relaxed font-light mb-6">
                 Revered across Garhwal and Kumaon as the divine daughter of the Himalaya who wed Lord Shiva. She is the fierce yet merciful guardian of the mountain passes. Every twelve years, the sacred Nanda Devi Raj Jat pilgrimage traces a rigorous 280-kilometer high-altitude glacial route behind a sacred four-horned ram. Because the inner sanctuary was desecrated by excessive expeditions in the 1970s, the Indian government legally sealed the core biosphere in 1982. To this day, no climber is permitted to set foot on her summit sanctuary.
               </p>
 
               <!-- Sacred Ethic Banner -->
-              <div class="p-4 rounded-xl border border-white/10 bg-white/[0.02] mb-6">
+              <div class="p-4 rounded-xl border border-[#0F172A]/10 bg-white/[0.02] mb-6">
                 <div class="flex items-start gap-3">
-                  <div class="w-7 h-7 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] shrink-0 mt-0.5">
+                  <div class="w-7 h-7 rounded-lg bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center text-[#EA580C] shrink-0 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   </div>
                   <div>
-                    <span class="text-white font-bold text-xs font-display block">The Mautar Elder Counsel</span>
-                    <p id="lore-counsel" class="text-silver/80 text-xs font-light mt-0.5">
+                    <span class="text-[#0F172A] font-bold text-xs font-display block">The Mautar Elder Counsel</span>
+                    <p id="lore-counsel" class="text-[#94A3B8]/80 text-xs font-light mt-0.5">
                       "When you gaze upon Nanda Devi from Kuari Pass, fold your hands in silence before you pick up your camera. The mountain provides life to the rivers that sustain our children."
                     </p>
                   </div>
@@ -156,14 +156,14 @@
             </div>
 
             <!-- Visible On Expeditions Footer -->
-            <div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs">
+            <div class="pt-5 border-t border-[#0F172A]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs">
               <div>
-                <span class="text-silver/60 block text-[10px] uppercase tracking-wider mb-1">Visible On Expeditions</span>
+                <span class="text-[#94A3B8]/60 block text-[10px] uppercase tracking-wider mb-1">Visible On Expeditions</span>
                 <div id="lore-routes" class="flex flex-wrap gap-2">
-                  <a href="/treks/kuari-pass" class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors">
+                  <a href="/treks/kuari-pass" class="px-2.5 py-1 rounded bg-white/5 border border-[#0F172A]/10 text-[#EA580C] hover:bg-[#EA580C]/10 transition-colors">
                     Kuari Pass
                   </a>
-                  <a href="/treks/brahmatal" class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors">
+                  <a href="/treks/brahmatal" class="px-2.5 py-1 rounded bg-white/5 border border-[#0F172A]/10 text-[#EA580C] hover:bg-[#EA580C]/10 transition-colors">
                     Brahmatal
                   </a>
                 </div>
@@ -172,7 +172,7 @@
               <a 
                 id="lore-cta"
                 href="/treks/kuari-pass" 
-                class="btn-tactile inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00f2fe] text-[#050505] font-bold uppercase tracking-wider hover:bg-white transition-colors self-start sm:self-auto"
+                class="btn-tactile inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#EA580C] text-[#050505] font-bold uppercase tracking-wider hover:bg-white transition-colors self-start sm:self-auto"
               >
                 <span>Witness This Peak</span>
                 <span>&rarr;</span>
@@ -303,12 +303,12 @@
 
         // Button state
         buttons.forEach((b) => {
-          b.classList.remove('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-          b.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+          b.classList.remove('border-[#EA580C]', 'bg-[#EA580C]', 'text-[#050505]', 'font-bold');
+          b.classList.add('border-[#0F172A]/10', 'bg-white/5', 'text-ink');
           b.setAttribute('aria-selected', 'false');
         });
-        btn.classList.add('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-        btn.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+        btn.classList.add('border-[#EA580C]', 'bg-[#EA580C]', 'text-[#050505]', 'font-bold');
+        btn.classList.remove('border-[#0F172A]/10', 'bg-white/5', 'text-ink');
         btn.setAttribute('aria-selected', 'true');
 
         // Update Content
@@ -334,7 +334,7 @@
           data.routes.forEach((r) => {
             const link = document.createElement('a');
             link.href = `/treks/${r.slug}`;
-            link.className = 'px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors';
+            link.className = 'px-2.5 py-1 rounded bg-white/5 border border-[#0F172A]/10 text-[#EA580C] hover:bg-[#EA580C]/10 transition-colors';
             link.textContent = r.name;
             routesEl.appendChild(link);
           });

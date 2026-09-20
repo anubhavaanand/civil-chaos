@@ -113,20 +113,20 @@ const reviews: Review[] = [
 ];
 ---
 
-<section id="reviews" class="py-24 relative border-t border-white/5 bg-[#050505]">
+<section id="reviews" class="py-24 relative border-t border-[#0F172A]/10 bg-[#F9FAFB]">
   <div class="max-w-7xl mx-auto px-6">
 
     <!-- Header & Google Rating Summary HUD -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-white/10">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-[#0F172A]/10">
       <div>
         <div class="flex items-center gap-3 mb-3">
-          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
-          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Unblemished Trust Record</span>
+          <span class="h-[2px] w-8 bg-[#EA580C]"></span>
+          <span class="text-[#EA580C] font-mono text-xs tracking-widest uppercase font-bold">Unblemished Trust Record</span>
         </div>
-        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-[#0F172A] tracking-tight">
           PROVEN ON SACRED RIDGES
         </h2>
-        <p class="text-silver text-sm sm:text-base mt-2 max-w-xl font-light">
+        <p class="text-[#94A3B8] text-sm sm:text-base mt-2 max-w-xl font-light">
           Real feedback from independent climbers across India who chose boutique small-batch expeditions over mass commercial trekking syndicates.
         </p>
       </div>
@@ -144,10 +144,10 @@ const reviews: Review[] = [
 
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xl sm:text-2xl font-display font-bold text-white leading-none">100% Native</span>
+              <span class="text-xl sm:text-2xl font-display font-bold text-[#0F172A] leading-none">100% Native</span>
             </div>
             <div class="text-xs font-mono text-cyan-400 font-bold mt-1">NIM & WFR Certified Guides</div>
-            <div class="text-[11px] font-mono text-silver/60 mt-0.5">Village Mautar, Uttarkashi</div>
+            <div class="text-[11px] font-mono text-[#94A3B8]/60 mt-0.5">Village Mautar, Uttarkashi</div>
           </div>
         </div>
       </div>
@@ -155,16 +155,16 @@ const reviews: Review[] = [
 
     <!-- Category Filter Controls -->
     <div class="flex flex-wrap items-center gap-2 mb-10 font-mono text-xs">
-      <button data-review-filter="all" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
+      <button data-review-filter="all" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#EA580C] bg-[#EA580C] text-[#050505] font-bold">
         All Verified Field Notes ({reviews.length})
       </button>
-      <button data-review-filter="winter" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+      <button data-review-filter="winter" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#0F172A]/10 bg-white/5 text-ink hover:border-[#EA580C]/40">
         Winter Snow Summits
       </button>
-      <button data-review-filter="high-pass" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+      <button data-review-filter="high-pass" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#0F172A]/10 bg-white/5 text-ink hover:border-[#EA580C]/40">
         Technical High Passes (4,000m+)
       </button>
-      <button data-review-filter="circuit" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+      <button data-review-filter="circuit" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#0F172A]/10 bg-white/5 text-ink hover:border-[#EA580C]/40">
         Glacial Lake Circuits
       </button>
     </div>
@@ -181,12 +181,12 @@ const reviews: Review[] = [
               <!-- Top Metadata Row -->
               <div class="flex items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2.5">
-                  <div class="w-9 h-9 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center font-mono text-xs font-bold text-[#00f2fe]">
+                  <div class="w-9 h-9 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center font-mono text-xs font-bold text-[#EA580C]">
                     {r.initials}
                   </div>
                   <div>
-                    <h4 class="text-white font-display font-bold text-sm leading-snug">{r.name}</h4>
-                    <p class="text-[11px] font-mono text-silver/60">{r.location}</p>
+                    <h4 class="text-[#0F172A] font-display font-bold text-sm leading-snug">{r.name}</h4>
+                    <p class="text-[11px] font-mono text-[#94A3B8]/60">{r.location}</p>
                   </div>
                 </div>
 
@@ -196,11 +196,11 @@ const reviews: Review[] = [
               </div>
 
               <!-- Trek Target Tag & Altitude Datum -->
-              <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white/5 border border-white/10 mb-4 font-mono text-[11px]">
-                <a href={`/treks/${r.trekSlug}`} class="text-white hover:text-[#00f2fe] font-semibold truncate transition-colors">
+              <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white/5 border border-[#0F172A]/10 mb-4 font-mono text-[11px]">
+                <a href={`/treks/${r.trekSlug}`} class="text-[#0F172A] hover:text-[#EA580C] font-semibold truncate transition-colors">
                   {r.trekName}
                 </a>
-                <span class="text-[#00f2fe] font-bold shrink-0">{r.altitudeM}m</span>
+                <span class="text-[#EA580C] font-bold shrink-0">{r.altitudeM}m</span>
               </div>
 
               <!-- Highlight Quote -->
@@ -209,13 +209,13 @@ const reviews: Review[] = [
               </p>
 
               <!-- Body Review -->
-              <p class="text-silver/90 text-sm leading-relaxed font-light mb-4">
+              <p class="text-[#94A3B8]/90 text-sm leading-relaxed font-light mb-4">
                 {r.text}
               </p>
             </div>
 
             <!-- Bottom Footer: Verification & Date -->
-            <div class="pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-silver/60">
+            <div class="pt-4 border-t border-[#0F172A]/10 flex items-center justify-between text-[10px] font-mono text-[#94A3B8]/60">
               <span class="inline-flex items-center gap-1 text-emerald-400">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -243,11 +243,11 @@ const reviews: Review[] = [
 
         // Update button states
         filterButtons.forEach((b) => {
-          b.classList.remove('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-          b.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+          b.classList.remove('border-[#EA580C]', 'bg-[#EA580C]', 'text-[#050505]', 'font-bold');
+          b.classList.add('border-[#0F172A]/10', 'bg-white/5', 'text-ink');
         });
-        btn.classList.add('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-        btn.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+        btn.classList.add('border-[#EA580C]', 'bg-[#EA580C]', 'text-[#050505]', 'font-bold');
+        btn.classList.remove('border-[#0F172A]/10', 'bg-white/5', 'text-ink');
 
         // Filter cards
         cards.forEach((card) => {
