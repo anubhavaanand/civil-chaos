@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     );
   } catch (err: any) {
-    return new Response(JSON.stringify({ ok: false, error: err.message }), {
+    return new Response(JSON.stringify({ ok: false, error: 'An internal error occurred' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
