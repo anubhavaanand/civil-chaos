@@ -1,37 +1,25 @@
 @import "tailwindcss";
 @import "@fontsource/space-grotesk";
-@import "@fontsource/geist-sans";
-@import "@fontsource/geist-mono";
+@import "@fontsource/inter";
 
 @theme {
-  --color-obsidian: #F9FAFB;
-  --color-slate: #0F172A;
-  --color-silver: #94A3B8;
-  --color-glacier: #EA580C;
-  --color-glacier-deep: #C2410C;
+  --color-obsidian: #050505;
+  --color-slate: #0f172a;
+  --color-silver: #d4d4d8;
+  --color-glacier: #00f2fe;
+  --color-glacier-deep: #00b4d8;
   --color-glass: rgb(255 255 255 / 0.10);
   --color-glass-border: rgb(255 255 255 / 0.20);
   --color-ink: #e8eef2;
   --color-ink-dim: #a9b8c0;
-  --color-brand: #EA580C;
+  --color-brand: #00f2fe;
   --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Geist Sans", sans-serif;
-  --font-mono: "Geist Mono", monospace;
+  --font-body: "Inter", sans-serif;
 
   /* Emil Kowalski Motion Easing Tokens */
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@layer base {
-  h1, h2, h3, h4, h5, h6 {
-    text-wrap: balance;
-    letter-spacing: -0.025em;
-  }
-  p {
-    text-wrap: pretty;
-  }
 }
 
 @layer utilities {
@@ -86,7 +74,7 @@
 }
 
 :focus-visible {
-  outline: 2px solid #EA580C;
+  outline: 2px solid #00f2fe;
   outline-offset: 3px;
   border-radius: 4px;
 }
