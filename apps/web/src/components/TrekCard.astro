@@ -9,12 +9,12 @@ interface Props {
 const { trek } = Astro.props;
 const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage, summary } = trek;
 ---
-<a href={`/treks/${slug}`} class="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-[#0F172A]/10 bg-white shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#EA580C]">
-  <div class="absolute inset-0 bg-white pointer-events-none supports-[backdrop-filter:blur(0)]:hidden"></div>
+<a href={`/treks/${slug}`} class="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-white/20 shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-400">
+  <div class="absolute inset-0 bg-slate-900/85 pointer-events-none supports-[backdrop-filter:blur(0)]:hidden"></div>
   <div class="absolute inset-0 bg-white/10 backdrop-blur-md backdrop-saturate-150 pointer-events-none"></div>
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
   
-  <div class="relative w-full aspect-video overflow-hidden shrink-0 bg-[#F9FAFB]">
+  <div class="relative w-full aspect-video overflow-hidden shrink-0 bg-slate-800">
     <img 
       src={heroImage} 
       alt={name} 
@@ -26,21 +26,21 @@ const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage
     </div>
   </div>
 
-  <div class="relative p-5 z-10 flex flex-col flex-grow text-[#0F172A]">
-    <h3 class="text-xl font-bold font-display text-[#0F172A] mb-2 line-clamp-1">{name}</h3>
-    {summary && <p class="text-sm text-[#94A3B8] mb-4 line-clamp-2 font-['Inter'] flex-grow">{summary}</p>}
+  <div class="relative p-5 z-10 flex flex-col flex-grow text-slate-200">
+    <h3 class="text-xl font-bold font-['Space_Grotesk'] text-white mb-2 line-clamp-1">{name}</h3>
+    {summary && <p class="text-sm text-slate-400 mb-4 line-clamp-2 font-['Inter'] flex-grow">{summary}</p>}
     
-    <div class="flex items-center justify-between text-sm font-['Inter'] mt-auto pt-4 border-t border-[#0F172A]/10">
-      <div class="flex flex-col gap-1 text-[#0F172A]/80">
+    <div class="flex items-center justify-between text-sm font-['Inter'] mt-auto pt-4 border-t border-white/10">
+      <div class="flex flex-col gap-1 text-slate-300">
         <span class="flex items-center gap-1.5">
-          <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           {durationDays} days
         </span>
         {maxAltitudeM && (
           <span class="flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
             {maxAltitudeM}m
@@ -48,8 +48,8 @@ const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage
         )}
       </div>
       <div class="text-right">
-        <div class="text-xs text-[#94A3B8] mb-0.5">from</div>
-        <div class="text-lg font-bold text-[#EA580C]">₹{fromPrice.toLocaleString('en-IN')}</div>
+        <div class="text-xs text-slate-400 mb-0.5">from</div>
+        <div class="text-lg font-bold text-teal-400">₹{fromPrice.toLocaleString('en-IN')}</div>
       </div>
     </div>
   </div>
