@@ -124,7 +124,7 @@ export const POST: APIRoute = async ({ request }) => {
       console.error('[revalidate] Cloudflare API error:', err);
       return new Response(JSON.stringify({ 
         error: 'Cache purge error',
-        message: err instanceof Error ? err.message : 'Unknown error'
+        message: 'An internal error occurred'
       }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
