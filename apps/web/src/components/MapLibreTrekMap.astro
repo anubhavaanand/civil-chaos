@@ -1,0 +1,162 @@
+---
+import type { Trek } from '../data/mock-treks';
+
+interface Props {
+  treks: Trek[];
+}
+
+const { treks } = Astro.props;
+---
+
+<section id="interactive-map" class="py-24 relative border-t border-[#0F172A]/10 bg-[#F9FAFB]">
+  <div class="max-w-7xl mx-auto px-6 mb-8">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="h-[1px] w-8 bg-[#EA580C]"></div>
+      <span class="text-[#EA580C] font-mono text-xs uppercase tracking-[0.2em]">Live Satellite Telemetry</span>
+    </div>
+    <h2 class="text-3xl md:text-5xl font-bold text-[#0F172A] mb-6 tracking-tight">Himalayan <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#0F172A] to-[#0F172A]/60">Topography</span></h2>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    <div id="maplibre-container" class="w-full h-[600px] rounded-2xl overflow-hidden border border-[#0F172A]/10 relative shadow-xl" data-treks={JSON.stringify(treks)}>
+      
+      <!-- LCP-friendly Loading State -->
+      <div id="map-loader" class="absolute inset-0 bg-[#F9FAFB] flex flex-col items-center justify-center z-10 transition-opacity duration-700">
+        <div class="w-12 h-12 border-2 border-[#EA580C]/20 border-t-[#00f2fe] rounded-full animate-spin mb-4"></div>
+        <span class="text-[#EA580C] font-mono text-xs tracking-widest animate-pulse">LINKING SATELLITE IMAGERY...</span>
+      </div>
+
+      <div id="map" class="w-full h-full"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Lazy Load MapLibre JS & CSS to protect Page LCP (Largest Contentful Paint)
+  const container = document.getElementById('maplibre-container');
+
+  if (container) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadMapLibre();
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: "200px" }); // Pre-load 200px before scrolling into view
+
+    observer.observe(container);
+  }
+
+  async function loadMapLibre() {
+    try {
+      // Dynamically import MapLibre
+      const maplibregl = await import('maplibre-gl');
+      await import('maplibre-gl/dist/maplibre-gl.css');
+
+      const treksData = container?.dataset.treks;
+      if (!treksData) return;
+      
+      const treks = JSON.parse(treksData);
+      
+      // We will fallback to a public demo MapTiler key if the .env one is missing locally
+      // DO NOT USE THIS FALLBACK IN HEAVY PROD.
+      const mapKey = import.meta.env.PUBLIC_MAPTILER_KEY || 'get_your_own_OpIi9Z3yfLbfbZ'; 
+
+      const map = new maplibregl.Map({
+        container: 'map',
+        // Dark matter + Satellite blend for a cinematic technical look
+        style: `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapKey}`,
+        center: [79.0, 30.7], // Center on Uttarakhand
+        zoom: 7.5,
+        pitch: 65,
+        bearing: -15,
+        maxPitch: 85,
+        attributionControl: false
+      });
+
+      map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+
+      map.on('load', () => {
+        // Fade out loader
+        const loader = document.getElementById('map-loader');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 700);
+        }
+
+        // Inject 3D Terrain
+        map.addSource('terrain-source', {
+          type: 'raster-dem',
+          url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${mapKey}`
+        });
+        map.setTerrain({ source: 'terrain-source', exaggeration: 1.5 });
+
+        // Add Trek Pins
+        treks.forEach((trek: any) => {
+          if (!trek.coordinates || trek.coordinates.length < 2) return;
+
+          const el = document.createElement('div');
+          el.className = 'w-4 h-4 bg-[#EA580C] rounded-full shadow-md border-2 border-white cursor-pointer hover:scale-150 hover:bg-white transition-all duration-300';
+          
+          const popupHtml = `
+            <div class="bg-white/95 border border-[#0F172A]/10 p-4 rounded-lg backdrop-blur-md min-w-[200px]">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-2 h-2 rounded-full ${trek.difficulty === 'easy' ? 'bg-emerald-400' : trek.difficulty === 'moderate' ? 'bg-amber-400' : 'bg-rose-400'}"></span>
+                <span class="text-xs font-mono text-[#94A3B8] uppercase">${trek.difficulty}</span>
+              </div>
+              <h3 class="text-[#0F172A] font-bold text-base leading-tight mb-1">${trek.name}</h3>
+              <p class="text-[#EA580C] font-mono text-xs mb-3">ALT: ${trek.maxAltitudeM}m</p>
+              <a href="/treks/${trek.slug}" class="inline-block w-full text-center py-2 bg-[#0F172A]/5 text-[#0F172A] hover:bg-white/10 text-[#0F172A] text-xs font-mono uppercase tracking-wider rounded transition-colors">
+                View Telemetry
+              </a>
+            </div>
+          `;
+
+          const popup = new maplibregl.Popup({ offset: 25, className: 'dark-alpine-popup' })
+            .setHTML(popupHtml);
+
+          new maplibregl.Marker({ element: el })
+            .setLngLat(trek.coordinates)
+            .setPopup(popup)
+            .addTo(map);
+        });
+
+        // Add subtle fog/atmosphere for realism if supported
+        if (typeof (map as any).setFog === 'function') {
+          (map as any).setFog({
+            'color': 'rgba(249, 250, 251, 0.9)',
+            'high-color': 'rgba(234, 88, 12, 0.1)',
+            'horizon-blend': 0.1,
+            'space-color': 'rgba(226, 232, 240, 1)'
+          });
+        }
+      });
+
+    } catch (err) {
+      console.error("MapLibre load failed:", err);
+    }
+  }
+</script>
+
+<style is:global>
+/* Override MapLibre default light popups to match Alpine Glass */
+.dark-alpine-popup .maplibregl-popup-content {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+}
+.dark-alpine-popup .maplibregl-popup-tip {
+  border-top-color: rgba(255,255,255,0.95) !important;
+  border-bottom-color: rgba(255,255,255,0.95) !important;
+}
+.maplibregl-ctrl-group {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.maplibregl-ctrl-group button {
+  
+}
+</style>

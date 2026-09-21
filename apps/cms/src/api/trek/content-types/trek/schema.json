@@ -108,6 +108,12 @@
       "type": "boolean",
       "default": false
     },
+    "popularity": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "Manual ranking weight; higher sorts first on popularity-sorted listings"
+    },
     "seo": {
       "type": "component",
       "repeatable": false,

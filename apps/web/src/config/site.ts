@@ -12,13 +12,6 @@ export const SITE_CONFIG = {
   phoneRaw: "919876543210",
   phoneTel: "+919876543210",
   email: "contact@holyhimalayas.com",
-  googleReviews: {
-    rating: 5.0,
-    count: 40,
-    displayText: "5.0 (40+ Google Reviews)",
-    badgeText: "40+ Verified Reviews",
-    schemaCount: "40"
-  },
   coordinates: {
     lat: 30.7268,
     lng: 78.4354,

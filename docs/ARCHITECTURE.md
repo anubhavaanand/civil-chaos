@@ -43,13 +43,12 @@ APP_KEYS= API_TOKEN_SALT= ADMIN_JWT_SECRET= JWT_SECRET= TRANSFER_TOKEN_SALT= ENC
 WEB_REVALIDATE_URL= WEB_REVALIDATE_SECRET=   # outbound webhook target
 ```
 
-## Deployment checklist
-1. Neon: create project → copy pooled `DATABASE_URL` into Render env.
-2. Cloudinary: create account → credentials into Strapi env + install `strapi-provider-upload-cloudinary`.
-3. Render: new Web Service from repo `apps/cms`, persistent disk mounted at `/opt/render/project/src/public/uploads` (fallback only), health check `/admin`, auto-deploy on push to `main`.
-4. Strapi admin: create API token (read + create on booking-request), create regions/treks seed content.
-5. Cloudflare Pages: project from repo `apps/web`, build `npm run build`, output `dist`, env vars above, deploy hook = `WEB_REVALIDATE_URL`.
-6. DNS: A/AAAA via Cloudflare; `cms.` subdomain → Render.
+## Deployment checklist (✅ COMPLETED)
+1. ✅ **Neon Database**: Hosted at `civil-chaos-db`. `DATABASE_URL` is configured in Render.
+2. ✅ **Cloudinary**: Configured with credentials in Strapi env (`CLOUDINARY_NAME`, etc).
+3. ✅ **Render (Backend)**: Strapi 5 is LIVE at `https://civil-chaos.onrender.com`. Admin panel is `/admin`. Persistent disk is mounted at `/opt/render/project/src/public/uploads` for fallback.
+4. ✅ **Strapi Content & API**: `STRAPI_API_TOKEN` created. Live database is fully seeded with 10 treks, 3 regions, 23 batches, 11 packages via `apps/cms/scripts/seed.mjs`.
+5. ✅ **Cloudflare Pages (Frontend)**: Astro 5 is LIVE at `https://civil-chaos.pages.dev`.
 
 ## Local dev
-`npm run dev` in both apps (web :4321, cms :1337/admin). Seed script `apps/cms/scripts/seed.mjs` loads 4 sample treks + batches from `docs/seed-data/`.
+`npm run dev` in both apps (web :4321, cms :1337/admin). Seed script `apps/cms/scripts/seed.mjs` was already executed against the live Render database to populate 10 treks + batches from `apps/cms/data/seed-data.json`.

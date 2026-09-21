@@ -113,51 +113,41 @@ const reviews: Review[] = [
 ];
 ---
 
-<section id="reviews" class="py-24 relative border-t border-white/5 bg-[#050505]">
+<section id="reviews" class="py-24 relative border-t border-[#0F172A]/10 bg-[#F9FAFB]">
   <div class="max-w-7xl mx-auto px-6">
 
     <!-- Header & Google Rating Summary HUD -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-white/10">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-[#0F172A]/10">
       <div>
         <div class="flex items-center gap-3 mb-3">
-          <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
-          <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Unblemished Trust Record</span>
+          <span class="h-[2px] w-8 bg-[#EA580C]"></span>
+          <span class="text-[#EA580C] font-mono text-xs tracking-widest uppercase font-bold">Unblemished Trust Record</span>
         </div>
-        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-[#0F172A] tracking-tight">
           PROVEN ON SACRED RIDGES
         </h2>
-        <p class="text-silver text-sm sm:text-base mt-2 max-w-xl font-light">
+        <p class="text-[#94A3B8] text-sm sm:text-base mt-2 max-w-xl font-light">
           Real feedback from independent climbers across India who chose boutique small-batch expeditions over mass commercial trekking syndicates.
         </p>
       </div>
 
-      <!-- Google Verified Badge Card -->
+      <!-- Expedition Basecamp Credential Card -->
       <div class="double-bezel-outer self-start lg:self-auto">
         <div class="double-bezel-inner p-4 sm:p-5 bg-[#0a0f18]/90 backdrop-blur-xl flex items-center gap-5">
-          <div class="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 border border-white/10 shrink-0">
-            <!-- Google G Icon -->
-            <svg class="w-7 h-7" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          <div class="flex flex-col items-center justify-center p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/25 shrink-0">
+            <!-- Mountain Peak Icon -->
+            <svg class="w-7 h-7 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8 3 4 8 5-5 5 15H2L8 3z" />
             </svg>
-            <div class="text-[10px] font-mono font-bold text-silver/70 mt-1 uppercase">Google</div>
+            <div class="text-[10px] font-mono font-bold text-cyan-300 mt-1 uppercase tracking-wider">Basecamp</div>
           </div>
 
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-3xl font-display font-black text-white leading-none">5.0</span>
-              <div class="flex items-center gap-0.5 text-amber-400">
-                {Array.from({ length: 5 }).map(() => (
-                  <svg class="w-4 h-4 fill-amber-400 text-amber-400" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
+              <span class="text-xl sm:text-2xl font-display font-bold text-[#0F172A] leading-none">100% Native</span>
             </div>
-            <div class="text-xs font-mono text-emerald-400 font-bold mt-1">40+ Verified Reviews</div>
-            <div class="text-[11px] font-mono text-silver/60 mt-0.5">Village Mautar, Uttarkashi</div>
+            <div class="text-xs font-mono text-cyan-400 font-bold mt-1">NIM & WFR Certified Guides</div>
+            <div class="text-[11px] font-mono text-[#94A3B8]/60 mt-0.5">Village Mautar, Uttarkashi</div>
           </div>
         </div>
       </div>
@@ -165,16 +155,16 @@ const reviews: Review[] = [
 
     <!-- Category Filter Controls -->
     <div class="flex flex-wrap items-center gap-2 mb-10 font-mono text-xs">
-      <button data-review-filter="all" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
+      <button data-review-filter="all" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#EA580C] bg-[#EA580C] text-[#050505] font-bold">
         All Verified Field Notes ({reviews.length})
       </button>
-      <button data-review-filter="winter" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+      <button data-review-filter="winter" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#0F172A]/10 bg-white/5 text-ink hover:border-[#EA580C]/40">
         Winter Snow Summits
       </button>
-      <button data-review-filter="high-pass" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+      <button data-review-filter="high-pass" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#0F172A]/10 bg-white/5 text-ink hover:border-[#EA580C]/40">
         Technical High Passes (4,000m+)
       </button>
-      <button data-review-filter="circuit" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+      <button data-review-filter="circuit" class="review-tab-btn btn-tactile px-3.5 py-1.5 rounded-lg border border-[#0F172A]/10 bg-white/5 text-ink hover:border-[#EA580C]/40">
         Glacial Lake Circuits
       </button>
     </div>
@@ -191,30 +181,26 @@ const reviews: Review[] = [
               <!-- Top Metadata Row -->
               <div class="flex items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2.5">
-                  <div class="w-9 h-9 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center font-mono text-xs font-bold text-[#00f2fe]">
+                  <div class="w-9 h-9 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center font-mono text-xs font-bold text-[#EA580C]">
                     {r.initials}
                   </div>
                   <div>
-                    <h4 class="text-white font-display font-bold text-sm leading-snug">{r.name}</h4>
-                    <p class="text-[11px] font-mono text-silver/60">{r.location}</p>
+                    <h4 class="text-[#0F172A] font-display font-bold text-sm leading-snug">{r.name}</h4>
+                    <p class="text-[11px] font-mono text-[#94A3B8]/60">{r.location}</p>
                   </div>
                 </div>
 
-                <div class="flex items-center gap-0.5 text-amber-400">
-                  {Array.from({ length: 5 }).map(() => (
-                    <svg class="w-3 h-3 fill-amber-400 text-amber-400" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <span class="px-2.5 py-1 rounded text-[11px] font-mono font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/25 shrink-0">
+                  {r.tag}
+                </span>
               </div>
 
               <!-- Trek Target Tag & Altitude Datum -->
-              <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white/5 border border-white/10 mb-4 font-mono text-[11px]">
-                <a href={`/treks/${r.trekSlug}`} class="text-white hover:text-[#00f2fe] font-semibold truncate transition-colors">
+              <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white/5 border border-[#0F172A]/10 mb-4 font-mono text-[11px]">
+                <a href={`/treks/${r.trekSlug}`} class="text-[#0F172A] hover:text-[#EA580C] font-semibold truncate transition-colors">
                   {r.trekName}
                 </a>
-                <span class="text-[#00f2fe] font-bold shrink-0">{r.altitudeM}m</span>
+                <span class="text-[#EA580C] font-bold shrink-0">{r.altitudeM}m</span>
               </div>
 
               <!-- Highlight Quote -->
@@ -223,18 +209,18 @@ const reviews: Review[] = [
               </p>
 
               <!-- Body Review -->
-              <p class="text-silver/90 text-sm leading-relaxed font-light mb-4">
+              <p class="text-[#94A3B8]/90 text-sm leading-relaxed font-light mb-4">
                 {r.text}
               </p>
             </div>
 
             <!-- Bottom Footer: Verification & Date -->
-            <div class="pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-silver/60">
+            <div class="pt-4 border-t border-[#0F172A]/10 flex items-center justify-between text-[10px] font-mono text-[#94A3B8]/60">
               <span class="inline-flex items-center gap-1 text-emerald-400">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                Google Verified Trekker
+                Verified Climber Log
               </span>
               <span>{r.date}</span>
             </div>
@@ -257,11 +243,11 @@ const reviews: Review[] = [
 
         // Update button states
         filterButtons.forEach((b) => {
-          b.classList.remove('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-          b.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+          b.classList.remove('border-[#EA580C]', 'bg-[#EA580C]', 'text-[#050505]', 'font-bold');
+          b.classList.add('border-[#0F172A]/10', 'bg-white/5', 'text-ink');
         });
-        btn.classList.add('border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-        btn.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+        btn.classList.add('border-[#EA580C]', 'bg-[#EA580C]', 'text-[#050505]', 'font-bold');
+        btn.classList.remove('border-[#0F172A]/10', 'bg-white/5', 'text-ink');
 
         // Filter cards
         cards.forEach((card) => {
