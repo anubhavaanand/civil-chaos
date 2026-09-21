@@ -30,12 +30,12 @@ Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all
 | startPoint | string (town) | e.g. "Joshimath" |
 | coordinates | json | {"lat":30.42,"lng":79.57}  -  map marker |
 | heroGallery | media (multiple) | ordered |
-| itinerary | component repeatable: { day: integer, title: string, details: richtext, altitudeM: integer } | |
+| itinerary | component repeatable: { day: integer, title: string, description: richtext, altitudeM: integer, distanceKm: decimal } | |
 | inclusions | richtext | |
 | exclusions | richtext | |
 | howToReach | richtext | trains/buses to base town |
 | googleMapsEmbedUrl | string | optional per-trek embed |
-| faq | component repeatable: { q: string, a: richtext } | |
+| faq | component repeatable: { question: string, answer: richtext } | |
 | batches | relation 1:N → batch | |
 | packages | relation 1:N → package | |
 | isFeatured | boolean | homepage boost |

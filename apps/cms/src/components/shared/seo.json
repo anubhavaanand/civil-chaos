@@ -2,18 +2,24 @@
   "collectionName": "components_shared_seos",
   "info": {
     "displayName": "SEO",
-    "icon": "search",
-    "description": "Metadata for SEO and rich snippets"
+    "description": "Search engine optimization metadata"
   },
-  "options": {},
   "attributes": {
     "metaTitle": {
       "type": "string",
-      "required": true
+      "maxLength": 60
     },
     "metaDescription": {
       "type": "text",
-      "required": true
+      "maxLength": 160
+    },
+    "shareImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "keywords": {
+      "type": "string"
     }
   }
 }

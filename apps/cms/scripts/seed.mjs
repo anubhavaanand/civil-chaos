@@ -99,8 +99,24 @@ async function main() {
   // 1. Seed Regions
   console.log('--- Step 1: Seeding Himalayan Regions ---');
   const regionMap = {};
+
+  const existingRegionsRes = await apiRequest('/regions', 'GET');
+  if (existingRegionsRes.ok && Array.isArray(existingRegionsRes.data)) {
+    for (const reg of existingRegionsRes.data) {
+      const id = reg.documentId || reg.id;
+      regionMap[reg.name.toLowerCase()] = id;
+      console.log(`✓ Existing Region Found: ${reg.name} (ID: ${id})`);
+    }
+  }
+
   for (const reg of REGIONS) {
-    const res = await apiRequest('/regions', 'POST', reg);
+    if (regionMap[reg.name.toLowerCase()]) {
+      continue;
+    }
+    const res = await apiRequest('/regions', 'POST', {
+      ...reg,
+      publishedAt: new Date().toISOString()
+    });
     if (res.ok) {
       const id = res.data.documentId || res.data.id;
       regionMap[reg.name.toLowerCase()] = id;
@@ -112,9 +128,22 @@ async function main() {
 
   // 2. Seed Treks with Batches, Packages, Itineraries, FAQs
   console.log('\n--- Step 2: Seeding Expeditions & Itineraries ---');
+  const existingTreksRes = await apiRequest('/treks?pagination[pageSize]=100', 'GET');
+  const existingTrekSlugs = new Set();
+  if (existingTreksRes.ok && Array.isArray(existingTreksRes.data)) {
+    for (const t of existingTreksRes.data) {
+      existingTrekSlugs.add(t.slug);
+      console.log(`✓ Existing Trek Found: ${t.name} (Slug: ${t.slug})`);
+    }
+  }
+
   for (const trek of treks) {
+    if (existingTrekSlugs.has(trek.slug)) {
+      continue;
+    }
     const regionKey = (trek.region || 'Garhwal').toLowerCase();
     const regionId = regionMap[regionKey];
+    const isFeatured = trek.slug === 'kuari-pass' || trek.slug === 'kedarkantha' || trek.slug === 'bali-pass';
 
     const trekPayload = {
       name: trek.name,
@@ -128,21 +157,24 @@ async function main() {
       startPoint: trek.startPoint,
       coordinates: trek.coordinates ? { lng: trek.coordinates[0], lat: trek.coordinates[1] } : null,
       bestSeasons: trek.bestSeasons,
-      isFeatured: trek.slug === 'kuari-pass' || trek.slug === 'kedarkantha' || trek.slug === 'bali-pass',
+      isFeatured,
+      popularity: isFeatured ? 100 : Math.max(1, treks.length - treks.indexOf(trek)),
       itinerary: (trek.itinerary || []).map(item => ({
         day: item.day,
         title: item.title,
-        details: item.description,
-        altitudeM: item.altitudeM
+        description: item.description || '',
+        altitudeM: item.altitudeM || null,
+        distanceKm: item.distanceKm || null
       })),
       faq: (trek.faqs || []).map(f => ({
-        q: f.question,
-        a: f.answer
+        question: f.question,
+        answer: f.answer
       })),
       seo: {
-        metaTitle: `${trek.name} Trek 2027 | Dream of The Holy Himalayas`,
-        metaDescription: trek.summary
+        metaTitle: `${trek.name} | Holy Himalayas`.slice(0, 60),
+        metaDescription: (trek.summary || '').slice(0, 160)
       },
+      publishedAt: new Date().toISOString(),
       ...(regionId ? { region: regionId } : {})
     };
 
@@ -180,7 +212,8 @@ async function main() {
           name: pkg.name,
           priceINR: pkg.priceINR,
           durationDays: trek.durationDays,
-          isPopular: !!pkg.isPopular
+          isPopular: !!pkg.isPopular,
+          publishedAt: new Date().toISOString()
         };
         await apiRequest('/packages', 'POST', pkgPayload);
       }

@@ -1,0 +1,47 @@
+# Render Blueprint for Dream of The Holy Himalayas
+# This file defines both the Strapi CMS and Astro web deployments
+
+services:
+  # Strapi CMS Backend
+  - type: web
+    name: holy-himalayas-cms
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: apps/cms
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /admin
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_CLIENT
+        value: postgres
+      - key: DATABASE_URL
+        fromDatabase:
+          name: holy-himalayas-db
+          property: connectionString
+      - key: APP_KEYS
+        generateValue: true
+      - key: API_TOKEN_SALT
+        generateValue: true
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TRANSFER_TOKEN_SALT
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      # Add these in Render dashboard after first deploy:
+      # - CLOUDINARY_NAME
+      # - CLOUDINARY_KEY
+      # - CLOUDINARY_SECRET
+      # - WEB_REVALIDATE_URL
+      # - WEB_REVALIDATE_SECRET
+
+databases:
+  - name: holy-himalayas-db
+    plan: free
+    region: oregon
