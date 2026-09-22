@@ -3,76 +3,73 @@ import Layout from '../../layouts/Layout.astro';
 import GlassNav from '../../components/GlassNav.astro';
 import TrekCard from '../../components/TrekCard.astro';
 import DifficultyBadge from '../../components/DifficultyBadge.astro';
-import TrekComparator from '../../components/TrekComparator.astro';
 import WhatsAppFab from '../../components/WhatsAppFab.astro';
 import Footer from '../../components/Footer.astro';
-import { getTreks } from '../../lib/strapi';
-
-const treks = await getTreks();
+import { mockTreks } from '../../data/mock-treks';
 
 // Pre-calculate filter category counts
 const regionCounts = {
-  all: treks.length,
-  Garhwal: treks.filter(t => t.region === 'Garhwal').length,
-  Kumaon: treks.filter(t => t.region === 'Kumaon').length,
-  Himachal: treks.filter(t => t.region === 'Himachal').length
+  all: mockTreks.length,
+  Garhwal: mockTreks.filter(t => t.region === 'Garhwal').length,
+  Kumaon: mockTreks.filter(t => t.region === 'Kumaon').length,
+  Himachal: mockTreks.filter(t => t.region === 'Himachal').length
 };
 
 const altitudeCounts = {
-  all: treks.length,
-  sub4k: treks.filter(t => t.maxAltitudeM < 4000).length,
-  mid4k: treks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
-  above5k: treks.filter(t => t.maxAltitudeM > 5000).length
+  all: mockTreks.length,
+  sub4k: mockTreks.filter(t => t.maxAltitudeM < 4000).length,
+  mid4k: mockTreks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
+  above5k: mockTreks.filter(t => t.maxAltitudeM > 5000).length
 };
 
 const difficultyCounts = {
-  all: treks.length,
-  easy: treks.filter(t => t.difficulty === 'easy').length,
-  moderate: treks.filter(t => t.difficulty === 'moderate').length,
-  difficult: treks.filter(t => t.difficulty === 'difficult').length
+  all: mockTreks.length,
+  easy: mockTreks.filter(t => t.difficulty === 'easy').length,
+  moderate: mockTreks.filter(t => t.difficulty === 'moderate').length,
+  difficult: mockTreks.filter(t => t.difficulty === 'difficult').length
 };
 ---
 
 <Layout title="Expedition Catalog | Dream of The Holy Himalayas">
   <GlassNav />
 
-  <main class="pt-28 pb-24 bg-[#F9FAFB] min-h-screen text-[#0F172A] font-body">
+  <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
     <div class="container mx-auto px-4 max-w-7xl">
       
       <!-- Catalog Eyebrow & Hero Header -->
-      <div class="mt-4 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#0F172A]/10">
+      <div class="mt-4 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
         <div>
           <div class="flex items-center gap-3 mb-3">
-            <span class="h-[2px] w-8 bg-[#EA580C]"></span>
-            <span class="text-[#EA580C] font-mono text-xs tracking-widest uppercase font-bold">Himalayan Route Roster</span>
+            <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+            <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Himalayan Route Roster</span>
           </div>
-          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-[#0F172A] tracking-tight">
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight">
             EXPEDITION CATALOG
           </h1>
-          <p class="text-[#94A3B8] text-sm sm:text-base mt-2 max-w-2xl font-light">
+          <p class="text-silver text-sm sm:text-base mt-2 max-w-2xl font-light">
             Ten precision-scouted alpine routes across Garhwal, Kumaon, and Himachal Pradesh. Intimate micro-batches led by native Mautar mountain guides.
           </p>
         </div>
 
         <!-- Telemetry Summary Pill -->
-        <div class="flex items-center gap-4 p-3 rounded-xl border border-[#0F172A]/10 bg-white/80 backdrop-blur-md self-start md:self-auto font-mono text-xs">
+        <div class="flex items-center gap-4 p-3 rounded-xl border border-white/10 bg-[#0a0f18]/80 backdrop-blur-md self-start md:self-auto font-mono text-xs">
           <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#EA580C]  animate-pulse"></span>
-            <span class="text-[#94A3B8] uppercase tracking-wider">Matching Routes:</span>
-            <span id="active-routes-count" class="font-bold text-[#EA580C] text-sm">{treks.length}</span>
+            <span class="w-2 h-2 rounded-full bg-[#00f2fe] shadow-[0_0_8px_#00f2fe] animate-pulse"></span>
+            <span class="text-silver uppercase tracking-wider">Matching Routes:</span>
+            <span id="active-routes-count" class="font-bold text-[#00f2fe] text-sm">{mockTreks.length}</span>
           </div>
         </div>
       </div>
 
       <!-- Linear-Style High-Density Filter Matrix Toolbar -->
       <div class="double-bezel-outer mb-10">
-        <div class="double-bezel-inner p-5 sm:p-6 bg-white/95 backdrop-blur-xl">
+        <div class="double-bezel-inner p-5 sm:p-6 bg-[#0a0f18]/90 backdrop-blur-xl">
           
           <!-- Top Row: Search & View Mode Switcher -->
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#0F172A]/10">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/10">
             <!-- Quick Search Input -->
             <div class="relative flex-1 max-w-md">
-              <span class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-[#94A3B8]">
+              <span class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-ink-dim">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -81,17 +78,17 @@ const difficultyCounts = {
                 type="text"
                 id="trekSearchInput"
                 placeholder="Search summit, pass, valley, or region..."
-                class="w-full bg-[#F9FAFB] border border-[#0F172A]/10 focus:border-[#EA580C] rounded-xl pl-10 pr-4 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8]/60 outline-none transition-all font-mono"
+                class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 outline-none transition-all font-mono"
               />
             </div>
 
             <!-- View Switcher & Clear Controls -->
             <div class="flex items-center gap-3 self-end md:self-auto">
               <!-- View Mode Segmented Control -->
-              <div class="inline-flex rounded-lg border border-[#0F172A]/10 bg-[#F9FAFB] p-1 font-mono text-xs">
+              <div class="inline-flex rounded-lg border border-white/10 bg-[#050505] p-1 font-mono text-xs">
                 <button
                   id="viewBentoBtn"
-                  class="btn-tactile flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#EA580C] hover:bg-[#c2410c] text-white shadow-md font-bold transition-all"
+                  class="btn-tactile flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#00f2fe] text-[#050505] font-bold transition-all"
                   aria-pressed="true"
                   title="Bento Card View"
                 >
@@ -102,7 +99,7 @@ const difficultyCounts = {
                 </button>
                 <button
                   id="viewMatrixBtn"
-                  class="btn-tactile flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[#94A3B8] hover:text-[#0F172A] transition-all"
+                  class="btn-tactile flex items-center gap-1.5 px-3 py-1.5 rounded-md text-ink-dim hover:text-white transition-all"
                   aria-pressed="false"
                   title="High-Density Matrix View"
                 >
@@ -116,7 +113,7 @@ const difficultyCounts = {
               <!-- Reset Button -->
               <button
                 id="resetAllFiltersBtn"
-                class="btn-tactile px-3 py-2 rounded-lg border border-[#0F172A]/10 bg-[#0F172A]/5 text-[11px] font-mono text-[#94A3B8] hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400 uppercase tracking-wider transition-all"
+                class="btn-tactile px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-[11px] font-mono text-ink-dim hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400 uppercase tracking-wider transition-all"
               >
                 Reset
               </button>
@@ -129,23 +126,23 @@ const difficultyCounts = {
             <!-- Region Group -->
             <div>
               <div class="flex items-center gap-2 mb-2.5">
-                <svg class="w-3.5 h-3.5 text-[#EA580C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-3.5 h-3.5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-[#94A3B8] font-bold">Himalayan Region</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-silver font-bold">Himalayan Region</span>
               </div>
               <div class="flex flex-wrap gap-1.5" data-filter-group="region">
-                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#EA580C] bg-[#EA580C] hover:bg-[#c2410c] text-white shadow-md font-bold">
+                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({regionCounts.all})
                 </button>
-                <button data-value="Garhwal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="Garhwal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   Garhwal ({regionCounts.Garhwal})
                 </button>
-                <button data-value="Kumaon" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="Kumaon" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   Kumaon ({regionCounts.Kumaon})
                 </button>
-                <button data-value="Himachal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="Himachal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   Himachal ({regionCounts.Himachal})
                 </button>
               </div>
@@ -154,22 +151,22 @@ const difficultyCounts = {
             <!-- Altitude Band Group -->
             <div>
               <div class="flex items-center gap-2 mb-2.5">
-                <svg class="w-3.5 h-3.5 text-[#EA580C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-3.5 h-3.5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-[#94A3B8] font-bold">Max Altitude Band</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-silver font-bold">Max Altitude Band</span>
               </div>
               <div class="flex flex-wrap gap-1.5" data-filter-group="altitude">
-                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#EA580C] bg-[#EA580C] hover:bg-[#c2410c] text-white shadow-md font-bold">
+                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({altitudeCounts.all})
                 </button>
-                <button data-value="sub4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="sub4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   &lt; 4,000m ({altitudeCounts.sub4k})
                 </button>
-                <button data-value="mid4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="mid4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   4,000 to 5,000m ({altitudeCounts.mid4k})
                 </button>
-                <button data-value="above5k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="above5k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   &gt; 5,000m ({altitudeCounts.above5k})
                 </button>
               </div>
@@ -178,22 +175,22 @@ const difficultyCounts = {
             <!-- Difficulty Group -->
             <div>
               <div class="flex items-center gap-2 mb-2.5">
-                <svg class="w-3.5 h-3.5 text-[#EA580C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-3.5 h-3.5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                 </svg>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-[#94A3B8] font-bold">Trail Rigor</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-silver font-bold">Trail Rigor</span>
               </div>
               <div class="flex flex-wrap gap-1.5" data-filter-group="difficulty">
-                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#EA580C] bg-[#EA580C] hover:bg-[#c2410c] text-white shadow-md font-bold">
+                <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({difficultyCounts.all})
                 </button>
-                <button data-value="easy" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="easy" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   Easy ({difficultyCounts.easy})
                 </button>
-                <button data-value="moderate" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="moderate" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   Moderate ({difficultyCounts.moderate})
                 </button>
-                <button data-value="difficult" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A] hover:border-[#EA580C]/40">
+                <button data-value="difficult" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
                   Difficult ({difficultyCounts.difficult})
                 </button>
               </div>
@@ -205,7 +202,7 @@ const difficultyCounts = {
 
       <!-- VIEW 1: Bento Cards Grid -->
       <div id="treks-bento-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {treks.map((trek) => (
+        {mockTreks.map((trek) => (
           <div
             class="trek-item-wrapper transition-all duration-300"
             data-slug={trek.slug}
@@ -222,10 +219,10 @@ const difficultyCounts = {
 
       <!-- VIEW 2: High-Density Technical Matrix (Linear / Swiss Atelier Table) -->
       <div id="treks-matrix-view" class="hidden double-bezel-outer overflow-hidden">
-        <div class="double-bezel-inner bg-white/95 overflow-x-auto">
+        <div class="double-bezel-inner bg-[#0a0f18]/90 overflow-x-auto">
           <table class="w-full text-left text-sm border-collapse font-mono">
             <thead>
-              <tr class="border-b border-[#0F172A]/10 bg-[#F9FAFB]/60 text-[11px] uppercase tracking-wider text-[#94A3B8]">
+              <tr class="border-b border-white/10 bg-[#050505]/60 text-[11px] uppercase tracking-wider text-silver">
                 <th class="p-4">Expedition Route</th>
                 <th class="p-4">Sector</th>
                 <th class="p-4">Peak Datum</th>
@@ -237,9 +234,9 @@ const difficultyCounts = {
               </tr>
             </thead>
             <tbody class="divide-y divide-white/5">
-              {treks.map((trek) => (
+              {mockTreks.map((trek) => (
                 <tr 
-                  class="trek-matrix-row hover:bg-[#0F172A]/[0.03] transition-colors"
+                  class="trek-matrix-row hover:bg-white/[0.04] transition-colors"
                   data-slug={trek.slug}
                   data-name={trek.name.toLowerCase()}
                   data-region={trek.region}
@@ -247,37 +244,37 @@ const difficultyCounts = {
                   data-difficulty={trek.difficulty}
                   data-days={trek.durationDays}
                 >
-                  <td class="p-4 font-sans font-bold text-[#0F172A]">
-                    <a href={`/treks/${trek.slug}`} class="hover:text-[#EA580C] transition-colors flex items-center gap-2">
+                  <td class="p-4 font-sans font-bold text-white">
+                    <a href={`/treks/${trek.slug}`} class="hover:text-[#00f2fe] transition-colors flex items-center gap-2">
                       <span>{trek.name}</span>
                       {trek.isFeatured && (
-                        <span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#EA580C]/10 border border-[#EA580C]/30 text-[#EA580C] uppercase">Featured</span>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] uppercase">Featured</span>
                       )}
                     </a>
                   </td>
-                  <td class="p-4 text-[#94A3B8] text-xs">
+                  <td class="p-4 text-silver/80 text-xs">
                     {trek.region}
                   </td>
-                  <td class="p-4 text-[#0F172A] font-bold">
+                  <td class="p-4 text-white font-bold">
                     {trek.maxAltitudeM.toLocaleString()}m
-                    <span class="text-[10px] text-[#94A3B8]/70 block font-normal">({Math.round(trek.maxAltitudeM * 3.28084).toLocaleString()} ft)</span>
+                    <span class="text-[10px] text-silver/50 block font-normal">({Math.round(trek.maxAltitudeM * 3.28084).toLocaleString()} ft)</span>
                   </td>
-                  <td class="p-4 text-[#94A3B8] text-xs">
+                  <td class="p-4 text-silver/80 text-xs">
                     {trek.trekDistanceKm} km
                   </td>
-                  <td class="p-4 text-[#94A3B8] text-xs">
+                  <td class="p-4 text-silver/80 text-xs">
                     {trek.durationDays} Days
                   </td>
                   <td class="p-4">
                     <DifficultyBadge difficulty={trek.difficulty} />
                   </td>
-                  <td class="p-4 text-right font-bold text-[#EA580C]">
+                  <td class="p-4 text-right font-bold text-[#00f2fe]">
                     ₹{trek.fromPrice.toLocaleString('en-IN')}
                   </td>
                   <td class="p-4 text-center">
                     <a 
                       href={`/treks/${trek.slug}`} 
-                      class="btn-tactile inline-flex items-center gap-1 px-3 py-1 rounded border border-[#0F172A]/10 bg-[#0F172A]/5 text-[11px] text-[#0F172A] hover:border-[#EA580C] hover:text-[#EA580C] hover:bg-[#EA580C]/10 transition-all font-mono"
+                      class="btn-tactile inline-flex items-center gap-1 px-3 py-1 rounded border border-white/15 bg-white/5 text-[11px] text-white hover:border-[#00f2fe] hover:text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-all font-mono"
                     >
                       <span>Inspect</span>
                       <span class="text-xs">→</span>
@@ -291,22 +288,17 @@ const difficultyCounts = {
       </div>
 
       <!-- No Treks Empty State -->
-      <div id="no-treks-empty" class="hidden text-center py-20 rounded-2xl border border-[#0F172A]/10 bg-white/90 p-8 mt-6">
-        <div class="w-12 h-12 rounded-full bg-[#0F172A]/5 border border-[#0F172A]/10 flex items-center justify-center mx-auto text-[#94A3B8] mb-4">
+      <div id="no-treks-empty" class="hidden text-center py-20 rounded-2xl border border-white/10 bg-[#0a0f18]/60 p-8 mt-6">
+        <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-silver mb-4">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 class="font-display text-xl font-bold text-[#0F172A] mb-2">No Matching Routes Found</h3>
-        <p class="text-sm text-[#94A3B8] mb-6 max-w-md mx-auto">No expeditions match your current search query and filter criteria. Adjust your criteria or reset filters.</p>
-        <button id="reset-empty-btn" class="btn-tactile bg-[#EA580C] hover:bg-[#c2410c] text-white shadow-md font-bold font-mono px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
+        <h3 class="font-display text-xl font-bold text-white mb-2">No Matching Routes Found</h3>
+        <p class="text-sm text-ink-dim mb-6 max-w-md mx-auto">No expeditions match your current search query and filter criteria. Adjust your criteria or reset filters.</p>
+        <button id="reset-empty-btn" class="btn-tactile bg-[#00f2fe] text-[#050505] font-bold font-mono px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
           Reset All Filters
         </button>
-      </div>
-
-      <!-- Side-by-Side Expedition Decision Matrix -->
-      <div class="mt-20 border-t border-[#0F172A]/10 pt-16">
-        <TrekComparator />
       </div>
 
     </div>
@@ -415,12 +407,12 @@ const difficultyCounts = {
 
             // Update UI styles for pills in this group
             pills.forEach((p) => {
-              p.classList.remove('active', 'border-[#EA580C]', 'bg-[#EA580C]', 'text-white', 'font-bold');
-              p.classList.add('border-[#0F172A]/10', 'bg-[#0F172A]/5', 'text-[#0F172A]');
+              p.classList.remove('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+              p.classList.add('border-white/10', 'bg-white/5', 'text-ink');
             });
 
-            pill.classList.add('active', 'border-[#EA580C]', 'bg-[#EA580C]', 'text-white', 'font-bold');
-            pill.classList.remove('border-[#0F172A]/10', 'bg-[#0F172A]/5', 'text-[#0F172A]');
+            pill.classList.add('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+            pill.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
 
             evaluateFilters();
           });
@@ -436,12 +428,12 @@ const difficultyCounts = {
       // View Switcher Handlers
       viewBentoBtn?.addEventListener('click', () => {
         state.view = 'bento';
-        viewBentoBtn.classList.add('bg-[#EA580C]', 'text-white', 'font-bold');
-        viewBentoBtn.classList.remove('text-[#94A3B8]');
+        viewBentoBtn.classList.add('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewBentoBtn.classList.remove('text-ink-dim');
         viewBentoBtn.setAttribute('aria-pressed', 'true');
 
-        viewMatrixBtn?.classList.remove('bg-[#EA580C]', 'text-white', 'font-bold');
-        viewMatrixBtn?.classList.add('text-[#94A3B8]');
+        viewMatrixBtn?.classList.remove('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewMatrixBtn?.classList.add('text-ink-dim');
         viewMatrixBtn?.setAttribute('aria-pressed', 'false');
 
         bentoView?.classList.remove('hidden');
@@ -450,12 +442,12 @@ const difficultyCounts = {
 
       viewMatrixBtn?.addEventListener('click', () => {
         state.view = 'matrix';
-        viewMatrixBtn.classList.add('bg-[#EA580C]', 'text-white', 'font-bold');
-        viewMatrixBtn.classList.remove('text-[#94A3B8]');
+        viewMatrixBtn.classList.add('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewMatrixBtn.classList.remove('text-ink-dim');
         viewMatrixBtn.setAttribute('aria-pressed', 'true');
 
-        viewBentoBtn?.classList.remove('bg-[#EA580C]', 'text-white', 'font-bold');
-        viewBentoBtn?.classList.add('text-[#94A3B8]');
+        viewBentoBtn?.classList.remove('bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+        viewBentoBtn?.classList.add('text-ink-dim');
         viewBentoBtn?.setAttribute('aria-pressed', 'false');
 
         matrixView?.classList.remove('hidden');
@@ -476,11 +468,11 @@ const difficultyCounts = {
           pills.forEach((p) => {
             const isAll = p.getAttribute('data-value') === 'all';
             if (isAll) {
-              p.classList.add('active', 'border-[#EA580C]', 'bg-[#EA580C]', 'text-white', 'font-bold');
-              p.classList.remove('border-[#0F172A]/10', 'bg-[#0F172A]/5', 'text-[#0F172A]');
+              p.classList.add('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+              p.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
             } else {
-              p.classList.remove('active', 'border-[#EA580C]', 'bg-[#EA580C]', 'text-white', 'font-bold');
-              p.classList.add('border-[#0F172A]/10', 'bg-[#0F172A]/5', 'text-[#0F172A]');
+              p.classList.remove('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
+              p.classList.add('border-white/10', 'bg-white/5', 'text-ink');
             }
           });
         });

@@ -9,15 +9,11 @@ import ItineraryTimeline from '../../components/ItineraryTimeline.astro';
 import UpcomingBatchesTable from '../../components/UpcomingBatchesTable.astro';
 import WeatherWidget from '../../components/WeatherWidget.astro';
 import GearChecklist from '../../components/GearChecklist.astro';
-import AltitudeAcclimatizationLab from '../../components/AltitudeAcclimatizationLab.astro';
 import BookingModal from '../../components/BookingModal.astro';
-import { getTreks } from '../../lib/strapi';
-import type { Trek } from '../../data/mock-treks';
-import { SITE_CONFIG } from '../../config/site';
+import { mockTreks, type Trek } from '../../data/mock-treks';
 
-export async function getStaticPaths() {
-  const treks = await getTreks();
-  return treks.map((trek) => ({
+export function getStaticPaths() {
+  return mockTreks.map((trek) => ({
     params: { slug: trek.slug },
     props: { trek },
   }));
@@ -36,8 +32,8 @@ const touristTripSchema = {
   "touristType": ["Trekkers", "Adventurers", "Hikers"],
   "provider": {
     "@type": "TravelAgency",
-    "name": SITE_CONFIG.name,
-    "url": SITE_CONFIG.url
+    "name": "Dream of The Holy Himalayas",
+    "url": "https://holyhimalayas.com"
   },
   "itinerary": {
     "@type": "ItemList",
@@ -66,27 +62,27 @@ const touristTripSchema = {
   <GlassNav />
 
   <!-- 1. The Elite Exped Authority Hero -->
-  <header class="relative h-[85vh] min-h-[600px] w-full overflow-hidden flex items-end bg-[#F9FAFB]">
+  <header class="relative h-[85vh] min-h-[600px] w-full overflow-hidden flex items-end bg-[#06090e]">
     <img src={trek.heroImage} alt={trek.name} class="absolute inset-0 w-full h-full object-cover opacity-90" />
     
     <!-- Triple layer gradient overlay for stark contrast -->
-    <div class="absolute inset-0 bg-gradient-to-t from-[#F9FAFB] via-black/40 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#06090E] via-[#06090E]/80 to-transparent"></div>
     
     <!-- Technical radial grid lines -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#F9FAFB_100%)] opacity-50 mix-blend-multiply"></div>
-    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(234,88,12,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(234,88,12,0.05) 1px, transparent 1px); background-size: 60px 60px;"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#06090E_100%)] opacity-50 mix-blend-multiply"></div>
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(20,184,166,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.05) 1px, transparent 1px); background-size: 60px 60px;"></div>
 
     <!-- High-Altitude GPS Crosshairs -->
     <div class="absolute top-28 right-6 lg:right-12 z-20 hidden md:block">
-      <div class="font-mono text-orange-500 text-xs tracking-[0.2em] bg-white/80 backdrop-blur-md px-4 py-2 rounded-sm border border-orange-600/30 flex items-center gap-3 shadow-[0_0_20px_rgba(234,88,12,0.15)]">
-        <span class="w-2 h-2 rounded-full bg-orange-600 animate-pulse"></span>
+      <div class="font-mono text-teal-400 text-xs tracking-[0.2em] bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-sm border border-teal-500/30 flex items-center gap-3 shadow-[0_0_20px_rgba(20,184,166,0.15)]">
+        <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
         LAT {trek.coordinates[1]}° N // LNG {trek.coordinates[0]}° E
       </div>
     </div>
 
     <!-- Hero Content -->
     <div class="container mx-auto px-4 relative z-20 pb-24">
-      <span class="text-orange-500 font-mono tracking-widest text-xs md:text-sm uppercase mb-4 block">
+      <span class="text-teal-400 font-mono tracking-widest text-xs md:text-sm uppercase mb-4 block">
         // Expedition Objective
       </span>
       <h1 class="text-5xl md:text-7xl lg:text-[6rem] font-display font-bold text-white uppercase tracking-tighter leading-none mb-6 drop-shadow-2xl">
@@ -95,10 +91,10 @@ const touristTripSchema = {
       
       <!-- Key Meta Specs -->
       <div class="flex flex-wrap items-center gap-3 md:gap-4 font-mono text-xs md:text-sm">
-        <span class="bg-orange-600/10 text-orange-600 border border-orange-600/30 px-3 py-1.5 rounded-sm uppercase">Alt: {trek.maxAltitudeM.toLocaleString()} m</span>
-        <span class="bg-[#0F172A]/5 text-white/80 border border-[#0F172A]/10 px-3 py-1.5 rounded-sm uppercase">Distance: {trek.trekDistanceKm} km</span>
-        <span class="bg-[#0F172A]/5 text-white/80 border border-[#0F172A]/10 px-3 py-1.5 rounded-sm uppercase">{trek.region} Himalayas</span>
-        <span class={`font-bold uppercase tracking-wider py-1.5 px-3 rounded-sm bg-[#0F172A]/5 border border-[#0F172A]/10 ${difficultyColor}`}>
+        <span class="bg-teal-500/10 text-teal-300 border border-teal-500/30 px-3 py-1.5 rounded-sm uppercase">Alt: {trek.maxAltitudeM.toLocaleString()} m</span>
+        <span class="bg-white/5 text-slate-300 border border-white/10 px-3 py-1.5 rounded-sm uppercase">Distance: {trek.trekDistanceKm} km</span>
+        <span class="bg-white/5 text-slate-300 border border-white/10 px-3 py-1.5 rounded-sm uppercase">{trek.region} Himalayas</span>
+        <span class={`font-bold uppercase tracking-wider py-1.5 px-3 rounded-sm bg-white/5 border border-white/10 ${difficultyColor}`}>
           Grade: {trek.difficulty}
         </span>
       </div>
@@ -106,56 +102,56 @@ const touristTripSchema = {
   </header>
 
   <!-- Main Body Wrapper -->
-  <main class="bg-[#F9FAFB] pb-40 w-full relative">
+  <main class="bg-[#06090e] pb-40 w-full relative">
     
     <!-- Trust Badges Bento (Pulling up into the hero space) -->
     <div class="container mx-auto px-4 -mt-12 relative z-30 mb-20">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="p-1 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10 shadow-2xl">
-          <div class="rounded-xl bg-[#FFFFFF]/90 backdrop-blur-xl border border-[#0F172A]/5 p-5 flex flex-col items-center justify-center text-center">
-            <div class="w-10 h-10 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center text-[#EA580C] mb-3">
+        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+          <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
               </svg>
             </div>
-            <h4 class="text-[#0F172A] font-display font-bold text-sm">100% Certified Guides</h4>
-            <p class="text-[#94A3B8] text-xs font-mono mt-1">NIM & WFR Certified</p>
+            <h4 class="text-white font-display font-bold text-sm">100% Certified Guides</h4>
+            <p class="text-silver/60 text-xs font-mono mt-1">NIM & WFR Certified</p>
           </div>
         </div>
 
-        <div class="p-1 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10 shadow-2xl">
-          <div class="rounded-xl bg-[#FFFFFF]/90 backdrop-blur-xl border border-[#0F172A]/5 p-5 flex flex-col items-center justify-center text-center">
-            <div class="w-10 h-10 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center text-[#EA580C] mb-3">
+        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+          <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
             </div>
-            <h4 class="text-[#0F172A] font-display font-bold text-sm">Micro Expeditions</h4>
-            <p class="text-[#94A3B8] text-xs font-mono mt-1">Strict Max 12-15 Trekkers</p>
+            <h4 class="text-white font-display font-bold text-sm">Micro Expeditions</h4>
+            <p class="text-silver/60 text-xs font-mono mt-1">Strict Max 12-15 Trekkers</p>
           </div>
         </div>
 
-        <div class="p-1 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10 shadow-2xl">
-          <div class="rounded-xl bg-[#FFFFFF]/90 backdrop-blur-xl border border-[#0F172A]/5 p-5 flex flex-col items-center justify-center text-center">
-            <div class="w-10 h-10 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center text-[#EA580C] mb-3">
+        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+          <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
               </svg>
             </div>
-            <h4 class="text-[#0F172A] font-display font-bold text-sm">All Permits Managed</h4>
-            <p class="text-[#94A3B8] text-xs font-mono mt-1">Forest & Wildlife Clearance</p>
+            <h4 class="text-white font-display font-bold text-sm">All Permits Managed</h4>
+            <p class="text-silver/60 text-xs font-mono mt-1">Forest & Wildlife Clearance</p>
           </div>
         </div>
 
-        <div class="p-1 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10 shadow-2xl">
-          <div class="rounded-xl bg-[#FFFFFF]/90 backdrop-blur-xl border border-[#0F172A]/5 p-5 flex flex-col items-center justify-center text-center">
-            <div class="w-10 h-10 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 flex items-center justify-center text-[#EA580C] mb-3">
+        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+          <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h4 class="text-[#0F172A] font-display font-bold text-sm">Transparent Pricing</h4>
-            <p class="text-[#94A3B8] text-xs font-mono mt-1">No Surprise Add-on Fees</p>
+            <h4 class="text-white font-display font-bold text-sm">Transparent Pricing</h4>
+            <p class="text-silver/60 text-xs font-mono mt-1">No Surprise Add-on Fees</p>
           </div>
         </div>
       </div>
@@ -166,9 +162,9 @@ const touristTripSchema = {
       <!-- 2. Technical Telemetry Grid -->
       <section>
         <div class="flex items-center gap-4 mb-8">
-          <div class="h-px bg-[#EA580C]/50 w-12"></div>
-          <h2 class="text-[#EA580C] font-mono tracking-widest text-xs uppercase font-bold">Expedition Telemetry</h2>
-          <div class="h-px bg-[#0F172A]/10 flex-1"></div>
+          <div class="h-px bg-[#00f2fe]/50 w-12"></div>
+          <h2 class="text-[#00f2fe] font-mono tracking-widest text-xs uppercase font-bold">Expedition Telemetry</h2>
+          <div class="h-px bg-white/10 flex-1"></div>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -179,7 +175,7 @@ const touristTripSchema = {
             
             <!-- Safety Protocol Warning Badge -->
             <div class="p-1 rounded-2xl bg-amber-500/5 border border-amber-500/20 shadow-lg">
-              <div class="rounded-xl bg-[#FFFFFF]/90 p-5 flex items-start gap-4 backdrop-blur-sm border border-amber-500/20">
+              <div class="rounded-xl bg-[#090d16]/90 p-5 flex items-start gap-4 backdrop-blur-sm border border-amber-500/20">
                 <div class="w-9 h-9 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -187,16 +183,11 @@ const touristTripSchema = {
                 </div>
                 <div>
                   <h4 class="text-amber-400 font-mono text-xs font-bold tracking-widest uppercase mb-1">Safety Protocol 4B Active</h4>
-                  <p class="text-[#94A3B8] text-xs leading-relaxed font-light">High altitude moraine crossing requires twice-daily pulse oximeter monitoring. Effective O2 saturation drops significantly above 14,000 ft.</p>
+                  <p class="text-silver/80 text-xs leading-relaxed font-light">High altitude moraine crossing requires twice-daily pulse oximeter monitoring. Effective O2 saturation drops significantly above 14,000 ft.</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- High-Altitude Physiology & Lake Louise AMS Diagnostic Lab -->
-        <div class="mt-8">
-          <AltitudeAcclimatizationLab initialAltitudeM={trek.maxAltitudeM} trekName={trek.name} />
         </div>
       </section>
 
@@ -206,38 +197,38 @@ const touristTripSchema = {
           
           <section class="space-y-6">
             <div class="flex items-center gap-4 mb-8">
-              <h2 class="text-3xl font-display font-bold text-[#0F172A] uppercase tracking-tight">Expedition Overview</h2>
-              <div class="h-px bg-[#0F172A]/10 flex-1"></div>
+              <h2 class="text-3xl font-display font-bold text-white uppercase tracking-tight">Expedition Overview</h2>
+              <div class="h-px bg-white/10 flex-1"></div>
             </div>
-            <p class="text-lg text-[#0F172A]/80 leading-relaxed font-light">{trek.description}</p>
+            <p class="text-lg text-slate-300 leading-relaxed font-light">{trek.description}</p>
             <div class="flex flex-wrap gap-3 pt-4">
-              <span class="text-xs font-bold tracking-widest text-[#94A3B8] uppercase font-mono mt-1">Best Seasons //</span>
+              <span class="text-xs font-bold tracking-widest text-slate-500 uppercase font-mono mt-1">Best Seasons //</span>
               {trek.bestSeasons.map((season) => (
-                <span class="rounded bg-[#0F172A]/5 px-3 py-1 text-xs font-mono text-orange-500 border border-[#0F172A]/10">{season}</span>
+                <span class="rounded bg-white/5 px-3 py-1 text-xs font-mono text-teal-400 border border-white/10">{season}</span>
               ))}
             </div>
           </section>
 
           <section class="space-y-6">
-            <div class="flex items-center justify-between border-b border-[#0F172A]/10 pb-4">
-              <h2 class="text-2xl font-display font-bold text-[#0F172A] uppercase">Fixed Departures</h2>
-              <span class="text-xs font-mono text-orange-500 hidden sm:inline-block">LIVE AVAILABILITY</span>
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <h2 class="text-2xl font-display font-bold text-white uppercase">Fixed Departures</h2>
+              <span class="text-xs font-mono text-teal-400 hidden sm:inline-block">LIVE AVAILABILITY</span>
             </div>
             <UpcomingBatchesTable batches={trek.batches} trekName={trek.name} trekSlug={trek.slug} />
           </section>
 
           <section class="space-y-8">
-            <h2 class="text-3xl font-display font-bold text-[#0F172A] uppercase tracking-tight border-b border-[#0F172A]/10 pb-4">Daily Itinerary Log</h2>
+            <h2 class="text-3xl font-display font-bold text-white uppercase tracking-tight border-b border-white/10 pb-4">Daily Itinerary Log</h2>
             <ItineraryTimeline days={trek.itinerary} />
           </section>
 
           <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="rounded-2xl border border-orange-600/20 bg-orange-600/5 p-8 space-y-4">
-              <h3 class="font-display text-xl font-bold text-orange-500 uppercase tracking-wide">Included</h3>
-              <ul class="space-y-3 text-sm text-[#0F172A]/80">
+            <div class="rounded-2xl border border-teal-500/20 bg-teal-500/5 p-8 space-y-4">
+              <h3 class="font-display text-xl font-bold text-teal-400 uppercase tracking-wide">Included</h3>
+              <ul class="space-y-3 text-sm text-slate-300">
                 {trek.inclusions.map((inc) => (
                   <li class="flex items-start gap-3">
-                    <svg class="w-4 h-4 text-[#EA580C] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-4 h-4 text-[#14b8a6] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>{inc}</span>
@@ -247,7 +238,7 @@ const touristTripSchema = {
             </div>
             <div class="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-8 space-y-4">
               <h3 class="font-display text-xl font-bold text-rose-400 uppercase tracking-wide">Excluded</h3>
-              <ul class="space-y-3 text-sm text-[#0F172A]/80">
+              <ul class="space-y-3 text-sm text-slate-300">
                 {trek.exclusions.map((exc) => (
                   <li class="flex items-start gap-3">
                     <svg class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -261,22 +252,22 @@ const touristTripSchema = {
           </section>
 
           <section class="space-y-6">
-            <h2 class="text-2xl font-display font-bold text-[#0F172A] uppercase border-b border-[#0F172A]/10 pb-4">Logistics & FAQs</h2>
-            <div class="rounded-2xl border border-[#0F172A]/10 bg-white/60 p-6 mb-8">
-              <h3 class="font-bold text-[#0F172A] mb-4">Basecamp Routing: {trek.startPoint}</h3>
+            <h2 class="text-2xl font-display font-bold text-white uppercase border-b border-white/10 pb-4">Logistics & FAQs</h2>
+            <div class="rounded-2xl border border-white/10 bg-slate-900/40 p-6 mb-8">
+              <h3 class="font-bold text-white mb-4">Basecamp Routing: {trek.startPoint}</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                 <div>
-                  <p class="font-mono text-orange-500 text-xs mb-1 flex items-center gap-1.5 uppercase font-bold tracking-wider">
-                    <svg class="w-3.5 h-3.5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <p class="font-mono text-teal-400 text-xs mb-1 flex items-center gap-1.5 uppercase font-bold tracking-wider">
+                    <svg class="w-3.5 h-3.5 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
                     Nearest Airport
                   </p>
-                  <p class="text-[#0F172A]/80">{trek.howToReach.nearestAirport}</p>
+                  <p class="text-slate-300">{trek.howToReach.nearestAirport}</p>
                 </div>
                 <div>
-                  <p class="font-mono text-orange-500 text-xs mb-1 flex items-center gap-1.5 uppercase font-bold tracking-wider">
-                    <svg class="w-3.5 h-3.5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <p class="font-mono text-teal-400 text-xs mb-1 flex items-center gap-1.5 uppercase font-bold tracking-wider">
+                    <svg class="w-3.5 h-3.5 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <rect x="4" y="3" width="16" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round" />
                       <circle cx="8" cy="15" r="1" fill="currentColor" />
                       <circle cx="16" cy="15" r="1" fill="currentColor" />
@@ -284,10 +275,10 @@ const touristTripSchema = {
                     </svg>
                     Nearest Railway
                   </p>
-                  <p class="text-[#0F172A]/80">{trek.howToReach.nearestRailway}</p>
+                  <p class="text-slate-300">{trek.howToReach.nearestRailway}</p>
                 </div>
               </div>
-              <p class="text-sm text-[#94A3B8] pt-4 mt-4 border-t border-[#0F172A]/5">{trek.howToReach.commuteDetails}</p>
+              <p class="text-sm text-slate-400 pt-4 mt-4 border-t border-white/5">{trek.howToReach.commuteDetails}</p>
             </div>
             <FAQAccordion items={trek.faqs} />
           </section>
@@ -305,23 +296,23 @@ const touristTripSchema = {
   </main>
 
   <!-- 4. The Much Better Adventures Sticky Info Bar -->
-  <div class="fixed bottom-0 left-0 w-full z-50 bg-[#F9FAFB]/90 backdrop-blur-2xl border-t border-orange-600/30 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] transform translate-y-0 transition-transform duration-300">
+  <div class="fixed bottom-0 left-0 w-full z-50 bg-[#06090e]/90 backdrop-blur-2xl border-t border-teal-500/30 shadow-[0_-20px_40px_rgba(0,0,0,0.5)] transform translate-y-0 transition-transform duration-300">
     <div class="container mx-auto px-4 h-20 md:h-24 flex items-center justify-between">
       
       <!-- Metrics (Hidden on Mobile) -->
       <div class="hidden md:flex items-center gap-6 font-mono text-xs lg:text-sm">
-        <div class="text-[#0F172A]/80 flex flex-col">
-          <span class="text-orange-600 font-bold uppercase tracking-widest text-[10px]">Duration</span> 
+        <div class="text-slate-300 flex flex-col">
+          <span class="text-teal-500 font-bold uppercase tracking-widest text-[10px]">Duration</span> 
           <span>{trek.durationDays} DAYS / {trek.durationDays - 1} NIGHTS</span>
         </div>
-        <div class="w-px h-8 bg-[#0F172A]/10"></div>
-        <div class="text-[#0F172A]/80 flex flex-col">
-          <span class="text-orange-600 font-bold uppercase tracking-widest text-[10px]">Max Altitude</span> 
+        <div class="w-px h-8 bg-white/10"></div>
+        <div class="text-slate-300 flex flex-col">
+          <span class="text-teal-500 font-bold uppercase tracking-widest text-[10px]">Max Altitude</span> 
           <span>{trek.maxAltitudeM.toLocaleString()} m</span>
         </div>
-        <div class="w-px h-8 bg-[#0F172A]/10"></div>
-        <div class="text-[#0F172A]/80 flex flex-col">
-          <span class="text-orange-600 font-bold uppercase tracking-widest text-[10px]">Difficulty</span> 
+        <div class="w-px h-8 bg-white/10"></div>
+        <div class="text-slate-300 flex flex-col">
+          <span class="text-teal-500 font-bold uppercase tracking-widest text-[10px]">Difficulty</span> 
           <span class="uppercase">{trek.difficulty}</span>
         </div>
       </div>
@@ -329,13 +320,13 @@ const touristTripSchema = {
       <!-- Pricing & CTA -->
       <div class="flex items-center justify-between w-full md:w-auto gap-4 md:gap-8">
         <div class="flex flex-col">
-          <span class="text-[10px] md:text-xs text-[#94A3B8] uppercase tracking-widest font-mono">Starts From</span>
-          <span class="text-2xl md:text-3xl font-display font-bold text-[#0F172A] leading-none">₹{trek.fromPrice.toLocaleString('en-IN')}</span>
+          <span class="text-[10px] md:text-xs text-slate-400 uppercase tracking-widest font-mono">Starts From</span>
+          <span class="text-2xl md:text-3xl font-display font-bold text-white leading-none">₹{trek.fromPrice.toLocaleString('en-IN')}</span>
         </div>
         
         <button
           data-open-modal="booking-modal"
-          class="btn-tactile open-booking-trigger group relative px-6 md:px-8 py-3.5 md:py-4 bg-orange-600 hover:bg-orange-500 text-[#F9FAFB] font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_rgba(234,88,12,0.3)] transition-all overflow-hidden whitespace-nowrap cursor-pointer"
+          class="btn-tactile open-booking-trigger group relative px-6 md:px-8 py-3.5 md:py-4 bg-teal-500 hover:bg-teal-400 text-[#06090E] font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all overflow-hidden whitespace-nowrap cursor-pointer"
         >
           <span class="relative z-10 flex items-center gap-2">
             Request Booking 
