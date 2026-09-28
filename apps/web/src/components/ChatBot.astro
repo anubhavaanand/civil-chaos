@@ -1,0 +1,135 @@
+---
+---
+<div id="chatbot-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+  <div id="chat-window" class="hidden w-80 sm:w-96 bg-slate-900 border border-white/20 rounded-2xl shadow-xl overflow-hidden mb-4 flex-col backdrop-blur-md backdrop-saturate-150">
+    <div class="bg-brand/20 p-4 border-b border-white/10 flex justify-between items-center relative">
+      <!-- Required dark scrim behind glass if needed, or just brand gradient -->
+      <div class="absolute inset-0 bg-black/30 -z-10"></div>
+      <h3 class="font-display text-lg text-white font-bold z-10">Himalayan Support</h3>
+      <button id="close-chat" class="text-white/60 hover:text-white transition-colors z-10" aria-label="Close Chat">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div id="chat-messages" class="p-4 h-80 overflow-y-auto flex flex-col gap-3 text-sm">
+      <div class="bg-white/10 p-3 rounded-lg rounded-tl-none self-start max-w-[85%] text-ink">
+        Namaste! How can I help you plan your Himalayan trek today?
+      </div>
+    </div>
+    <form id="chat-form" class="p-3 border-t border-white/10 flex gap-2">
+      <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-brand transition-colors" required autocomplete="off" />
+      <button type="submit" class="bg-brand text-slate-950 font-bold px-4 py-2 rounded-lg hover:bg-brand/90 transition-colors">
+        Send
+      </button>
+    </form>
+  </div>
+
+  <button id="chat-toggle" class="relative bg-brand text-slate-950 p-4 rounded-full shadow-lg hover:bg-brand/90 transition-transform hover:scale-105 active:scale-95 group" aria-label="Open Chat">
+    <span class="absolute inset-0 rounded-full bg-brand opacity-50 animate-ping group-hover:animate-none"></span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+    </svg>
+  </button>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const container = document.getElementById('chatbot-container');
+    if (!container) return; // run once per page
+
+    const toggleBtn = document.getElementById('chat-toggle');
+    const closeBtn = document.getElementById('close-chat');
+    const chatWindow = document.getElementById('chat-window');
+    const chatForm = document.getElementById('chat-form') as HTMLFormElement;
+    const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    const messagesContainer = document.getElementById('chat-messages');
+    
+    let trekContext: any = null;
+    let contextFetched = false;
+    
+    const fetchTrekContext = async () => {
+      if (contextFetched) return;
+      try {
+        const strapiUrl = import.meta.env.PUBLIC_STRAPI_URL || 'https://civil-chaos.onrender.com';
+        const res = await fetch(`${strapiUrl}/api/treks?populate=*`);
+        if (!res.ok) throw new Error('Strapi unreachable');
+        const data = await res.json();
+        
+        trekContext = data.data.map((t: any) => ({
+          name: t.attributes?.title || t.title || t.attributes?.slug,
+          difficulty: t.attributes?.difficulty || t.difficulty,
+          days: t.attributes?.durationDays || t.durationDays,
+          price: t.attributes?.priceFrom || t.priceFrom
+        }));
+      } catch (e) {
+        console.warn('Failed to fetch trek context', e);
+        trekContext = { error: 'Live data unavailable' };
+      } finally {
+        contextFetched = true;
+      }
+    };
+
+    const toggleChat = async () => {
+      const isHidden = chatWindow?.classList.contains('hidden');
+      if (isHidden) {
+        chatWindow?.classList.remove('hidden');
+        chatWindow?.classList.add('flex');
+        await fetchTrekContext();
+        chatInput?.focus();
+      } else {
+        chatWindow?.classList.add('hidden');
+        chatWindow?.classList.remove('flex');
+      }
+    };
+
+    toggleBtn?.addEventListener('click', toggleChat);
+    closeBtn?.addEventListener('click', toggleChat);
+
+    const addMessage = (text: string, isUser: boolean) => {
+      if (!messagesContainer) return;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `p-3 rounded-lg max-w-[85%] text-ink ${
+        isUser 
+          ? 'bg-brand text-slate-950 rounded-tr-none self-end font-medium' 
+          : 'bg-white/10 rounded-tl-none self-start'
+      }`;
+      msgDiv.textContent = text;
+      messagesContainer.appendChild(msgDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    };
+
+    chatForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = chatInput?.value.trim();
+      if (!message) return;
+
+      addMessage(message, true);
+      chatInput.value = '';
+      
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'bg-white/10 p-3 rounded-lg rounded-tl-none self-start max-w-[85%] text-ink/60 italic animate-pulse';
+      loadingDiv.textContent = 'Typing...';
+      messagesContainer?.appendChild(loadingDiv);
+      messagesContainer!.scrollTop = messagesContainer!.scrollHeight;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, context: trekContext })
+        });
+        
+        if (!res.ok) throw new Error('API Error');
+        const data = await res.json();
+        
+        loadingDiv.remove();
+        addMessage(data.response || 'Sorry, I could not understand that. Please use WhatsApp for booking!', false);
+      } catch (e) {
+        console.error('Chat error', e);
+        loadingDiv.remove();
+        addMessage('Sorry, something went wrong. Please reach out to us via WhatsApp!', false);
+      }
+    });
+  });
+</script>

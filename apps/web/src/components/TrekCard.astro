@@ -11,7 +11,7 @@ const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage
 ---
 <a href={`/treks/${slug}`} class="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-white/20 shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-400">
   <div class="absolute inset-0 bg-slate-900/85 pointer-events-none supports-[backdrop-filter:blur(0)]:hidden"></div>
-  <div class="absolute inset-0 bg-white/10 backdrop-blur-md backdrop-saturate-150 pointer-events-none"></div>
+  <div class="absolute inset-0 bg-[#0a0f18]/10 backdrop-blur-md backdrop-saturate-150 pointer-events-none"></div>
   <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
   
   <div class="relative w-full aspect-video overflow-hidden shrink-0 bg-slate-800">
@@ -28,9 +28,9 @@ const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage
 
   <div class="relative p-5 z-10 flex flex-col flex-grow text-slate-200">
     <h3 class="text-xl font-bold font-['Space_Grotesk'] text-white mb-2 line-clamp-1">{name}</h3>
-    {summary && <p class="text-sm text-slate-400 mb-4 line-clamp-2 font-['Inter'] flex-grow">{summary}</p>}
+    {summary && <p class="text-sm text-slate-400 mb-4 line-clamp-2 font-['Satoshi'] flex-grow">{summary}</p>}
     
-    <div class="flex items-center justify-between text-sm font-['Inter'] mt-auto pt-4 border-t border-white/10">
+    <div class="flex items-center justify-between text-sm font-['Satoshi'] mt-auto pt-4 border-t border-white/10">
       <div class="flex flex-col gap-1 text-slate-300">
         <span class="flex items-center gap-1.5">
           <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,41 +1,41 @@
 ---
 // GearChecklist.astro
-// Interactive Himalayan Trekking Gear Packing Checklist & Weight Estimator
+// Satoshiactive Himalayan Trekking Gear Packing Checklist & Weight Estimator
 ---
 
-<div class="w-full rounded-2xl bg-white/90 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
+<div class="w-full rounded-2xl bg-[#0a0f18]/90 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
   <!-- Header -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
     <div>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wide">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-#34D399/20 text-#34D399 border border-#34D399/30 uppercase tracking-wide">
         Backpack Load Optimizer
       </span>
       <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
-        <svg class="w-5 h-5 text-[#EA580C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="w-5 h-5 text-[#00F2FE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
-        <span>Interactive Gear & Weight Checklist</span>
+        <span>Satoshiactive Gear & Weight Checklist</span>
       </h3>
     </div>
 
     <!-- Weight Meter Gauge -->
-    <div class="flex items-center gap-4 bg-[#F9FAFB] p-3 rounded-xl border border-slate-800">
+    <div class="flex items-center gap-4 bg-[#050505] p-3 rounded-xl border border-slate-800">
       <div>
         <span class="block text-[10px] text-[#94A3B8] font-bold uppercase tracking-wider">Total Pack Weight</span>
-        <div id="weight-display" class="text-xl font-heading font-bold text-emerald-400">
+        <div id="weight-display" class="text-xl font-heading font-bold text-#34D399">
           <span id="pack-weight-val">6.4</span> KG <span class="text-xs font-normal text-[#94A3B8]">/ 10 KG Max</span>
         </div>
       </div>
       <div class="w-24 bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
-        <div id="weight-bar" class="bg-gradient-to-r from-emerald-400 to-amber-400 h-full w-[64%] transition-all duration-300"></div>
+        <div id="weight-bar" class="bg-gradient-to-r from-#34D399 to-#FBBF24 h-full w-[64%] transition-all duration-300"></div>
       </div>
     </div>
   </div>
 
-  <!-- Interactive Checklist Categories Grid -->
+  <!-- Satoshiactive Checklist Categories Grid -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
     <!-- Category 1: Technical Clothing -->
-    <div class="p-4 rounded-xl bg-[#F9FAFB]/60 border border-slate-800">
+    <div class="p-4 rounded-xl bg-[#050505]/60 border border-slate-800">
       <h4 class="font-heading font-bold text-sm text-cyan-300 flex items-center justify-between mb-3">
         <span class="flex items-center gap-2">
           <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -45,8 +45,8 @@
         </span>
         <span class="text-xs text-[#94A3B8] font-normal">~ 3.2 kg</span>
       </h4>
-      <div class="space-y-2.5 text-xs text-[#0F172A]/80">
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+      <div class="space-y-2.5 text-xs text-[#F8FAFC]/80">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="1.2" checked />
             <span>Heavy Down Jacket (-10°C rated)</span>
@@ -54,7 +54,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">1.20 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.45" checked />
             <span>Fleece Thermal Jacket</span>
@@ -62,7 +62,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.45 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.4" checked />
             <span>Waterproof Hardshell Jacket</span>
@@ -70,7 +70,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.40 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.5" checked />
             <span>Merino Wool Thermal Sets (x2)</span>
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Category 2: Footwear & Hardware -->
-    <div class="p-4 rounded-xl bg-[#F9FAFB]/60 border border-slate-800">
+    <div class="p-4 rounded-xl bg-[#050505]/60 border border-slate-800">
       <h4 class="font-heading font-bold text-sm text-cyan-300 flex items-center justify-between mb-3">
         <span class="flex items-center gap-2">
           <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -91,8 +91,8 @@
         </span>
         <span class="text-xs text-[#94A3B8] font-normal">~ 2.1 kg</span>
       </h4>
-      <div class="space-y-2.5 text-xs text-[#0F172A]/80">
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+      <div class="space-y-2.5 text-xs text-[#F8FAFC]/80">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="1.3" checked />
             <span>High-Ankle Waterproof Trek Boots</span>
@@ -100,7 +100,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">1.30 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.4" checked />
             <span>Microspikes / Snow Crampons</span>
@@ -108,7 +108,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.40 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.25" checked />
             <span>Waterproof Gaiters</span>
@@ -116,7 +116,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.25 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.5" />
             <span>Trekking Poles (Pair)</span>
@@ -127,7 +127,7 @@
     </div>
 
     <!-- Category 3: Essentials & Medical -->
-    <div class="p-4 rounded-xl bg-[#F9FAFB]/60 border border-slate-800">
+    <div class="p-4 rounded-xl bg-[#050505]/60 border border-slate-800">
       <h4 class="font-heading font-bold text-sm text-cyan-300 flex items-center justify-between mb-3">
         <span class="flex items-center gap-2">
           <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -137,8 +137,8 @@
         </span>
         <span class="text-xs text-[#94A3B8] font-normal">~ 1.1 kg</span>
       </h4>
-      <div class="space-y-2.5 text-xs text-[#0F172A]/80">
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+      <div class="space-y-2.5 text-xs text-[#F8FAFC]/80">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.3" checked />
             <span>AMS & Altitude Medical Kit</span>
@@ -146,7 +146,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.30 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.35" checked />
             <span>2L Insulated Hydration Bladder</span>
@@ -154,7 +154,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.35 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.2" checked />
             <span>Headlamp (300+ Lumens) + Extra Batts</span>
@@ -162,7 +162,7 @@
           <span class="text-[11px] text-[#94A3B8] font-mono">0.20 kg</span>
         </label>
 
-        <label class="flex items-center justify-between p-2 rounded bg-white/80 hover:bg-white border border-slate-800 cursor-pointer transition">
+        <label class="flex items-center justify-between p-2 rounded bg-[#0a0f18]/80 hover:bg-[#0a0f18] border border-slate-800 cursor-pointer transition">
           <div class="flex items-center gap-2">
             <input type="checkbox" class="gear-item accent-cyan-400 rounded" data-weight="0.4" />
             <span>20,000 mAh Cold-Resistant Powerbank</span>
@@ -176,8 +176,8 @@
   <!-- Footer Tip & Export Button -->
   <div class="pt-4 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
     <div class="text-xs text-[#94A3B8] flex items-center gap-2">
-      <span class="text-amber-400 font-bold flex items-center gap-1">
-        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <span class="text-#FBBF24 font-bold flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-#FBBF24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
         <span>Holy Himalayas Pro Tip:</span>
@@ -212,11 +212,11 @@
     if (weightBarEl) {
       weightBarEl.style.width = `${pct}%`;
       if (total > 10) {
-        weightBarEl.className = 'bg-gradient-to-r from-amber-400 to-rose-500 h-full transition-all duration-300';
-        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-rose-400';
+        weightBarEl.className = 'bg-gradient-to-r from-#FBBF24 to-#FB7185 h-full transition-all duration-300';
+        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-#FB7185';
       } else {
-        weightBarEl.className = 'bg-gradient-to-r from-emerald-400 to-amber-400 h-full transition-all duration-300';
-        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-emerald-400';
+        weightBarEl.className = 'bg-gradient-to-r from-#34D399 to-#FBBF24 h-full transition-all duration-300';
+        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-#34D399';
       }
     }
   }

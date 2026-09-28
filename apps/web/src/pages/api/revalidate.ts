@@ -33,7 +33,7 @@ interface StrapiWebhookPayload {
 }
 
 /**
- * GET is intentionally unsupported — this endpoint is POST-only.
+ * GET is intentionally unsupported - this endpoint is POST-only.
  * Strapi webhooks POST here; Astro's prerenderer probes routes with GET,
  * so we respond 405 Method Not Allowed instead of leaving the route unhandled.
  */

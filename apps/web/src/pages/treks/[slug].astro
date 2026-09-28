@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 
 const { trek } = Astro.props as { trek: Trek };
 
-const difficultyColor = trek.difficulty === 'easy' ? 'text-emerald-400' : trek.difficulty === 'moderate' ? 'text-amber-400' : 'text-rose-400';
+const difficultyColor = trek.difficulty === 'easy' ? 'text-#34D399' : trek.difficulty === 'moderate' ? 'text-#FBBF24' : 'text-#FB7185';
 
 // Schema.org TouristTrip + Product / Offer JSON-LD
 const touristTripSchema = {
@@ -109,9 +109,9 @@ const productSchema = {
       <!-- Key Meta Specs -->
       <div class="flex flex-wrap items-center gap-3 md:gap-4 font-mono text-xs md:text-sm">
         <span class="bg-teal-500/10 text-teal-300 border border-teal-500/30 px-3 py-1.5 rounded-sm uppercase">Alt: {trek.maxAltitudeM.toLocaleString()} m</span>
-        <span class="bg-white/5 text-slate-300 border border-white/10 px-3 py-1.5 rounded-sm uppercase">Distance: {trek.trekDistanceKm} km</span>
-        <span class="bg-white/5 text-slate-300 border border-white/10 px-3 py-1.5 rounded-sm uppercase">{trek.region} Himalayas</span>
-        <span class={`font-bold uppercase tracking-wider py-1.5 px-3 rounded-sm bg-white/5 border border-white/10 ${difficultyColor}`}>
+        <span class="bg-[#0a0f18]/5 text-slate-300 border border-white/10 px-3 py-1.5 rounded-sm uppercase">Distance: {trek.trekDistanceKm} km</span>
+        <span class="bg-[#0a0f18]/5 text-slate-300 border border-white/10 px-3 py-1.5 rounded-sm uppercase">{trek.region} Himalayas</span>
+        <span class={`font-bold uppercase tracking-wider py-1.5 px-3 rounded-sm bg-[#0a0f18]/5 border border-white/10 ${difficultyColor}`}>
           Grade: {trek.difficulty}
         </span>
       </div>
@@ -124,7 +124,7 @@ const productSchema = {
     <!-- Trust Badges Bento (Pulling up into the hero space) -->
     <div class="container mx-auto px-4 -mt-12 relative z-30 mb-20">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+        <div class="p-1 rounded-2xl bg-[#0a0f18]/5 border border-white/10 shadow-2xl">
           <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
             <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
@@ -136,7 +136,7 @@ const productSchema = {
           </div>
         </div>
 
-        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+        <div class="p-1 rounded-2xl bg-[#0a0f18]/5 border border-white/10 shadow-2xl">
           <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
             <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
@@ -148,7 +148,7 @@ const productSchema = {
           </div>
         </div>
 
-        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+        <div class="p-1 rounded-2xl bg-[#0a0f18]/5 border border-white/10 shadow-2xl">
           <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
             <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
@@ -160,7 +160,7 @@ const productSchema = {
           </div>
         </div>
 
-        <div class="p-1 rounded-2xl bg-white/5 border border-white/10 shadow-2xl">
+        <div class="p-1 rounded-2xl bg-[#0a0f18]/5 border border-white/10 shadow-2xl">
           <div class="rounded-xl bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
             <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] mb-3">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
@@ -181,7 +181,7 @@ const productSchema = {
         <div class="flex items-center gap-4 mb-8">
           <div class="h-px bg-[#00f2fe]/50 w-12"></div>
           <h2 class="text-[#00f2fe] font-mono tracking-widest text-xs uppercase font-bold">Expedition Telemetry</h2>
-          <div class="h-px bg-white/10 flex-1"></div>
+          <div class="h-px bg-[#0a0f18]/10 flex-1"></div>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -191,15 +191,15 @@ const productSchema = {
             <WeatherWidget />
             
             <!-- Safety Protocol Warning Badge -->
-            <div class="p-1 rounded-2xl bg-amber-500/5 border border-amber-500/20 shadow-lg">
-              <div class="rounded-xl bg-[#090d16]/90 p-5 flex items-start gap-4 backdrop-blur-sm border border-amber-500/20">
-                <div class="w-9 h-9 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+            <div class="p-1 rounded-2xl bg-#FBBF24/5 border border-#FBBF24/20 shadow-lg">
+              <div class="rounded-xl bg-[#090d16]/90 p-5 flex items-start gap-4 backdrop-blur-sm border border-#FBBF24/20">
+                <div class="w-9 h-9 rounded-full bg-#FBBF24/15 border border-#FBBF24/30 flex items-center justify-center text-#FBBF24 shrink-0">
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                   </svg>
                 </div>
                 <div>
-                  <h4 class="text-amber-400 font-mono text-xs font-bold tracking-widest uppercase mb-1">Safety Protocol 4B Active</h4>
+                  <h4 class="text-#FBBF24 font-mono text-xs font-bold tracking-widest uppercase mb-1">Safety Protocol 4B Active</h4>
                   <p class="text-silver/80 text-xs leading-relaxed font-light">High altitude moraine crossing requires twice-daily pulse oximeter monitoring. Effective O2 saturation drops significantly above 14,000 ft.</p>
                 </div>
               </div>
@@ -215,13 +215,13 @@ const productSchema = {
           <section class="space-y-6">
             <div class="flex items-center gap-4 mb-8">
               <h2 class="text-3xl font-display font-bold text-white uppercase tracking-tight">Expedition Overview</h2>
-              <div class="h-px bg-white/10 flex-1"></div>
+              <div class="h-px bg-[#0a0f18]/10 flex-1"></div>
             </div>
             <p class="text-lg text-slate-300 leading-relaxed font-light">{trek.description}</p>
             <div class="flex flex-wrap gap-3 pt-4">
               <span class="text-xs font-bold tracking-widest text-slate-500 uppercase font-mono mt-1">Best Seasons //</span>
               {trek.bestSeasons.map((season) => (
-                <span class="rounded bg-white/5 px-3 py-1 text-xs font-mono text-teal-400 border border-white/10">{season}</span>
+                <span class="rounded bg-[#0a0f18]/5 px-3 py-1 text-xs font-mono text-teal-400 border border-white/10">{season}</span>
               ))}
             </div>
           </section>
@@ -253,12 +253,12 @@ const productSchema = {
                 ))}
               </ul>
             </div>
-            <div class="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-8 space-y-4">
-              <h3 class="font-display text-xl font-bold text-rose-400 uppercase tracking-wide">Excluded</h3>
+            <div class="rounded-2xl border border-#FB7185/20 bg-#FB7185/5 p-8 space-y-4">
+              <h3 class="font-display text-xl font-bold text-#FB7185 uppercase tracking-wide">Excluded</h3>
               <ul class="space-y-3 text-sm text-slate-300">
                 {trek.exclusions.map((exc) => (
                   <li class="flex items-start gap-3">
-                    <svg class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-4 h-4 text-#FB7185 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span>{exc}</span>
@@ -322,12 +322,12 @@ const productSchema = {
           <span class="text-teal-500 font-bold uppercase tracking-widest text-[10px]">Duration</span> 
           <span>{trek.durationDays} DAYS / {trek.durationDays - 1} NIGHTS</span>
         </div>
-        <div class="w-px h-8 bg-white/10"></div>
+        <div class="w-px h-8 bg-[#0a0f18]/10"></div>
         <div class="text-slate-300 flex flex-col">
           <span class="text-teal-500 font-bold uppercase tracking-widest text-[10px]">Max Altitude</span> 
           <span>{trek.maxAltitudeM.toLocaleString()} m</span>
         </div>
-        <div class="w-px h-8 bg-white/10"></div>
+        <div class="w-px h-8 bg-[#0a0f18]/10"></div>
         <div class="text-slate-300 flex flex-col">
           <span class="text-teal-500 font-bold uppercase tracking-widest text-[10px]">Difficulty</span> 
           <span class="uppercase">{trek.difficulty}</span>

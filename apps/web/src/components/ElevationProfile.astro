@@ -1,6 +1,6 @@
 ---
 // ElevationProfile.astro
-// Interactive Swiss Telemetry SVG Elevation Profile with Barometric Altitude Physics
+// Satoshiactive Swiss Telemetry SVG Elevation Profile with Barometric Altitude Physics
 import type { AltitudePoint } from '../lib/strapi';
 
 interface Props {
@@ -42,7 +42,7 @@ const getO2Percentage = (altM: number) => {
 };
 ---
 
-<div class="p-1.5 rounded-[24px] bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+<div class="p-1.5 rounded-[24px] bg-[#0a0f18]/5 border border-white/10 shadow-2xl overflow-hidden">
   <div class="rounded-[18px] bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-6 md:p-8">
     
     <!-- Top Telemetry Header -->
@@ -56,7 +56,7 @@ const getO2Percentage = (altM: number) => {
       </div>
       
       <div class="flex items-center gap-3 font-mono text-xs">
-        <div class="px-3 py-1.5 rounded-sm bg-white/5 border border-white/10 text-silver">
+        <div class="px-3 py-1.5 rounded-sm bg-[#0a0f18]/5 border border-white/10 text-silver">
           <span class="text-[#d4d4d8]/60">Total Dist:</span> <span class="text-white font-bold">{maxDist} km</span>
         </div>
         <div class="px-3 py-1.5 rounded-sm bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] font-bold">
@@ -81,7 +81,7 @@ const getO2Percentage = (altM: number) => {
       </div>
       <div>
         <span class="text-[10px] text-silver/60 uppercase block">Effective O2 Level</span>
-        <span id="hud-point-o2" class="text-emerald-400 font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
+        <span id="hud-point-o2" class="text-#34D399 font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
       </div>
     </div>
 
@@ -127,7 +127,7 @@ const getO2Percentage = (altM: number) => {
           stroke-linejoin="round" 
         />
 
-        <!-- Waypoint Nodes with Interactive Data Trigger -->
+        <!-- Waypoint Nodes with Satoshiactive Data Trigger -->
         {points.map((p, idx) => {
           const cx = getX(p.distanceKm);
           const cy = getY(p.altitudeM);
@@ -244,11 +244,11 @@ const getO2Percentage = (altM: number) => {
         if (hudO2) {
           hudO2.textContent = `${o2}% of Sea Level`;
           if (o2 < 60) {
-            hudO2.className = 'text-rose-400 font-bold block';
+            hudO2.className = 'text-#FB7185 font-bold block';
           } else if (o2 < 75) {
-            hudO2.className = 'text-amber-400 font-bold block';
+            hudO2.className = 'text-#FBBF24 font-bold block';
           } else {
-            hudO2.className = 'text-emerald-400 font-bold block';
+            hudO2.className = 'text-#34D399 font-bold block';
           }
         }
       };

@@ -1,6 +1,6 @@
 ---
 // FitnessQuiz.astro
-// Interactive High-Altitude Trekking Fitness Readiness Calculator
+// Satoshiactive High-Altitude Trekking Fitness Readiness Calculator
 ---
 
 <div class="w-full rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/95 border border-slate-800 p-6 shadow-2xl backdrop-blur-xl">
@@ -141,7 +141,7 @@
       <div>
         <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Your Himalayan Fitness Readiness Score</span>
         <div id="fitness-score-display" class="text-3xl font-heading font-bold text-cyan-300 mt-0.5">
-          90 / 100 <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 ml-2">Summit Ready!</span>
+          90 / 100 <span class="text-xs font-semibold text-#34D399 bg-#34D399/10 px-2 py-0.5 rounded border border-#34D399/30 ml-2">Summit Ready!</span>
         </div>
       </div>
       <button id="retake-quiz-btn" class="text-xs text-cyan-400 hover:underline">Retake Quiz</button>
@@ -157,11 +157,11 @@
         </h5>
         <ul id="recommended-treks-list" class="space-y-1.5 text-slate-300">
           <li class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-#34D399 shrink-0"></span>
             <span><strong class="text-cyan-300">Kedarkantha Summit (12,500 ft):</strong> Perfect match for your cardio score!</span>
           </li>
           <li class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-#34D399 shrink-0"></span>
             <span><strong class="text-cyan-300">Har Ki Dun Valley (11,768 ft):</strong> Ideal scenic endurance trail.</span>
           </li>
         </ul>
@@ -205,11 +205,11 @@
     if (scoreDisplay) {
       let badge = '';
       if (finalScore >= 80) {
-        badge = `<span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 ml-2">Summit Ready!</span>`;
+        badge = `<span class="text-xs font-semibold text-#34D399 bg-#34D399/10 px-2 py-0.5 rounded border border-#34D399/30 ml-2">Summit Ready!</span>`;
       } else if (finalScore >= 55) {
-        badge = `<span class="text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30 ml-2">Moderate Prep Needed</span>`;
+        badge = `<span class="text-xs font-semibold text-#FBBF24 bg-#FBBF24/10 px-2 py-0.5 rounded border border-#FBBF24/30 ml-2">Moderate Prep Needed</span>`;
       } else {
-        badge = `<span class="text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/30 ml-2">3-Week Prep Recommended</span>`;
+        badge = `<span class="text-xs font-semibold text-#FB7185 bg-#FB7185/10 px-2 py-0.5 rounded border border-#FB7185/30 ml-2">3-Week Prep Recommended</span>`;
       }
       scoreDisplay.innerHTML = `${finalScore} / 100 ${badge}`;
     }
