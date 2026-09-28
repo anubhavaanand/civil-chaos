@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "@fontsource/space-grotesk";
-@import "@fontsource/inter";
+// Inter font removed per Dark Alpine Glass theme
 
 @theme {
   --color-obsidian: #050505;
@@ -49,7 +49,7 @@
   }
 
   .dark-scrim {
-    @apply bg-black/40;
+    @apply bg-black/50;
   }
 
   .bg-grid {
