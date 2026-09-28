@@ -3,14 +3,14 @@
 // Real-Time High-Altitude Himalayan Weather Forecast & Alpine Telemetry Widget
 ---
 
-<div class="p-1.5 rounded-[24px] bg-[#0F172A]/5 border border-[#0F172A]/10 shadow-2xl overflow-hidden">
-  <div class="rounded-[18px] bg-[#FFFFFF]/90 backdrop-blur-xl border border-[#0F172A]/10 p-6 md:p-8">
+<div class="p-1.5 rounded-[24px] bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+  <div class="rounded-[18px] bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-6 md:p-8">
     
     <!-- Widget Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#0F172A]/10">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/10">
       <div>
         <div class="flex items-center gap-2">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-sm text-[10px] font-mono font-bold bg-[#EA580C]/15 text-[#EA580C] border border-[#EA580C]/30 uppercase tracking-widest">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-sm text-[10px] font-mono font-bold bg-[#00f2fe]/15 text-[#00f2fe] border border-[#00f2fe]/30 uppercase tracking-widest">
             Live Barometric Telemetry
           </span>
           <span class="flex h-2 w-2 relative">
@@ -18,8 +18,8 @@
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
         </div>
-        <h3 class="text-xl font-display font-bold text-[#0F172A] mt-1.5 flex items-center gap-2 tracking-tight">
-          <svg class="w-5 h-5 text-[#EA580C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+        <h3 class="text-xl font-display font-bold text-white mt-1.5 flex items-center gap-2 tracking-tight">
+          <svg class="w-5 h-5 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
           Himalayan Weather & Micro-Climate Index
@@ -27,14 +27,14 @@
       </div>
 
       <!-- Region/Trek Selector Tabs -->
-      <div class="flex items-center bg-[#F9FAFB] p-1 rounded-lg border border-[#0F172A]/10 text-xs font-mono">
-        <button data-loc="sankri" class="weather-tab-btn px-3 py-1.5 rounded-md bg-[#EA580C] text-[#050505] font-bold transition shadow">
+      <div class="flex items-center bg-[#050505] p-1 rounded-lg border border-white/10 text-xs font-mono">
+        <button data-loc="sankri" class="weather-tab-btn px-3 py-1.5 rounded-md bg-[#00f2fe] text-[#050505] font-bold transition shadow">
           Sankri (Base)
         </button>
-        <button data-loc="kedarkantha" class="weather-tab-btn px-3 py-1.5 rounded-md text-[#94A3B8] hover:text-[#0F172A] transition">
+        <button data-loc="kedarkantha" class="weather-tab-btn px-3 py-1.5 rounded-md text-silver hover:text-white transition">
           Kedarkantha Peak
         </button>
-        <button data-loc="roopkund" class="weather-tab-btn px-3 py-1.5 rounded-md text-[#94A3B8] hover:text-[#0F172A] transition">
+        <button data-loc="roopkund" class="weather-tab-btn px-3 py-1.5 rounded-md text-silver hover:text-white transition">
           Roopkund Glacial
         </button>
       </div>
@@ -43,14 +43,14 @@
     <!-- Live Telemetry Grid -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-6">
       <!-- Card 1: Temperature & Chill -->
-      <div class="p-4 rounded-xl bg-[#0F172A]/5 border border-[#0F172A]/10 flex flex-col justify-between">
-        <div class="flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
           <span>Current Temp</span>
-          <span class="text-[#EA580C]">1,950 m</span>
+          <span class="text-[#00f2fe]">1,950 m</span>
         </div>
         <div class="my-2">
-          <div id="w-temp" class="text-3xl font-display font-bold text-[#EA580C]">14°C</div>
-          <p id="w-chill" class="text-xs text-[#94A3B8] mt-0.5 font-light">Feels like 11°C (Clear Alpine Sky)</p>
+          <div id="w-temp" class="text-3xl font-display font-bold text-[#00f2fe]">14°C</div>
+          <p id="w-chill" class="text-xs text-silver mt-0.5 font-light">Feels like 11°C (Clear Alpine Sky)</p>
         </div>
         <div class="text-[11px] font-mono text-amber-400 flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -61,14 +61,14 @@
       </div>
 
       <!-- Card 2: Wind & Gusts -->
-      <div class="p-4 rounded-xl bg-[#0F172A]/5 border border-[#0F172A]/10 flex flex-col justify-between">
-        <div class="flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
           <span>Wind Velocity</span>
-          <span class="text-[#94A3B8]">Ridge Gusts</span>
+          <span class="text-silver">Ridge Gusts</span>
         </div>
         <div class="my-2">
-          <div id="w-wind" class="text-3xl font-display font-bold text-[#0F172A]">12 <span class="text-sm font-mono font-normal text-[#94A3B8]">km/h</span></div>
-          <p id="w-wind-dir" class="text-xs text-[#94A3B8] mt-0.5 font-light">North-Westerly Breeze</p>
+          <div id="w-wind" class="text-3xl font-display font-bold text-white">12 <span class="text-sm font-mono font-normal text-silver/60">km/h</span></div>
+          <p id="w-wind-dir" class="text-xs text-silver mt-0.5 font-light">North-Westerly Breeze</p>
         </div>
         <div class="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -79,17 +79,17 @@
       </div>
 
       <!-- Card 3: Oxygen Concentration Index -->
-      <div class="p-4 rounded-xl bg-[#0F172A]/5 border border-[#0F172A]/10 flex flex-col justify-between">
-        <div class="flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
           <span>Effective Oxygen</span>
           <span class="text-emerald-400">O₂ Ratio</span>
         </div>
         <div class="my-2">
-          <div id="w-o2" class="text-3xl font-display font-bold text-emerald-400">82% <span class="text-xs font-mono font-normal text-[#94A3B8]">vs Sea Level</span></div>
-          <p id="w-o2-desc" class="text-xs text-[#94A3B8] mt-0.5 font-light">Mild acclimatization required</p>
+          <div id="w-o2" class="text-3xl font-display font-bold text-emerald-400">82% <span class="text-xs font-mono font-normal text-silver/60">vs Sea Level</span></div>
+          <p id="w-o2-desc" class="text-xs text-silver mt-0.5 font-light">Mild acclimatization required</p>
         </div>
-        <div class="text-[11px] font-mono text-[#EA580C] flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-[#EA580C] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <div class="text-[11px] font-mono text-[#00f2fe] flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-[#00f2fe] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
           <span>Hydration Buffer: 3.5L/day</span>
@@ -97,14 +97,14 @@
       </div>
 
       <!-- Card 4: UV Radiation & Snow Glare -->
-      <div class="p-4 rounded-xl bg-[#0F172A]/5 border border-[#0F172A]/10 flex flex-col justify-between">
-        <div class="flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+      <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-mono text-silver/60">
           <span>UV Radiation</span>
           <span class="text-amber-400">Glare Index</span>
         </div>
         <div class="my-2">
-          <div id="w-uv" class="text-3xl font-display font-bold text-amber-400">8.4 <span class="text-xs font-mono font-normal text-[#94A3B8]">Very High</span></div>
-          <p class="text-xs text-[#94A3B8] mt-0.5 font-light">Cat 3/4 Polarized Lenses Required</p>
+          <div id="w-uv" class="text-3xl font-display font-bold text-amber-400">8.4 <span class="text-xs font-mono font-normal text-silver/60">Very High</span></div>
+          <p class="text-xs text-silver mt-0.5 font-light">Cat 3/4 Polarized Lenses Required</p>
         </div>
         <div class="text-[11px] font-mono text-amber-300 flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -116,48 +116,48 @@
     </div>
 
     <!-- 5-Day Alpine Forecast Table -->
-    <div class="mt-4 pt-4 border-t border-[#0F172A]/10">
-      <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8] mb-3">5-Day High-Altitude Outlook</h4>
+    <div class="mt-4 pt-4 border-t border-white/10">
+      <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-silver/60 mb-3">5-Day High-Altitude Outlook</h4>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs font-mono">
-        <div class="p-3 rounded-lg bg-[#0F172A]/5 border border-[#0F172A]/10">
-          <span class="block text-[#94A3B8] text-[10px] uppercase font-bold">Today</span>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Today</span>
           <svg class="w-6 h-6 mx-auto my-1.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
           </svg>
-          <span class="block font-bold text-[#EA580C]">14° / 2°</span>
-          <span class="block text-[9px] text-[#94A3B8]">Bluebird</span>
+          <span class="block font-bold text-[#00f2fe]">14° / 2°</span>
+          <span class="block text-[9px] text-silver/60">Bluebird</span>
         </div>
-        <div class="p-3 rounded-lg bg-[#0F172A]/5 border border-[#0F172A]/10">
-          <span class="block text-[#94A3B8] text-[10px] uppercase font-bold">Tomorrow</span>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Tomorrow</span>
           <svg class="w-6 h-6 mx-auto my-1.5 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z"/>
           </svg>
-          <span class="block font-bold text-[#EA580C]">12° / -1°</span>
-          <span class="block text-[9px] text-[#94A3B8]">Partly Sun</span>
+          <span class="block font-bold text-[#00f2fe]">12° / -1°</span>
+          <span class="block text-[9px] text-silver/60">Partly Sun</span>
         </div>
-        <div class="p-3 rounded-lg bg-[#0F172A]/5 border border-[#0F172A]/10">
-          <span class="block text-[#94A3B8] text-[10px] uppercase font-bold">Day 3</span>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Day 3</span>
           <svg class="w-6 h-6 mx-auto my-1.5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14m0-14.14l14.14 14.14"/>
           </svg>
-          <span class="block font-bold text-[#EA580C]">6° / -6°</span>
+          <span class="block font-bold text-[#00f2fe]">6° / -6°</span>
           <span class="block text-[9px] text-amber-400 font-semibold">Light Snow</span>
         </div>
-        <div class="p-3 rounded-lg bg-[#0F172A]/5 border border-[#0F172A]/10">
-          <span class="block text-[#94A3B8] text-[10px] uppercase font-bold">Day 4</span>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Day 4</span>
           <svg class="w-6 h-6 mx-auto my-1.5 text-cyan-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14m0-14.14l14.14 14.14"/>
           </svg>
-          <span class="block font-bold text-[#EA580C]">4° / -8°</span>
+          <span class="block font-bold text-[#00f2fe]">4° / -8°</span>
           <span class="block text-[9px] text-cyan-300 font-semibold">Powder</span>
         </div>
-        <div class="p-3 rounded-lg bg-[#0F172A]/5 border border-[#0F172A]/10 col-span-2 sm:col-span-1">
-          <span class="block text-[#94A3B8] text-[10px] uppercase font-bold">Day 5</span>
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10 col-span-2 sm:col-span-1">
+          <span class="block text-silver/60 text-[10px] uppercase font-bold">Day 5</span>
           <svg class="w-6 h-6 mx-auto my-1.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
           </svg>
-          <span class="block font-bold text-[#EA580C]">10° / -3°</span>
-          <span class="block text-[9px] text-[#94A3B8]">Clear Ridge</span>
+          <span class="block font-bold text-[#00f2fe]">10° / -3°</span>
+          <span class="block text-[9px] text-silver/60">Clear Ridge</span>
         </div>
       </div>
     </div>
@@ -205,9 +205,9 @@
       if (!locKey || !WEATHER_LOCS[locKey]) return;
 
       document.querySelectorAll('.weather-tab-btn').forEach(b => {
-        b.className = 'weather-tab-btn px-3 py-1.5 rounded-md text-[#94A3B8] hover:text-[#0F172A] transition';
+        b.className = 'weather-tab-btn px-3 py-1.5 rounded-md text-silver hover:text-white transition';
       });
-      target.className = 'weather-tab-btn px-3 py-1.5 rounded-md bg-[#EA580C] text-[#050505] font-bold transition shadow';
+      target.className = 'weather-tab-btn px-3 py-1.5 rounded-md bg-[#00f2fe] text-[#050505] font-bold transition shadow';
 
       const data = WEATHER_LOCS[locKey];
       const wTemp = document.getElementById('w-temp');
@@ -222,9 +222,9 @@
       if (wTemp) wTemp.innerText = data.temp;
       if (wChill) wChill.innerText = data.chill;
       if (wSummit) wSummit.innerText = data.summitTemp;
-      if (wWind) wWind.innerHTML = `${data.wind} <span class="text-sm font-mono font-normal text-[#94A3B8]">km/h</span>`;
+      if (wWind) wWind.innerHTML = `${data.wind} <span class="text-sm font-mono font-normal text-silver/60">km/h</span>`;
       if (wWindDir) wWindDir.innerText = data.windDir;
-      if (wO2) wO2.innerHTML = `${data.o2} <span class="text-xs font-mono font-normal text-[#94A3B8]">vs Sea Level</span>`;
+      if (wO2) wO2.innerHTML = `${data.o2} <span class="text-xs font-mono font-normal text-silver/60">vs Sea Level</span>`;
       if (wO2Desc) wO2Desc.innerText = data.o2Desc;
       if (wUV) wUV.innerHTML = `${data.uv}`;
     });

@@ -42,45 +42,45 @@ const getO2Percentage = (altM: number) => {
 };
 ---
 
-<div class="p-1.5 rounded-[24px] bg-[#0F172A]/5 border border-[#0F172A]/10 shadow-2xl overflow-hidden">
-  <div class="rounded-[18px] bg-[#FFFFFF]/90 backdrop-blur-xl border border-[#0F172A]/10 p-6 md:p-8">
+<div class="p-1.5 rounded-[24px] bg-white/5 border border-white/10 shadow-2xl overflow-hidden">
+  <div class="rounded-[18px] bg-[#090d16]/90 backdrop-blur-xl border border-white/5 p-6 md:p-8">
     
     <!-- Top Telemetry Header -->
-    <div class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#0F172A]/10 pb-4">
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
       <div>
         <div class="flex items-center gap-2 mb-1">
-          <span class="w-2 h-2 rounded-full bg-[#EA580C] animate-ping"></span>
-          <span class="text-[10px] font-mono tracking-widest text-[#EA580C] uppercase font-bold">Hypsometric Telemetry</span>
+          <span class="w-2 h-2 rounded-full bg-[#00f2fe] animate-ping"></span>
+          <span class="text-[10px] font-mono tracking-widest text-[#00f2fe] uppercase font-bold">Hypsometric Telemetry</span>
         </div>
-        <h3 class="font-display text-xl font-bold text-[#0F172A] tracking-tight">Altitude Gradient & Waypoint Profile</h3>
+        <h3 class="font-display text-xl font-bold text-white tracking-tight">Altitude Gradient & Waypoint Profile</h3>
       </div>
       
       <div class="flex items-center gap-3 font-mono text-xs">
-        <div class="px-3 py-1.5 rounded-sm bg-[#0F172A]/5 border border-[#0F172A]/10 text-[#94A3B8]">
-          <span class="text-[#d4d4d8]/60">Total Dist:</span> <span class="text-[#0F172A] font-bold">{maxDist} km</span>
+        <div class="px-3 py-1.5 rounded-sm bg-white/5 border border-white/10 text-silver">
+          <span class="text-[#d4d4d8]/60">Total Dist:</span> <span class="text-white font-bold">{maxDist} km</span>
         </div>
-        <div class="px-3 py-1.5 rounded-sm bg-[#EA580C]/10 border border-[#EA580C]/30 text-[#EA580C] font-bold">
+        <div class="px-3 py-1.5 rounded-sm bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] font-bold">
           Peak: {maxAltitudeM.toLocaleString()} m ({Math.round(maxAltitudeM * 3.28084).toLocaleString()} ft)
         </div>
       </div>
     </div>
 
     <!-- Live Scrubber Telemetry HUD (Updated via hover/touch) -->
-    <div id="elevation-scrubber-hud" class="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#F9FAFB]/70 border border-[#0F172A]/10 font-mono text-xs">
+    <div id="elevation-scrubber-hud" class="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#050505]/70 border border-white/10 font-mono text-xs">
       <div>
-        <span class="text-[10px] text-[#94A3B8] uppercase block">Active Waypoint</span>
-        <span id="hud-point-label" class="text-[#0F172A] font-bold truncate block">{points[0]?.label || 'Base Camp'}</span>
+        <span class="text-[10px] text-silver/60 uppercase block">Active Waypoint</span>
+        <span id="hud-point-label" class="text-white font-bold truncate block">{points[0]?.label || 'Base Camp'}</span>
       </div>
       <div>
-        <span class="text-[10px] text-[#94A3B8] uppercase block">Elevation</span>
-        <span id="hud-point-alt" class="text-[#EA580C] font-bold block">{points[0]?.altitudeM.toLocaleString()} m ({Math.round((points[0]?.altitudeM || 0) * 3.28084).toLocaleString()} ft)</span>
+        <span class="text-[10px] text-silver/60 uppercase block">Elevation</span>
+        <span id="hud-point-alt" class="text-[#00f2fe] font-bold block">{points[0]?.altitudeM.toLocaleString()} m ({Math.round((points[0]?.altitudeM || 0) * 3.28084).toLocaleString()} ft)</span>
       </div>
       <div>
-        <span class="text-[10px] text-[#94A3B8] uppercase block">Trail Progress</span>
-        <span id="hud-point-dist" class="text-[#0F172A] font-bold block">{points[0]?.distanceKm} km ({Math.round(((points[0]?.distanceKm || 0) / maxDist) * 100)}%)</span>
+        <span class="text-[10px] text-silver/60 uppercase block">Trail Progress</span>
+        <span id="hud-point-dist" class="text-white font-bold block">{points[0]?.distanceKm} km ({Math.round(((points[0]?.distanceKm || 0) / maxDist) * 100)}%)</span>
       </div>
       <div>
-        <span class="text-[10px] text-[#94A3B8] uppercase block">Effective O2 Level</span>
+        <span class="text-[10px] text-silver/60 uppercase block">Effective O2 Level</span>
         <span id="hud-point-o2" class="text-emerald-400 font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
       </div>
     </div>
@@ -90,8 +90,8 @@ const getO2Percentage = (altM: number) => {
       <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} class="w-full min-w-[700px] h-auto overflow-visible font-mono">
         <defs>
           <linearGradient id="glacierElevationGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#EA580C" stop-opacity="0.35"></stop>
-            <stop offset="50%" stop-color="#EA580C" stop-opacity="0.10"></stop>
+            <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.35"></stop>
+            <stop offset="50%" stop-color="#00f2fe" stop-opacity="0.10"></stop>
             <stop offset="100%" stop-color="#050505" stop-opacity="0.0"></stop>
           </linearGradient>
         </defs>
@@ -121,7 +121,7 @@ const getO2Percentage = (altM: number) => {
         <path 
           d={`M ${svgPathPoints}`} 
           fill="none" 
-          stroke="#EA580C" 
+          stroke="#00f2fe" 
           stroke-width="2.5" 
           stroke-linecap="round" 
           stroke-linejoin="round" 
@@ -150,7 +150,7 @@ const getO2Percentage = (altM: number) => {
                 y1={cy} 
                 x2={cx} 
                 y2={svgHeight - padding.bottom} 
-                stroke="#EA580C" 
+                stroke="#00f2fe" 
                 stroke-opacity="0.15" 
                 stroke-dasharray="2 2"
                 class="group-hover:stroke-opacity-60 transition-all"
@@ -161,7 +161,7 @@ const getO2Percentage = (altM: number) => {
                 cx={cx} 
                 cy={cy} 
                 r={isPeak ? "9" : "6"} 
-                fill="#EA580C" 
+                fill="#00f2fe" 
                 fill-opacity={isPeak ? "0.4" : "0.2"} 
                 class="group-hover:scale-150 transition-transform origin-center"
               />
@@ -171,7 +171,7 @@ const getO2Percentage = (altM: number) => {
                 cx={cx} 
                 cy={cy} 
                 r={isPeak ? "4.5" : "3"} 
-                fill={isPeak ? "#ffffff" : "#EA580C"} 
+                fill={isPeak ? "#ffffff" : "#00f2fe"} 
                 stroke="#050505" 
                 stroke-width="1.5" 
               />
@@ -181,7 +181,7 @@ const getO2Percentage = (altM: number) => {
                 x={cx} 
                 y={cy - 12} 
                 text-anchor="middle" 
-                fill={isPeak ? "#EA580C" : "#d4d4d8"} 
+                fill={isPeak ? "#00f2fe" : "#d4d4d8"} 
                 font-size="10" 
                 font-weight={isPeak ? "700" : "500"}
               >
@@ -196,7 +196,7 @@ const getO2Percentage = (altM: number) => {
                   text-anchor="middle" 
                   fill="#a1a1aa" 
                   font-size="9.5"
-                  class="group-hover:fill-[#EA580C] transition-colors"
+                  class="group-hover:fill-[#00f2fe] transition-colors"
                 >
                   {p.label}
                 </text>

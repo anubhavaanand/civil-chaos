@@ -184,22 +184,24 @@ const filterGroups: FilterGroup[] = [
       resultCount.textContent = filtered.toString();
     }
 
-    // Render active tags
+        // Render active tags
     if (activeTags) {
-      activeTags.innerHTML = tags
-        .map(
-          (tag) => `
-          <span class="inline-flex items-center gap-1 rounded-md border border-glacier/20 bg-glacier/10 px-2 py-0.5 font-mono text-[10px] text-glacier">
-            ${tag}
-            <button class="ml-0.5 rounded hover:bg-glacier/20" aria-label="Remove filter">
-              <svg class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </span>
-        `
-        )
-        .join('');
+      activeTags.innerHTML = '';
+      tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = "inline-flex items-center gap-1 rounded-md border border-glacier/20 bg-glacier/10 px-2 py-0.5 font-mono text-[10px] text-glacier";
+
+        const textNode = document.createTextNode(tag);
+        span.appendChild(textNode);
+
+        const btn = document.createElement('button');
+        btn.className = "ml-0.5 rounded hover:bg-glacier/20";
+        btn.setAttribute('aria-label', 'Remove filter');
+        btn.innerHTML = `<svg class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+
+        span.appendChild(btn);
+        activeTags.appendChild(span);
+      });
     }
   };
 
