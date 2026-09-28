@@ -12,7 +12,7 @@ import GearChecklist from '../../components/GearChecklist.astro';
 import BookingModal from '../../components/BookingModal.astro';
 import { getTreks } from '../../lib/strapi';
 import type { Trek } from '../../lib/strapi';
-import { SITE_CONFIG } from '../../config/site';
+
 
 export async function getStaticPaths() {
   const treks = await getTreks();
