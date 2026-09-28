@@ -1,0 +1,44 @@
+# Render Blueprint for Dream of The Holy Himalayas CMS
+
+services:
+  - type: web
+    name: holy-himalayas-cms
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: apps/cms
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /admin
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_CLIENT
+        value: postgres
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_KEYS
+        generateValue: true
+      - key: API_TOKEN_SALT
+        generateValue: true
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TRANSFER_TOKEN_SALT
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: CLOUDINARY_NAME
+        sync: false
+      - key: CLOUDINARY_KEY
+        sync: false
+      - key: CLOUDINARY_SECRET
+        sync: false
+      - key: WEB_REVALIDATE_URL
+        sync: false
+      - key: WEB_REVALIDATE_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
