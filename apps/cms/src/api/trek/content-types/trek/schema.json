@@ -56,7 +56,16 @@
       "type": "decimal"
     },
     "bestSeasons": {
-      "type": "json"
+      "type": "enumeration",
+      "enum": [
+        "dec_feb",
+        "mar_apr",
+        "may_jun",
+        "jul_aug",
+        "sep_oct",
+        "nov"
+      ],
+      "required": false
     },
     "startPoint": {
       "type": "string"
@@ -107,12 +116,6 @@
     "isFeatured": {
       "type": "boolean",
       "default": false
-    },
-    "popularity": {
-      "type": "integer",
-      "default": 0,
-      "min": 0,
-      "description": "Manual ranking weight; higher sorts first on popularity-sorted listings"
     },
     "seo": {
       "type": "component",
