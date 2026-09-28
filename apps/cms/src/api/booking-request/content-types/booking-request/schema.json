@@ -33,7 +33,8 @@
     },
     "phone": {
       "type": "string",
-      "required": true
+      "required": true,
+      "regex": "^[6-9]\\d{9}$"
     },
     "email": {
       "type": "email"

@@ -14,7 +14,7 @@
       "required": true
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "altitudeM": {
       "type": "integer"
