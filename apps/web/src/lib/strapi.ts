@@ -1,7 +1,76 @@
 // apps/web/src/lib/strapi.ts
-// Typed Strapi 5 client with automatic graceful fallback to local mock data
 
-import { mockTreks, type Trek, type Batch } from '../data/mock-treks';
+export interface AltitudePoint {
+  distanceKm: number;
+  altitudeM: number;
+  label?: string;
+}
+
+export interface ItineraryDay {
+  day: number;
+  title: string;
+  altitudeM: number;
+  distanceKm: number;
+  description: string;
+}
+
+export interface Batch {
+  id: string;
+  startDate: string;
+  endDate: string;
+  seatsTotal: number;
+  seatsBooked: number;
+  pricePerPersonINR: number;
+  status: 'open' | 'full' | 'cancelled';
+}
+
+export interface PackageTier {
+  id: string;
+  name: string;
+  priceINR: number;
+  description: string;
+  features: string[];
+  isPopular?: boolean;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface Trek {
+  name: string;
+  slug: string;
+  difficulty: 'easy' | 'moderate' | 'difficult';
+  durationDays: number;
+  maxAltitudeM: number;
+  trekDistanceKm: number;
+  summary: string;
+  description: string;
+  coordinates: [number, number]; // [lng, lat]
+  region: string;
+  regionSlug: string;
+  startPoint: string;
+  bestSeasons: string[];
+  fromPrice: number;
+  heroImage: string;
+  gallery: string[];
+  altitudeProfile: AltitudePoint[];
+  itinerary: ItineraryDay[];
+  inclusions: string[];
+  exclusions: string[];
+  howToReach: {
+    baseTown: string;
+    nearestAirport: string;
+    nearestRailway: string;
+    commuteDetails: string;
+    mapEmbedUrl?: string;
+  };
+  faqs: FAQItem[];
+  batches: Batch[];
+  packages: PackageTier[];
+  isFeatured?: boolean;
+}
 
 const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = import.meta.env.STRAPI_API_TOKEN || '';
@@ -28,125 +97,176 @@ export async function fetchStrapi<T>(endpoint: string, options: RequestInit = {}
         ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}),
         ...options.headers,
       },
-      signal: AbortSignal.timeout(3000), // 3s fail-fast timeout for builds
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!res.ok) {
+      console.error(`Strapi error: ${res.status} on ${url}`);
       return null;
     }
 
     const json: StrapiResponse<T> = await res.json();
     return json.data;
-  } catch {
-    // Fail silently to local fallback
+  } catch (err) {
+    console.error(`Strapi fetch failed on ${url}`, err);
     return null;
   }
 }
 
-/**
- * Fetch all published treks with fallback to mockTreks
- */
-export async function getTreks(): Promise<Trek[]> {
-  const data = await fetchStrapi<any[]>('/treks?populate=*&pagination[pageSize]=100');
-  if (Array.isArray(data) && data.length > 0) {
-    return data.map((item) => normalizeTrek(item));
+function unwrap(item: any): any {
+  if (!item) return item;
+  if (item.attributes) {
+    return { id: item.id, documentId: item.documentId, ...item.attributes };
   }
-  return mockTreks;
+  return item;
 }
 
-/**
- * Fetch a single trek by slug with fallback
- */
+function getCheapestPrice(item: any): number {
+  let minPrice = Infinity;
+  
+  if (Array.isArray(item.batches) && item.batches.length > 0) {
+    for (const b of item.batches) {
+      const batch = unwrap(b);
+      if (batch.pricePerPersonINR && batch.pricePerPersonINR < minPrice) {
+        minPrice = batch.pricePerPersonINR;
+      }
+    }
+  }
+  
+  if (Array.isArray(item.packages) && item.packages.length > 0) {
+    for (const p of item.packages) {
+      const pkg = unwrap(p);
+      if (pkg.priceINR && pkg.priceINR < minPrice) {
+        minPrice = pkg.priceINR;
+      }
+    }
+  }
+  
+  return minPrice === Infinity ? 0 : minPrice;
+}
+
+function normalizeTrek(rawItem: any): Trek {
+  const item = unwrap(rawItem);
+  const region = unwrap(item.region);
+  
+  return {
+    name: item.name || '',
+    slug: item.slug || '',
+    difficulty: item.difficulty || 'moderate',
+    durationDays: item.durationDays || 0,
+    maxAltitudeM: item.maxAltitudeM || 0,
+    trekDistanceKm: item.trekDistanceKm || 0,
+    summary: item.summary || '',
+    description: item.description || '',
+    coordinates: item.coordinates ? [item.coordinates.lng, item.coordinates.lat] : [0, 0],
+    region: region?.name || '',
+    regionSlug: region?.slug || '',
+    startPoint: item.startPoint || '',
+    bestSeasons: Array.isArray(item.bestSeasons) ? item.bestSeasons : [],
+    fromPrice: getCheapestPrice(item),
+    heroImage: Array.isArray(item.heroGallery) && item.heroGallery.length > 0 
+      ? unwrap(item.heroGallery[0]).url 
+      : '',
+    gallery: Array.isArray(item.heroGallery) 
+      ? item.heroGallery.map((g: any) => unwrap(g).url) 
+      : [],
+    altitudeProfile: [], // You can map this if it's stored in Strapi, else keep empty array
+    itinerary: Array.isArray(item.itinerary) 
+      ? item.itinerary.map((it: any) => {
+          const uIt = unwrap(it);
+          return {
+            day: uIt.day,
+            title: uIt.title,
+            altitudeM: uIt.altitudeM || 0,
+            distanceKm: uIt.distanceKm || 0,
+            description: uIt.description || uIt.details || '',
+          };
+        })
+      : [],
+    inclusions: typeof item.inclusions === 'string' ? [item.inclusions] : Array.isArray(item.inclusions) ? item.inclusions : [],
+    exclusions: typeof item.exclusions === 'string' ? [item.exclusions] : Array.isArray(item.exclusions) ? item.exclusions : [],
+    howToReach: {
+      baseTown: item.startPoint || '',
+      nearestAirport: 'Please contact us',
+      nearestRailway: 'Please contact us',
+      commuteDetails: typeof item.howToReach === 'string' ? item.howToReach : (unwrap(item.howToReach)?.commuteDetails || ''),
+      mapEmbedUrl: item.googleMapsEmbedUrl || ''
+    },
+    faqs: Array.isArray(item.faq)
+      ? item.faq.map((f: any) => {
+          const uF = unwrap(f);
+          return {
+            question: uF.question || '',
+            answer: uF.answer || '',
+          };
+        })
+      : [],
+    batches: Array.isArray(item.batches)
+      ? item.batches.map((b: any) => {
+          const uB = unwrap(b);
+          return {
+            id: uB.documentId || String(uB.id),
+            startDate: uB.startDate,
+            endDate: uB.endDate,
+            seatsTotal: uB.seatsTotal || 12,
+            seatsBooked: uB.seatsBooked || 0,
+            pricePerPersonINR: uB.pricePerPersonINR || 0,
+            status: uB.status || 'open',
+          };
+        })
+      : [],
+    packages: Array.isArray(item.packages)
+      ? item.packages.map((p: any) => {
+          const uP = unwrap(p);
+          return {
+            id: uP.documentId || String(uP.id),
+            name: uP.name || '',
+            priceINR: uP.priceINR || 0,
+            description: uP.description || '',
+            features: uP.features || [],
+            isPopular: uP.isPopular || false,
+          };
+        })
+      : [],
+    isFeatured: !!item.isFeatured
+  };
+}
+
+export async function getTreks(): Promise<Trek[]> {
+  const data = await fetchStrapi<any[]>('/treks?populate=region,coordinates,heroGallery,difficulty,durationDays,batches,packages&pagination[pageSize]=100');
+  if (Array.isArray(data)) {
+    return data.map((item) => normalizeTrek(item));
+  }
+  return [];
+}
+
 export async function getTrekBySlug(slug: string): Promise<Trek | undefined> {
   const data = await fetchStrapi<any[]>(`/treks?filters[slug][$eq]=${slug}&populate=*`);
   if (Array.isArray(data) && data.length > 0) {
     return normalizeTrek(data[0]);
   }
-  return mockTreks.find((t) => t.slug === slug);
+  return undefined;
 }
 
-/**
- * Fetch upcoming open batches with fallback
- */
 export async function getOpenBatches(trekSlug?: string): Promise<Batch[]> {
   const endpoint = trekSlug
     ? `/batches?filters[trek][slug][$eq]=${trekSlug}&filters[status][$eq]=open&sort=startDate:asc`
     : '/batches?filters[status][$eq]=open&sort=startDate:asc&pagination[pageSize]=50';
 
   const data = await fetchStrapi<any[]>(endpoint);
-  if (Array.isArray(data) && data.length > 0) {
-    return data.map((b) => ({
-      id: b.documentId || String(b.id),
-      startDate: b.startDate,
-      endDate: b.endDate,
-      seatsTotal: b.seatsTotal,
-      seatsBooked: b.seatsBooked,
-      pricePerPersonINR: b.pricePerPersonINR,
-      status: b.status,
-    }));
+  if (Array.isArray(data)) {
+    return data.map((b) => {
+      const uB = unwrap(b);
+      return {
+        id: uB.documentId || String(uB.id),
+        startDate: uB.startDate,
+        endDate: uB.endDate,
+        seatsTotal: uB.seatsTotal || 12,
+        seatsBooked: uB.seatsBooked || 0,
+        pricePerPersonINR: uB.pricePerPersonINR || 0,
+        status: uB.status || 'open',
+      };
+    });
   }
-
-  const allBatches = mockTreks.flatMap((t) => t.batches);
-  return trekSlug
-    ? (mockTreks.find((t) => t.slug === trekSlug)?.batches || [])
-    : allBatches;
-}
-
-/**
- * Helper to normalize Strapi Document / Entry format into application Trek interface
- */
-function normalizeTrek(item: any): Trek {
-  const fallback = mockTreks.find((m) => m.slug === item.slug) || mockTreks[0];
-
-  return {
-    name: item.name || fallback.name,
-    slug: item.slug || fallback.slug,
-    difficulty: item.difficulty || fallback.difficulty,
-    durationDays: item.durationDays || fallback.durationDays,
-    maxAltitudeM: item.maxAltitudeM || fallback.maxAltitudeM,
-    trekDistanceKm: item.trekDistanceKm || fallback.trekDistanceKm,
-    summary: item.summary || fallback.summary,
-    description: item.description || fallback.description,
-    coordinates: item.coordinates
-      ? [item.coordinates.lng, item.coordinates.lat]
-      : fallback.coordinates,
-    region: item.region?.name || fallback.region,
-    regionSlug: (item.region?.slug || fallback.regionSlug) as any,
-    startPoint: item.startPoint || fallback.startPoint,
-    bestSeasons: item.bestSeasons || fallback.bestSeasons,
-    fromPrice: item.fromPrice || fallback.fromPrice,
-    heroImage: item.heroGallery?.[0]?.url || fallback.heroImage,
-    gallery: item.heroGallery?.map((g: any) => g.url) || fallback.gallery,
-    altitudeProfile: fallback.altitudeProfile,
-    itinerary: Array.isArray(item.itinerary) && item.itinerary.length > 0
-      ? item.itinerary.map((it: any) => ({
-          day: it.day,
-          title: it.title,
-          altitudeM: it.altitudeM || 0,
-          distanceKm: 0,
-          description: it.details || '',
-        }))
-      : fallback.itinerary,
-    inclusions: fallback.inclusions,
-    exclusions: fallback.exclusions,
-    howToReach: fallback.howToReach,
-    batches: Array.isArray(item.batches) && item.batches.length > 0
-      ? item.batches.map((b: any) => ({
-          id: b.documentId || String(b.id),
-          startDate: b.startDate,
-          endDate: b.endDate,
-          seatsTotal: b.seatsTotal || 12,
-          seatsBooked: b.seatsBooked || 0,
-          pricePerPersonINR: b.pricePerPersonINR,
-          status: b.status || 'open',
-        }))
-      : fallback.batches,
-    packages: fallback.packages,
-    faqs: Array.isArray(item.faq) && item.faq.length > 0
-      ? item.faq.map((f: any) => ({
-          question: f.q,
-          answer: f.a,
-        }))
-      : fallback.faqs,
-  };
+  return [];
 }

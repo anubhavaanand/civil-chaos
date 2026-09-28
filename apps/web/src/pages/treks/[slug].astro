@@ -12,7 +12,7 @@ import GearChecklist from '../../components/GearChecklist.astro';
 import AltitudeAcclimatizationLab from '../../components/AltitudeAcclimatizationLab.astro';
 import BookingModal from '../../components/BookingModal.astro';
 import { getTreks } from '../../lib/strapi';
-import type { Trek } from '../../data/mock-treks';
+import type { Trek } from '../../lib/strapi';
 import { SITE_CONFIG } from '../../config/site';
 
 export async function getStaticPaths() {
@@ -59,10 +59,24 @@ const touristTripSchema = {
     "validFrom": "2026-01-01"
   }
 };
+
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": trek.name,
+  "description": trek.description,
+  "image": trek.heroImage,
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": trek.fromPrice,
+    "availability": "https://schema.org/InStock"
+  }
+};
 ---
 
 <Layout title={`${trek.name} | Dream of The Holy Himalayas`}>
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(touristTripSchema)} is:inline />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([touristTripSchema, productSchema])} is:inline />
   <GlassNav />
 
   <!-- 1. The Elite Exped Authority Hero -->

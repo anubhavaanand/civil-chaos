@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 // Cloudflare Pages deployment: output 'static' with adapter for server endpoints
@@ -12,6 +13,7 @@ export default defineConfig({
     imageService: 'cloudflare',
   }),
 
+  integrations: [sitemap()],
 
   vite: {
     plugins: [tailwindcss()],

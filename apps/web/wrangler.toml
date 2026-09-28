@@ -1,0 +1,9 @@
+name = "holy-himalayas-web"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+PUBLIC_STRAPI_URL = "https://civil-chaos.onrender.com"
+PUBLIC_SITE_URL = "https://civil-chaos.pages.dev"
+# Add PUBLIC_MAPTILER_KEY, STRAPI_API_TOKEN, STRAPI_WEBHOOK_SECRET, RESEND_API_KEY in Cloudflare dashboard

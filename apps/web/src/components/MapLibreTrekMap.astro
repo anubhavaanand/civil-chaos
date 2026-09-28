@@ -1,5 +1,5 @@
 ---
-import type { Trek } from '../data/mock-treks';
+import type { Trek } from '../lib/strapi';
 
 interface Props {
   treks: Trek[];
@@ -18,7 +18,7 @@ const { treks } = Astro.props;
   </div>
 
   <div class="max-w-7xl mx-auto px-6">
-    <div id="maplibre-container" class="w-full h-[600px] rounded-2xl overflow-hidden border border-[#0F172A]/10 relative shadow-xl" data-treks={JSON.stringify(treks)}>
+    <div id="maplibre-container" class="w-full h-[600px] rounded-2xl overflow-hidden border border-[#0F172A]/10 relative shadow-xl" data-treks-url="/treks-geojson.json">
       
       <!-- LCP-friendly Loading State -->
       <div id="map-loader" class="absolute inset-0 bg-[#F9FAFB] flex flex-col items-center justify-center z-10 transition-opacity duration-700">
@@ -54,10 +54,23 @@ const { treks } = Astro.props;
       const maplibregl = await import('maplibre-gl');
       await import('maplibre-gl/dist/maplibre-gl.css');
 
-      const treksData = container?.dataset.treks;
-      if (!treksData) return;
+      const treksUrl = container?.dataset.treksUrl;
+      if (!treksUrl) return;
       
-      const treks = JSON.parse(treksData);
+      let treks = [];
+      try {
+        const res = await fetch(treksUrl);
+        const geojson = await res.json();
+        treks = geojson.features.map((f: any) => ({
+          coordinates: f.geometry.coordinates,
+          name: f.properties.name,
+          slug: f.properties.slug,
+          difficulty: f.properties.difficulty,
+          maxAltitudeM: f.properties.maxAltitudeM
+        }));
+      } catch (err) {
+        console.error("Failed to load treks GeoJSON:", err);
+      }
       
       // We will fallback to a public demo MapTiler key if the .env one is missing locally
       // DO NOT USE THIS FALLBACK IN HEAVY PROD.

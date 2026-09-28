@@ -29,7 +29,7 @@ An austere, high-altitude alpine atelier interface fusing Swiss typographic rigo
 - **Telemetry Muted** (`#64748B`): Coordinate grids, latitude/longitude labels, and inactive state tags.
 
 ### Functional Accent (Singular)
-- **Glacier Cyan** (`#00F2FE`): Strictly the single active accent. Used for expedition waypoints, altitude datum callouts, active radio buttons, primary dispatch buttons, and pulse rings. Saturation calibrated to 78%. No secondary purple, pink, or yellow neon accents permitted.
+- **Glacier Cyan** (`#00F2FE`): Strictly the single active accent. Used for expedition waypoints, altitude datum callouts, active radio buttons, primary dispatch buttons, and pulse rings. Saturation calibrated to 78%. No secondary purple, pink, or yellow neon accents permitted. NEVER use Orange (`#EA580C`).
 
 ---
 
@@ -51,11 +51,12 @@ An austere, high-altitude alpine atelier interface fusing Swiss typographic rigo
 
 ## 4. Component Behaviors & Styling
 
-### Double-Bezel Alpine Container
-All interactive cards, modals, and telemetry readouts employ the double-bezel construction:
+### Double-Bezel Alpine Container & Aave Glass Refraction
+All interactive cards, modals, and telemetry readouts employ a double-bezel construction combined with SVG displacement glass:
 1. **Outer Ring:** 1px solid border at `rgba(255, 255, 255, 0.08)`, outer radius `16px`.
 2. **Inner Body:** Inset padding of `1px`, background `#0a0f18` with `backdrop-blur-md`, inner radius `15px`.
-3. **Scrim Floor:** Under real mountain imagery, always enforce a dark backdrop filter (`backdrop-saturate-150 bg-black/40`) to maintain WCAG contrast.
+3. **Scrim Floor:** Under real mountain imagery, enforce a dark backdrop filter (`backdrop-saturate-150 bg-black/40`) to maintain WCAG contrast.
+4. **Refractive Glass (Aave Style):** For hero elements, implement a proper SVG `feDisplacementMap` filter linked via CSS to refract background content realistically, moving beyond standard CSS `backdrop-filter`.
 
 ### Buttons & Interactive Controls
 - **Primary Dispatch Action:** Obsidian fill with 1px Glacier Cyan border, text in Glacier Cyan (`#00f2fe`), letter-spacing `0.1em` uppercase. On hover: background transitions to `rgba(0, 242, 254, 0.12)`, border brightens. On active: tactile `-1px` vertical translation.
@@ -92,7 +93,7 @@ All interactive cards, modals, and telemetry readouts employ the double-bezel co
 
 ### Physical Engine Tuning
 - **Spring Physics:** `stiffness: 100, damping: 20`. Avoid linear or generic ease-in-out motion curves.
-- **Interaction Feedback:** Tactile push depth (`transform: translateY(-1px)` or `scale(0.98)`) on active touch/click.
+- **Interaction Feedback:** Tactile push depth (`transform: translateY(-1px)` or `scale(0.98)`) on active touch/click. Avoid cheap generic translate up (`hover:-translate-y-1`) that feels disconnected.
 - **Waterfall Cascades:** Data tables and catalog matrices reveal entries via staggered delays (35ms per row) on viewport entry.
 
 ### Perpetual Micro-Interactions
@@ -134,14 +135,15 @@ When an explorer transitions from the Homepage or Catalog into an Expedition Det
 
 The following conventions are strictly prohibited across all generated screens:
 
-1. **No Emojis Anywhere:** Zero decorative emojis in buttons, pills, headings, or navigation. All indicators must use calibrated 1.75px geometric SVGs.
-2. **No Em-Dashes:** Zero em-dash characters (`\u2014`) in copy, metadata, or documentation. Use standard hyphens with spaces or colons.
-3. **No Inter Font:** The generic `Inter` typeface is banned. Use `Cabinet Grotesk`, `Space Grotesk`, or `Satoshi`.
-4. **No Pure Black Backgrounds:** `#000000` is banned for surfaces. Use layered Obsidian (`#050505`) and Alpine Slate (`#0a0f18`).
-5. **No Neon / Cyberpunk Glows:** Radial box-shadow outer glows exceeding 12px or using saturated purple/magenta are banned.
-6. **No 3-Column Equal Card Clichés:** Standard three equal-sized cards in a row are banned. Use asymmetric bento grids or horizontal technical matrices.
-7. **No AI Copywriting Clichés:** Words like "Elevate", "Seamless", "Unleash", "Next-Gen", "Bespoke Journey" are banned. Use authentic Himalayan terminology ("Staging Window", "Alpine Ridge", "High Pass Traverse", "Acclimatization Profile").
-8. **No Filler UI Navigation:** Floating bounce arrows, "Scroll to explore" badges, and pulsating down-chevrons are banned.
+1. **No Light Themes:** The entire site MUST be Dark Alpine Glass. Do NOT use `bg-white` or dark text (`#0F172A`).
+2. **No Emojis Anywhere:** Zero decorative emojis in buttons, pills, headings, or navigation. All indicators must use calibrated 1.75px geometric SVGs.
+3. **No Em-Dashes:** Zero em-dash characters (`\u2014`) in copy, metadata, or documentation. Use standard hyphens with spaces or colons.
+4. **No Inter Font:** The generic `Inter` typeface is banned. Use `Cabinet Grotesk`, `Space Grotesk`, or `Satoshi`.
+5. **No Orange/Neon Accents:** DO NOT use generic Orange (`#EA580C`) or any other rainbow gradients. Use ONLY Glacier Cyan (`#00F2FE`).
+6. **No Pure Black Backgrounds:** `#000000` is banned for surfaces. Use layered Obsidian (`#050505`) and Alpine Slate (`#0a0f18`).
+7. **No 3-Column Equal Card Clichés:** Standard three equal-sized cards in a row are banned. Use asymmetric bento grids or horizontal technical matrices.
+8. **No AI Copywriting Clichés:** Words like "Elevate", "Seamless", "Unleash", "Next-Gen", "Bespoke Journey" are banned. Use authentic Himalayan terminology ("Staging Window", "Alpine Ridge", "High Pass Traverse", "Acclimatization Profile").
+9. **No Floating Bounce Slop:** Floating bounce arrows, "Scroll to explore" badges, and pulsating down-chevrons are banned. Avoid disconnected hover animations like generic `hover:-translate-y-1`.
 
 ---
 
@@ -156,7 +158,7 @@ Paste the contents of this `DESIGN.md` into your Stitch project's **Design Syste
 > "Generate an austere, dark-mode alpine expedition homepage for Dream of The Holy Himalayas based on our DESIGN.md. 
 > Layout: Asymmetric split. Left column features a tight, geometric headline in Space Grotesk ('SACRED PEAKS. INTIMATE EXPEDITIONS.'), a mono status pill for Mautar HQ (1,950m), and a tactile primary dispatch button in Glacier Cyan (#00F2FE). 
 > Right column: Interactive 3D peak telemetry viewport with dark slate double-bezel framing, snow particle overlay, and altitude waypoint HUD. 
-> Styling: Obsidian bedrock (#050505), frosted glass panels with dark scrim, 1px white border lines (8% opacity). No emojis, no purple glows, no centered hero text."
+> Styling: Obsidian bedrock (#050505), frosted glass panels with dark scrim, 1px white border lines (8% opacity). Implement a true SVG displacement filter glass effect (Aave-style) behind the glass panel. No emojis, no purple glows, no centered hero text."
 
 ### Recipe B: Route Detail with Morphing Hero & Elevation HUD
 > "Generate an expedition detail screen for the Kedarkantha Winter Push (3,810m) adhering to DESIGN.md. 
@@ -168,7 +170,7 @@ Paste the contents of this `DESIGN.md` into your Stitch project's **Design Syste
 > "Generate a technical expedition catalog screen for Himalayan treks across Garhwal, Kumaon, and Himachal. 
 > Header: Regional filter tabs with active Glacier Cyan underline. 
 > Grid: 2-column dominant asymmetric bento grid. The lead card is a double-width hero expedition with integrated route coordinates, followed by single-column technical cards. 
-> Card details: High-pass photography, difficulty badge, duration in days, and 'Starts from INR' in monospace font. Ensure each card is framed with our 1px whisper border and tactile hover physics."
+> Card details: High-pass photography, difficulty badge, duration in days, and 'Starts from INR' in monospace font. Ensure each card is framed with our 1px whisper border, Aave glass styling, and tactile 0.98 scale hover physics."
 
 ### Recipe D: High-Alpine Booking Drawer Modal
 > "Generate a focused booking request drawer dialog for Himalayan expeditions. 
