@@ -26,6 +26,11 @@ A trekker anywhere can: land on the site â†’ see an interactive Himalayan map â†
 - Strapi CMS: regions, treks, batches (dates/seats/price), packages, itinerary days, gallery, booking-requests
 - SEO: per-trek pages targeting "[Trek] trek 2027 / cost / itinerary / best time" + TouristTrip + Offer schema
 - Contact page (phone, WhatsApp, Google Maps business embed, address)
+- Chatbot:
+  - Floating chat bubble (bottom right), support & guide mode
+  - Dynamic context: fetches live trek data from Strapi when chat opens
+  - Provider: Cloudflare Workers AI (Llama 3)
+  - Behavior: answers questions, routes to WhatsApp/booking form, never submits bookings on user's behalf
 
 **Should**
 - Season/best-time badges, difficulty meter, altitude profile callout
