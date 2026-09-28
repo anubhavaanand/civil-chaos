@@ -17,6 +17,20 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('maplibre-gl')) {
+              return 'maplibre';
+            }
+            if (id.includes('three')) {
+              return 'three';
+            }
+          }
+        }
+      }
+    }
   },
   build: {
     // Generate sitemap and optimize for production
