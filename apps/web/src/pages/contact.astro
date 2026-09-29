@@ -3,7 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import GlassNav from '../components/GlassNav.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
-import { mockTreks } from '../data/mock-treks';
+import { getTreks } from '../lib/strapi';
+import { SITE_CONFIG } from '../config/site';
+
+const treks = await getTreks();
 
 // Direct comms channels
 const channels = [
@@ -35,6 +38,28 @@ const channels = [
 ---
 
 <Layout title="Alpine Dispatch & Contact | Dream of The Holy Himalayas">
+  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": ["Organization", "LocalBusiness", "TouristInformationCenter"],
+    "name": SITE_CONFIG.name,
+    "image": "https://images.unsplash.com/photo-1542228262-3d663b306a53?q=80&w=2071&auto=format&fit=crop",
+    "@id": "https://www.dreamoftheholyhimalayas.com",
+    "url": "https://www.dreamoftheholyhimalayas.com",
+    "telephone": SITE_CONFIG.phoneTel,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Village Mautar",
+      "addressLocality": "Uttarkashi",
+      "addressRegion": "Uttarakhand",
+      "postalCode": "249128", 
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 30.8273,
+      "longitude": 78.4354
+    }
+  })} />
   <GlassNav />
 
   <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
@@ -58,17 +83,17 @@ const channels = [
 
           <!-- Basecamp Status Readout -->
           <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/10 bg-[#0a0f18]/80 backdrop-blur-md font-mono text-xs self-start lg:self-auto">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+            <span class="w-2 h-2 rounded-full bg-#34D399 shadow-[0_0_8px_#10b981] animate-pulse"></span>
             <span class="text-silver">Mautar Basecamp Link:</span>
-            <span class="text-emerald-400 font-bold uppercase">Active Online</span>
+            <span class="text-#34D399 font-bold uppercase">Active Online</span>
           </div>
         </div>
       </div>
 
-      <!-- Main Grid: Interactive Dispatch Generator vs Communications Matrix -->
+      <!-- Main Grid: Satoshiactive Dispatch Generator vs Communications Matrix -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-20">
 
-        <!-- Left Column: Interactive Pre-Filled WhatsApp Dispatch Generator (7 Cols) -->
+        <!-- Left Column: Satoshiactive Pre-Filled WhatsApp Dispatch Generator (7 Cols) -->
         <div class="lg:col-span-7 double-bezel-outer">
           <div class="double-bezel-inner p-6 sm:p-8 bg-[#0a0f18]/90 backdrop-blur-xl">
             <div class="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
@@ -114,7 +139,7 @@ const channels = [
                     id="contactTrek"
                     class="w-full bg-[#050505] border border-white/15 focus:border-[#00f2fe] rounded-xl px-3 py-2.5 text-xs text-white outline-none transition-all font-mono cursor-pointer"
                   >
-                    {mockTreks.map((t) => (
+                    {treks.map((t) => (
                       <option value={t.name}>{t.name} ({t.region})</option>
                     ))}
                     <option value="Custom Expedition">Custom Alpine Route</option>
@@ -190,7 +215,7 @@ const channels = [
 
               <div class="space-y-4">
                 {channels.map((ch) => (
-                  <div class="p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all">
+                  <div class="p-4 rounded-xl border border-white/10 bg-[#0a0f18]/[0.02] hover:bg-[#0a0f18]/[0.05] transition-all">
                     <div class="flex items-start gap-3.5">
                       <div class="w-9 h-9 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] shrink-0">
                         <Fragment set:html={ch.icon} />
@@ -225,11 +250,11 @@ const channels = [
             </div>
 
             <div class="grid grid-cols-2 gap-3 font-mono text-xs pt-2">
-              <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+              <div class="p-3 rounded-lg bg-[#0a0f18]/5 border border-white/10">
                 <span class="text-[10px] text-silver/60 uppercase block">Latitude / Longitude</span>
                 <span class="text-white font-bold text-xs mt-0.5 block">30°43'36" N, 78°26'07" E</span>
               </div>
-              <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+              <div class="p-3 rounded-lg bg-[#0a0f18]/5 border border-white/10">
                 <span class="text-[10px] text-silver/60 uppercase block">Base Elevation</span>
                 <span class="text-[#00f2fe] font-bold text-xs mt-0.5 block">1,950m (6,397 ft)</span>
               </div>

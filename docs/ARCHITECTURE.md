@@ -5,6 +5,7 @@
 [Trekker] --HTTPS--> [Cloudflare Pages: Astro site]
                           |  static prerender (build-time fetch from Strapi)
                           |  hybrid: /_actions/booking  +  /api/revalidate  = serverless fns
+                          |  chatbot: Cloudflare Workers AI (Llama 3) on web origin
                           v
                      [Render: Strapi 5] --REST--> [Neon Postgres]
                           |  media --> [Cloudinary]
@@ -21,6 +22,7 @@ Repo: monorepo `apps/web` (Astro 5, output: 'hybrid') + `apps/cms` (Strapi 5). `
 - **MapLibre GL + MapTiler free tier** (100k map loads/mo). No Google Maps key needed for the homepage map. Google Maps used ONLY as per-trek-page embed (free).
 - **Render for Strapi** (not Railway): free tier has persistent disk  -  Railway's ephemeral FS loses `/uploads` on every deploy. Media anyway goes to Cloudinary; disk is belt-and-suspenders.
 - **Neon** free Postgres, **Cloudinary** free tier (25GB) for images.
+- **Chatbot runtime**: Cloudflare Workers AI on web origin. Knowledge source is Strapi REST API (same read-only public token as frontend). No new infra, no new API keys beyond CF built-in.
 
 ## Revalidation flow
 Strapi `afterUpdate`/`afterCreate`/`afterDelete` on trek/batch/package content types → POST `/api/revalidate` on the site with secret header → Astro/CF purges affected trek pages → next request re-prerenders (ISR-style).

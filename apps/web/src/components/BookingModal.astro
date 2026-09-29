@@ -1,6 +1,6 @@
 ---
 import { actions } from 'astro:actions';
-import type { Trek } from '../data/mock-treks';
+import type { Trek } from '../lib/strapi';
 
 interface Props {
   trek: Trek;
@@ -18,7 +18,7 @@ const { trek } = Astro.props;
       <!-- Close Button -->
       <button
         id="close-dialog-btn"
-        class="btn-tactile absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-ink-dim hover:border-glacier/30 hover:bg-glacier/10 hover:text-white transition-colors"
+        class="btn-tactile absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-[#0a0f18]/5 text-ink-dim hover:border-glacier/30 hover:bg-glacier/10 hover:text-white transition-colors"
         aria-label="Close booking modal"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -61,7 +61,7 @@ const { trek } = Astro.props;
             name="customerName"
             required
             placeholder="e.g. Rahul Sharma"
-            class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+            class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
           />
         </div>
 
@@ -77,7 +77,7 @@ const { trek } = Astro.props;
               required
               pattern="^[6-9]\\d{9}$"
               placeholder="9876543210"
-              class="w-full rounded-xl border border-white/15 bg-white/5 pl-14 pr-4 py-2.5 text-sm font-mono text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+              class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 pl-14 pr-4 py-2.5 text-sm font-mono text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
             />
           </div>
         </div>
@@ -94,7 +94,7 @@ const { trek } = Astro.props;
               max="15"
               value="1"
               required
-              class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-mono text-white focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+              class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm font-mono text-white focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
             />
           </div>
           <div>
@@ -104,7 +104,7 @@ const { trek } = Astro.props;
               id="preferredDates"
               name="preferredDates"
               placeholder="e.g. October 2026"
-              class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+              class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
             />
           </div>
         </div>
@@ -117,12 +117,12 @@ const { trek } = Astro.props;
             name="message"
             rows="2"
             placeholder="Offloading requirements, medical background, dietary preferences..."
-            class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+            class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
           ></textarea>
         </div>
 
         <!-- Action Response Feedback -->
-        <div id="booking-feedback" class="hidden text-xs font-medium text-rose-400 p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20"></div>
+        <div id="booking-feedback" class="hidden text-xs font-medium text-#FB7185 p-2.5 rounded-lg bg-#FB7185/10 border border-#FB7185/20"></div>
 
         <!-- Submit Button -->
         <button

@@ -1,9 +1,9 @@
 ---
-// InteractiveTopoMap.astro
+// SatoshiactiveTopoMap.astro
 // High-performance 0-dependency native client-side interactive topography engine
 // Built with Dark Alpine Glass aesthetics, WGS84 Cartesian projections, and real-time telemetry HUD
 import { getTreks } from '../lib/strapi';
-import type { Trek } from '../data/mock-treks';
+import type { Trek } from '../lib/strapi';
 
 interface Props {
   treks?: Trek[];
@@ -57,7 +57,7 @@ const projectedTreks = treks.map((trek) => {
           THEATER OF EXPEDITIONS
         </h2>
         <p class="text-silver max-w-2xl text-base sm:text-lg mt-3">
-          Interactive topographic radar covering the Indian Himalayas. Pan, zoom, filter sectors, and inspect active staging routes originating from Basecamp Mautar.
+          Satoshiactive topographic radar covering the Indian Himalayas. Pan, zoom, filter sectors, and inspect active staging routes originating from Basecamp Mautar.
         </p>
       </div>
       
@@ -67,7 +67,7 @@ const projectedTreks = treks.map((trek) => {
           <div class="text-[10px] font-mono text-silver uppercase tracking-widest">Basecamp Sector</div>
           <div class="text-sm font-mono font-bold text-[#00f2fe]">30°43'36" N, 78°26'07" E</div>
         </div>
-        <div class="h-8 w-[1px] bg-white/10"></div>
+        <div class="h-8 w-[1px] bg-[#0a0f18]/10"></div>
         <div>
           <div class="text-[10px] font-mono text-silver uppercase tracking-widest">Elevation Datum</div>
           <div class="text-sm font-mono font-bold text-white">1,950m MSL</div>
@@ -81,7 +81,7 @@ const projectedTreks = treks.map((trek) => {
       id="topo-engine-container" 
       class="relative h-[620px] lg:h-[720px] rounded-xl border border-white/10 bg-[#03060a] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] touch-none"
       role="region"
-      aria-label="Interactive Himalayan Topography Map"
+      aria-label="Satoshiactive Himalayan Topography Map"
     >
       <!-- Hardware-Accelerated Viewport Wrapper -->
       <div 
@@ -228,7 +228,7 @@ const projectedTreks = treks.map((trek) => {
           </g>
         </svg>
 
-        <!-- Interactive Summit Pins (HTML Overlay Layer with Accessible Hit Targets) -->
+        <!-- Satoshiactive Summit Pins (HTML Overlay Layer with Accessible Hit Targets) -->
         <div id="pins-layer" class="absolute inset-0 pointer-events-none">
           {projectedTreks.map((trek) => {
             const leftPercent = (trek.projX / 1000) * 100;
@@ -325,7 +325,7 @@ const projectedTreks = treks.map((trek) => {
             role="radio" 
             aria-checked="false"
             data-sector="garhwal" 
-            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-white/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-[#0a0f18]/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
           >
             <span class="sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent"></span>
             <span>Garhwal Massif</span>
@@ -336,7 +336,7 @@ const projectedTreks = treks.map((trek) => {
             role="radio" 
             aria-checked="false"
             data-sector="kumaon" 
-            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-white/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-[#0a0f18]/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
           >
             <span class="sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent"></span>
             <span>Kumaon Region</span>
@@ -347,7 +347,7 @@ const projectedTreks = treks.map((trek) => {
             role="radio" 
             aria-checked="false"
             data-sector="himachal" 
-            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-white/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
+            class="sector-btn w-full flex items-center gap-3 px-3 py-2 rounded border border-white/15 bg-[#0a0f18]/5 hover:border-white/30 text-silver hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer text-left"
           >
             <span class="sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent"></span>
             <span>Himachal Divide</span>
@@ -379,7 +379,7 @@ const projectedTreks = treks.map((trek) => {
             </span>
             <span class="text-[10px] font-mono uppercase tracking-widest text-[#00f2fe] font-bold">Summit Telemetry</span>
           </div>
-          <span id="hud-difficulty" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+          <span id="hud-difficulty" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#FBBF24/20 text-amber-300 border border-#FBBF24/30">
             Moderate
           </span>
         </div>
@@ -395,14 +395,14 @@ const projectedTreks = treks.map((trek) => {
         </div>
 
         <!-- Real-Time Alpine Telemetry Grid -->
-        <div class="grid grid-cols-2 gap-2 my-3 p-3 rounded-lg bg-black/40 border border-white/5 font-mono">
+        <div class="grid grid-cols-2 gap-2 my-3 p-3 rounded-lg bg-black/60 border border-white/5 font-mono">
           <div>
             <div class="text-[9px] text-silver uppercase">Elevation</div>
             <div id="hud-altitude" class="text-sm font-bold text-white">3,876m <span class="text-[10px] text-silver font-normal">(12,716ft)</span></div>
           </div>
           <div>
             <div class="text-[9px] text-silver uppercase">Est. O2 Level</div>
-            <div id="hud-oxygen" class="text-sm font-bold text-emerald-400">64% <span class="text-[9px] text-silver font-normal">Sea Lvl</span></div>
+            <div id="hud-oxygen" class="text-sm font-bold text-#34D399">64% <span class="text-[9px] text-silver font-normal">Sea Lvl</span></div>
           </div>
           <div>
             <div class="text-[9px] text-silver uppercase">Ridge Temp</div>
@@ -674,7 +674,7 @@ const projectedTreks = treks.map((trek) => {
         sectorBtns.forEach((b) => {
           b.setAttribute('aria-checked', 'false');
           b.classList.remove('border-[#00f2fe]', 'bg-[#00f2fe]/10', 'text-white');
-          b.classList.add('border-white/15', 'bg-white/5', 'text-silver');
+          b.classList.add('border-white/15', 'bg-[#0a0f18]/5', 'text-silver');
           const ind = b.querySelector('.sector-indicator');
           if (ind) {
             ind.className = 'sector-indicator w-2.5 h-2.5 rounded-sm border border-white/40 bg-transparent';
@@ -683,7 +683,7 @@ const projectedTreks = treks.map((trek) => {
 
         btn.setAttribute('aria-checked', 'true');
         btn.classList.add('border-[#00f2fe]', 'bg-[#00f2fe]/10', 'text-white');
-        btn.classList.remove('border-white/15', 'bg-white/5', 'text-silver');
+        btn.classList.remove('border-white/15', 'bg-[#0a0f18]/5', 'text-silver');
         const ind = btn.querySelector('.sector-indicator');
         if (ind) {
           ind.className = 'sector-indicator w-2.5 h-2.5 rounded-sm bg-[#00f2fe] shadow-[0_0_6px_#00f2fe]';
@@ -710,7 +710,7 @@ const projectedTreks = treks.map((trek) => {
       pins.forEach((p) => {
         const core = p.querySelector('.pin-core');
         if (core) {
-          core.classList.remove('scale-150', 'bg-white', 'shadow-[0_0_20px_#ffffff]');
+          core.classList.remove('scale-150', 'bg-[#0a0f18]', 'shadow-[0_0_20px_#ffffff]');
           core.classList.add('bg-[#00f2fe]');
         }
       });
@@ -719,7 +719,7 @@ const projectedTreks = treks.map((trek) => {
       const activeCore = pin.querySelector('.pin-core');
       if (activeCore) {
         activeCore.classList.remove('bg-[#00f2fe]');
-        activeCore.classList.add('scale-150', 'bg-white', 'shadow-[0_0_20px_#ffffff]');
+        activeCore.classList.add('scale-150', 'bg-[#0a0f18]', 'shadow-[0_0_20px_#ffffff]');
       }
 
       const slug = pin.getAttribute('data-slug') || '';
@@ -761,11 +761,11 @@ const projectedTreks = treks.map((trek) => {
       if (hudDifficulty) {
         hudDifficulty.textContent = difficulty.toUpperCase();
         if (difficulty === 'easy') {
-          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30';
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#34D399/20 text-emerald-300 border border-#34D399/30';
         } else if (difficulty === 'moderate') {
-          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30';
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#FBBF24/20 text-amber-300 border border-#FBBF24/30';
         } else {
-          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-rose-400/20 text-rose-300 border border-rose-400/30';
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#FB7185/20 text-rose-300 border border-#FB7185/30';
         }
       }
 

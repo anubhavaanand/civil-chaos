@@ -74,7 +74,7 @@ const filterGroups: FilterGroup[] = [
       </div>
       <button
         id="clearFilters"
-        class="btn-tactile rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-ink-dim hover:border-glacier/30 hover:bg-glacier/5 hover:text-glacier"
+        class="btn-tactile rounded-lg border border-white/10 bg-[#0a0f18]/5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-ink-dim hover:border-glacier/30 hover:bg-glacier/5 hover:text-glacier"
       >
         Clear All
       </button>
@@ -88,7 +88,7 @@ const filterGroups: FilterGroup[] = [
           <div class="mb-2.5 flex items-center gap-2">
             <span class="text-ink-dim" set:html={group.icon} />
             <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-dim">{group.label}</span>
-            <span class="ml-auto rounded bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-ink-dim">
+            <span class="ml-auto rounded bg-[#0a0f18]/5 px-1.5 py-0.5 font-mono text-[9px] text-ink-dim">
               {group.options.filter(o => o.count && o.count > 0).length} options
             </span>
           </div>
@@ -97,7 +97,7 @@ const filterGroups: FilterGroup[] = [
           <div class="flex flex-wrap gap-2">
             {group.options.map((option) => (
               <button
-                class="filter-pill btn-tactile group relative flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2 transition-all duration-150 hover:border-glacier/30 hover:bg-glacier/[0.06]"
+                class="filter-pill btn-tactile group relative flex items-center gap-2 rounded-lg border border-white/10 bg-[#0a0f18]/[0.03] px-3.5 py-2 transition-all duration-150 hover:border-glacier/30 hover:bg-glacier/[0.06]"
                 data-group={group.id}
                 data-value={option.value}
                 aria-pressed="false"
@@ -112,7 +112,7 @@ const filterGroups: FilterGroup[] = [
                 
                 {/* Count Badge */}
                 {option.count !== undefined && (
-                  <span class="rounded-md bg-white/5 px-1.5 py-0.5 font-mono text-[9px] font-bold text-ink-dim transition-[background-color,color] duration-150 group-hover:bg-glacier/10 group-hover:text-glacier">
+                  <span class="rounded-md bg-[#0a0f18]/5 px-1.5 py-0.5 font-mono text-[9px] font-bold text-ink-dim transition-[background-color,color] duration-150 group-hover:bg-glacier/10 group-hover:text-glacier">
                     {option.count}
                   </span>
                 )}
@@ -219,13 +219,13 @@ const filterGroups: FilterGroup[] = [
         state[group]?.delete(value);
         pill.setAttribute('aria-pressed', 'false');
         pill.classList.remove('border-glacier/40', 'bg-glacier/[0.1]');
-        pill.classList.add('border-white/10', 'bg-white/[0.03]');
+        pill.classList.add('border-white/10', 'bg-[#0a0f18]/[0.03]');
         if (indicator) indicator.style.opacity = '0';
       } else {
         state[group]?.add(value);
         pill.setAttribute('aria-pressed', 'true');
         pill.classList.add('border-glacier/40', 'bg-glacier/[0.1]');
-        pill.classList.remove('border-white/10', 'bg-white/[0.03]');
+        pill.classList.remove('border-white/10', 'bg-[#0a0f18]/[0.03]');
         if (indicator) indicator.style.opacity = '1';
       }
 
@@ -240,7 +240,7 @@ const filterGroups: FilterGroup[] = [
       pills.forEach((pill) => {
         pill.setAttribute('aria-pressed', 'false');
         pill.classList.remove('border-glacier/40', 'bg-glacier/[0.1]');
-        pill.classList.add('border-white/10', 'bg-white/[0.03]');
+        pill.classList.add('border-white/10', 'bg-[#0a0f18]/[0.03]');
         const indicator = pill.querySelector('.active-indicator') as HTMLElement;
         if (indicator) indicator.style.opacity = '0';
       });

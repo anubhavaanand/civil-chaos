@@ -32,6 +32,18 @@ interface StrapiWebhookPayload {
   event: string;
 }
 
+/**
+ * GET is intentionally unsupported - this endpoint is POST-only.
+ * Strapi webhooks POST here; Astro's prerenderer probes routes with GET,
+ * so we respond 405 Method Not Allowed instead of leaving the route unhandled.
+ */
+export const GET: APIRoute = async () => {
+  return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
+    status: 405,
+    headers: { 'Content-Type': 'application/json', 'Allow': 'POST' }
+  });
+};
+
 export const POST: APIRoute = async ({ request }) => {
   // Validate secret header
   const secret = request.headers.get('x-revalidate-secret');

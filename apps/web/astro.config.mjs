@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 // Cloudflare Pages deployment: output 'static' with adapter for server endpoints
@@ -12,9 +13,24 @@ export default defineConfig({
     imageService: 'cloudflare',
   }),
 
+  integrations: [sitemap()],
 
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('maplibre-gl')) {
+              return 'maplibre';
+            }
+            if (id.includes('three')) {
+              return 'three';
+            }
+          }
+        }
+      }
+    }
   },
   build: {
     // Generate sitemap and optimize for production

@@ -1,8 +1,6 @@
-# Render Blueprint for Dream of The Holy Himalayas
-# This file defines both the Strapi CMS and Astro web deployments
+# Render Blueprint for Dream of The Holy Himalayas CMS
 
 services:
-  # Strapi CMS Backend
   - type: web
     name: holy-himalayas-cms
     runtime: node
@@ -19,7 +17,7 @@ services:
       - key: DATABASE_CLIENT
         value: postgres
       - key: DATABASE_URL
-        sync: false # Set this in Render dashboard to point to Neon DB
+        sync: false
       - key: APP_KEYS
         generateValue: true
       - key: API_TOKEN_SALT
@@ -32,9 +30,15 @@ services:
         generateValue: true
       - key: ENCRYPTION_KEY
         generateValue: true
-      # Add these in Render dashboard after first deploy:
-      # - CLOUDINARY_NAME
-      # - CLOUDINARY_KEY
-      # - CLOUDINARY_SECRET
-      # - WEB_REVALIDATE_URL
-      # - WEB_REVALIDATE_SECRET
+      - key: CLOUDINARY_NAME
+        sync: false
+      - key: CLOUDINARY_KEY
+        sync: false
+      - key: CLOUDINARY_SECRET
+        sync: false
+      - key: WEB_REVALIDATE_URL
+        sync: false
+      - key: WEB_REVALIDATE_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false

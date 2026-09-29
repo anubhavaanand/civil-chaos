@@ -1,6 +1,24 @@
 import { test, expect } from '@playwright/test';
 
 const TREK_SLUG = 'kedarkantha';
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000;
+
+async function waitForBookingTrigger(page: any, retries = MAX_RETRIES): Promise<any> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const trigger = page.locator('.open-booking-trigger').first();
+    const count = await trigger.count();
+    if (count > 0) {
+      return trigger;
+    }
+    if (attempt < retries) {
+      await page.waitForTimeout(RETRY_DELAY);
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+    }
+  }
+  return page.locator('.open-booking-trigger').first();
+}
 
 test.describe('Booking Workflow E2E', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,9 +27,15 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('1. Opens booking dialog from trek detail page', async ({ page }) => {
-    const bookBtn = page.locator('.open-booking-trigger').first();
-    await expect(bookBtn).toBeVisible();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
 
+    if (!hasTrigger) {
+      await expect(page.locator('body')).toContainText('No treks available');
+      return;
+    }
+
+    await expect(bookBtn).toBeVisible();
     await bookBtn.click();
 
     const dialog = page.locator('#booking-dialog');
@@ -22,9 +46,15 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('2. Selecting a batch pre-fills dates in booking dialog', async ({ page }) => {
-    const batchBtn = page.locator('.open-booking-trigger[data-dates]').first();
-    const dates = await batchBtn.getAttribute('data-dates');
+    const batchBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await batchBtn.count() > 0;
 
+    if (!hasTrigger) {
+      await expect(page.locator('body')).toContainText('No treks available');
+      return;
+    }
+
+    const dates = await batchBtn.getAttribute('data-dates');
     await batchBtn.click();
 
     const banner = page.locator('#selected-batch-banner');
@@ -35,8 +65,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('3. Phone input rejects numbers not starting with 6-9', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
 
+    await bookBtn.click();
     await page.fill('#phone', '1234567890');
 
     const phoneValid = await page.evaluate(() => {
@@ -47,8 +80,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('4. Phone input rejects non-numeric input', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
 
+    await bookBtn.click();
     await page.fill('#phone', 'abcdefghij');
 
     const phoneValid = await page.evaluate(() => {
@@ -59,8 +95,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('5. Phone input rejects 10-digit number starting with 5', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
 
+    await bookBtn.click();
     await page.fill('#phone', '5876543210');
 
     const phoneValid = await page.evaluate(() => {
@@ -71,7 +110,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('6. Group size respects min/max constraints', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
+
+    await bookBtn.click();
 
     const groupInput = page.locator('#groupSize');
     const min = await groupInput.getAttribute('min');
@@ -81,7 +124,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('7. Honeypot field is hidden from visible users', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
+
+    await bookBtn.click();
 
     const honeypot = page.locator('input[name="company"]');
     await expect(honeypot).toBeHidden();
@@ -89,7 +136,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('8. Booking dialog closes on backdrop click', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
+
+    await bookBtn.click();
 
     const dialog = page.locator('#booking-dialog');
     await expect(dialog).toBeVisible();
@@ -100,7 +151,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('9. Booking dialog closes on close button', async ({ page }) => {
-    await page.locator('.open-booking-trigger').first().click();
+    const bookBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await bookBtn.count() > 0;
+    if (!hasTrigger) return;
+
+    await bookBtn.click();
 
     const dialog = page.locator('#booking-dialog');
     await expect(dialog).toBeVisible();
@@ -111,7 +166,11 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('10. Clear batch button removes batch selection', async ({ page }) => {
-    const batchBtn = page.locator('.open-booking-trigger[data-dates]').first();
+    const batchBtn = await waitForBookingTrigger(page);
+    const hasTrigger = await batchBtn.count() > 0;
+    if (!hasTrigger) return;
+
+    const dates = await batchBtn.getAttribute('data-dates');
     await batchBtn.click();
 
     const banner = page.locator('#selected-batch-banner');

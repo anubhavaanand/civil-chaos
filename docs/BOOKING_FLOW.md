@@ -1,6 +1,8 @@
 # BOOKING_FLOW  -  request-to-WhatsApp booking (Phase 1, no payments)
 
 ## User flow
+> **Note:** Chatbot may suggest treks and answer questions. All booking submissions go through the Request Booking form or WhatsApp deep-link. Chatbot does not submit bookings in Phase 1.
+
 1. Trek page → "Request Booking" CTA → opens BookingModal (or `/treks/[slug]#book`) with: name, Indian mobile (required), email (optional), group size, preferred batch dropdown (from open batches) or free-text dates, message.
 2. Submit → Astro Action `booking` (see API_CONTRACT).
 3. Success screen: big WhatsApp button (`whatsappUrl` deep link with prefilled summary: trek, dates, group size, name) + "we'll confirm on WhatsApp/call within a few hours" + fallback phone number. ALSO opens option to just call.

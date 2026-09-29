@@ -5,28 +5,30 @@ import TrekCard from '../../components/TrekCard.astro';
 import DifficultyBadge from '../../components/DifficultyBadge.astro';
 import WhatsAppFab from '../../components/WhatsAppFab.astro';
 import Footer from '../../components/Footer.astro';
-import { mockTreks } from '../../data/mock-treks';
+import { getTreks } from '../../lib/strapi';
+
+const treks = await getTreks();
 
 // Pre-calculate filter category counts
 const regionCounts = {
-  all: mockTreks.length,
-  Garhwal: mockTreks.filter(t => t.region === 'Garhwal').length,
-  Kumaon: mockTreks.filter(t => t.region === 'Kumaon').length,
-  Himachal: mockTreks.filter(t => t.region === 'Himachal').length
+  all: treks.length,
+  Garhwal: treks.filter(t => t.region === 'Garhwal').length,
+  Kumaon: treks.filter(t => t.region === 'Kumaon').length,
+  Himachal: treks.filter(t => t.region === 'Himachal').length
 };
 
 const altitudeCounts = {
-  all: mockTreks.length,
-  sub4k: mockTreks.filter(t => t.maxAltitudeM < 4000).length,
-  mid4k: mockTreks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
-  above5k: mockTreks.filter(t => t.maxAltitudeM > 5000).length
+  all: treks.length,
+  sub4k: treks.filter(t => t.maxAltitudeM < 4000).length,
+  mid4k: treks.filter(t => t.maxAltitudeM >= 4000 && t.maxAltitudeM <= 5000).length,
+  above5k: treks.filter(t => t.maxAltitudeM > 5000).length
 };
 
 const difficultyCounts = {
-  all: mockTreks.length,
-  easy: mockTreks.filter(t => t.difficulty === 'easy').length,
-  moderate: mockTreks.filter(t => t.difficulty === 'moderate').length,
-  difficult: mockTreks.filter(t => t.difficulty === 'difficult').length
+  all: treks.length,
+  easy: treks.filter(t => t.difficulty === 'easy').length,
+  moderate: treks.filter(t => t.difficulty === 'moderate').length,
+  difficult: treks.filter(t => t.difficulty === 'difficult').length
 };
 ---
 
@@ -56,7 +58,7 @@ const difficultyCounts = {
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-[#00f2fe] shadow-[0_0_8px_#00f2fe] animate-pulse"></span>
             <span class="text-silver uppercase tracking-wider">Matching Routes:</span>
-            <span id="active-routes-count" class="font-bold text-[#00f2fe] text-sm">{mockTreks.length}</span>
+            <span id="active-routes-count" class="font-bold text-[#00f2fe] text-sm">{treks.length}</span>
           </div>
         </div>
       </div>
@@ -113,7 +115,7 @@ const difficultyCounts = {
               <!-- Reset Button -->
               <button
                 id="resetAllFiltersBtn"
-                class="btn-tactile px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-[11px] font-mono text-ink-dim hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400 uppercase tracking-wider transition-all"
+                class="btn-tactile px-3 py-2 rounded-lg border border-white/10 bg-[#0a0f18]/5 text-[11px] font-mono text-ink-dim hover:border-#FB7185/30 hover:bg-#FB7185/10 hover:text-#FB7185 uppercase tracking-wider transition-all"
               >
                 Reset
               </button>
@@ -136,13 +138,13 @@ const difficultyCounts = {
                 <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({regionCounts.all})
                 </button>
-                <button data-value="Garhwal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="Garhwal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   Garhwal ({regionCounts.Garhwal})
                 </button>
-                <button data-value="Kumaon" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="Kumaon" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   Kumaon ({regionCounts.Kumaon})
                 </button>
-                <button data-value="Himachal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="Himachal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   Himachal ({regionCounts.Himachal})
                 </button>
               </div>
@@ -160,13 +162,13 @@ const difficultyCounts = {
                 <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({altitudeCounts.all})
                 </button>
-                <button data-value="sub4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="sub4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   &lt; 4,000m ({altitudeCounts.sub4k})
                 </button>
-                <button data-value="mid4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="mid4k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   4,000 to 5,000m ({altitudeCounts.mid4k})
                 </button>
-                <button data-value="above5k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="above5k" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   &gt; 5,000m ({altitudeCounts.above5k})
                 </button>
               </div>
@@ -184,13 +186,13 @@ const difficultyCounts = {
                 <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({difficultyCounts.all})
                 </button>
-                <button data-value="easy" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="easy" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   Easy ({difficultyCounts.easy})
                 </button>
-                <button data-value="moderate" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="moderate" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   Moderate ({difficultyCounts.moderate})
                 </button>
-                <button data-value="difficult" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-white/5 text-ink hover:border-[#00f2fe]/40">
+                <button data-value="difficult" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
                   Difficult ({difficultyCounts.difficult})
                 </button>
               </div>
@@ -202,7 +204,7 @@ const difficultyCounts = {
 
       <!-- VIEW 1: Bento Cards Grid -->
       <div id="treks-bento-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {mockTreks.map((trek) => (
+        {treks.map((trek) => (
           <div
             class="trek-item-wrapper transition-all duration-300"
             data-slug={trek.slug}
@@ -234,9 +236,9 @@ const difficultyCounts = {
               </tr>
             </thead>
             <tbody class="divide-y divide-white/5">
-              {mockTreks.map((trek) => (
+              {treks.map((trek) => (
                 <tr 
-                  class="trek-matrix-row hover:bg-white/[0.04] transition-colors"
+                  class="trek-matrix-row hover:bg-[#0a0f18]/[0.04] transition-colors"
                   data-slug={trek.slug}
                   data-name={trek.name.toLowerCase()}
                   data-region={trek.region}
@@ -244,7 +246,7 @@ const difficultyCounts = {
                   data-difficulty={trek.difficulty}
                   data-days={trek.durationDays}
                 >
-                  <td class="p-4 font-sans font-bold text-white">
+                  <td class="p-4 font-body font-bold text-white">
                     <a href={`/treks/${trek.slug}`} class="hover:text-[#00f2fe] transition-colors flex items-center gap-2">
                       <span>{trek.name}</span>
                       {trek.isFeatured && (
@@ -274,7 +276,7 @@ const difficultyCounts = {
                   <td class="p-4 text-center">
                     <a 
                       href={`/treks/${trek.slug}`} 
-                      class="btn-tactile inline-flex items-center gap-1 px-3 py-1 rounded border border-white/15 bg-white/5 text-[11px] text-white hover:border-[#00f2fe] hover:text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-all font-mono"
+                      class="btn-tactile inline-flex items-center gap-1 px-3 py-1 rounded border border-white/15 bg-[#0a0f18]/5 text-[11px] text-white hover:border-[#00f2fe] hover:text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-all font-mono"
                     >
                       <span>Inspect</span>
                       <span class="text-xs">→</span>
@@ -289,7 +291,7 @@ const difficultyCounts = {
 
       <!-- No Treks Empty State -->
       <div id="no-treks-empty" class="hidden text-center py-20 rounded-2xl border border-white/10 bg-[#0a0f18]/60 p-8 mt-6">
-        <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-silver mb-4">
+        <div class="w-12 h-12 rounded-full bg-[#0a0f18]/5 border border-white/10 flex items-center justify-center mx-auto text-silver mb-4">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -408,11 +410,11 @@ const difficultyCounts = {
             // Update UI styles for pills in this group
             pills.forEach((p) => {
               p.classList.remove('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-              p.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+              p.classList.add('border-white/10', 'bg-[#0a0f18]/5', 'text-ink');
             });
 
             pill.classList.add('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-            pill.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+            pill.classList.remove('border-white/10', 'bg-[#0a0f18]/5', 'text-ink');
 
             evaluateFilters();
           });
@@ -469,10 +471,10 @@ const difficultyCounts = {
             const isAll = p.getAttribute('data-value') === 'all';
             if (isAll) {
               p.classList.add('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-              p.classList.remove('border-white/10', 'bg-white/5', 'text-ink');
+              p.classList.remove('border-white/10', 'bg-[#0a0f18]/5', 'text-ink');
             } else {
               p.classList.remove('active', 'border-[#00f2fe]', 'bg-[#00f2fe]', 'text-[#050505]', 'font-bold');
-              p.classList.add('border-white/10', 'bg-white/5', 'text-ink');
+              p.classList.add('border-white/10', 'bg-[#0a0f18]/5', 'text-ink');
             }
           });
         });
