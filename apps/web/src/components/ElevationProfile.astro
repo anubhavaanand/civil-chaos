@@ -81,7 +81,7 @@ const getO2Percentage = (altM: number) => {
       </div>
       <div>
         <span class="text-[10px] text-silver/60 uppercase block">Effective O2 Level</span>
-        <span id="hud-point-o2" class="text-#34D399 font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
+        <span id="hud-point-o2" class="text-[#34D399] font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
       </div>
     </div>
 
@@ -244,11 +244,11 @@ const getO2Percentage = (altM: number) => {
         if (hudO2) {
           hudO2.textContent = `${o2}% of Sea Level`;
           if (o2 < 60) {
-            hudO2.className = 'text-#FB7185 font-bold block';
+            hudO2.className = 'text-[#FB7185] font-bold block';
           } else if (o2 < 75) {
-            hudO2.className = 'text-#FBBF24 font-bold block';
+            hudO2.className = 'text-[#FBBF24] font-bold block';
           } else {
-            hudO2.className = 'text-#34D399 font-bold block';
+            hudO2.className = 'text-[#34D399] font-bold block';
           }
         }
       };

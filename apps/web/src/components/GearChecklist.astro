@@ -7,7 +7,7 @@
   <!-- Header -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
     <div>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-#34D399/20 text-#34D399 border border-#34D399/30 uppercase tracking-wide">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#34D399]/20 text-[#34D399] border border-[#34D399]/30 uppercase tracking-wide">
         Backpack Load Optimizer
       </span>
       <h3 class="text-xl font-heading font-bold text-slate-100 mt-1 flex items-center gap-2">
@@ -22,12 +22,12 @@
     <div class="flex items-center gap-4 bg-[#050505] p-3 rounded-xl border border-slate-800">
       <div>
         <span class="block text-[10px] text-[#94A3B8] font-bold uppercase tracking-wider">Total Pack Weight</span>
-        <div id="weight-display" class="text-xl font-heading font-bold text-#34D399">
+        <div id="weight-display" class="text-xl font-heading font-bold text-[#34D399]">
           <span id="pack-weight-val">6.4</span> KG <span class="text-xs font-normal text-[#94A3B8]">/ 10 KG Max</span>
         </div>
       </div>
       <div class="w-24 bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
-        <div id="weight-bar" class="bg-gradient-to-r from-#34D399 to-#FBBF24 h-full w-[64%] transition-all duration-300"></div>
+        <div id="weight-bar" class="bg-gradient-to-r from-[#34D399] to-[#FBBF24] h-full w-[64%] transition-all duration-300"></div>
       </div>
     </div>
   </div>
@@ -176,8 +176,8 @@
   <!-- Footer Tip & Export Button -->
   <div class="pt-4 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
     <div class="text-xs text-[#94A3B8] flex items-center gap-2">
-      <span class="text-#FBBF24 font-bold flex items-center gap-1">
-        <svg class="w-3.5 h-3.5 text-#FBBF24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <span class="text-[#FBBF24] font-bold flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-[#FBBF24]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
         <span>Holy Himalayas Pro Tip:</span>
@@ -212,11 +212,11 @@
     if (weightBarEl) {
       weightBarEl.style.width = `${pct}%`;
       if (total > 10) {
-        weightBarEl.className = 'bg-gradient-to-r from-#FBBF24 to-#FB7185 h-full transition-all duration-300';
-        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-#FB7185';
+        weightBarEl.className = 'bg-gradient-to-r from-[#FBBF24] to-[#FB7185] h-full transition-all duration-300';
+        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-[#FB7185]';
       } else {
-        weightBarEl.className = 'bg-gradient-to-r from-#34D399 to-#FBBF24 h-full transition-all duration-300';
-        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-#34D399';
+        weightBarEl.className = 'bg-gradient-to-r from-[#34D399] to-[#FBBF24] h-full transition-all duration-300';
+        if (displayEl) displayEl.className = 'text-xl font-heading font-bold text-[#34D399]';
       }
     }
   }
