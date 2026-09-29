@@ -147,7 +147,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
           </div>
 
           <div class="p-4 rounded-lg bg-[#0a0f18]/90 backdrop-blur-md border border-white/10 flex items-center justify-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-#34D399/15 border border-#34D399/30 flex items-center justify-center text-#34D399 shrink-0">
+            <div class="w-10 h-10 rounded-full bg-[#34D399]/15 border border-[#34D399]/30 flex items-center justify-center text-[#34D399] shrink-0">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -434,11 +434,11 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
                   </td>
                   <td class="py-4 px-6">
                     {isFull ? (
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-#FB7185/10 text-#FB7185 border border-#FB7185/20">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#FB7185]/10 text-[#FB7185] border border-[#FB7185]/20">
                         Full
                       </span>
                     ) : isLowSeats ? (
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-#FBBF24/10 text-#FBBF24 border border-#FBBF24/20">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#FBBF24]/10 text-[#FBBF24] border border-[#FBBF24]/20">
                         Only {seatsLeft} seats left
                       </span>
                     ) : (

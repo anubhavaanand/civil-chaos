@@ -114,7 +114,7 @@ interface Props {
           const popupHtml = `
             <div class="bg-[#0a0f18]/95 border border-white/10 p-4 rounded-lg backdrop-blur-md min-w-[200px]">
               <div class="flex items-center gap-2 mb-2">
-                <span class="w-2 h-2 rounded-full ${trek.difficulty === 'easy' ? 'bg-#34D399' : trek.difficulty === 'moderate' ? 'bg-#FBBF24' : 'bg-#FB7185'}"></span>
+                <span class="w-2 h-2 rounded-full ${trek.difficulty === 'easy' ? 'bg-[#34D399]' : trek.difficulty === 'moderate' ? 'bg-[#FBBF24]' : 'bg-[#FB7185]'}"></span>
                 <span class="text-xs font-mono text-[#94A3B8] uppercase">${trek.difficulty}</span>
               </div>
               <h3 class="text-[#F8FAFC] font-bold text-base leading-tight mb-1">${trek.name}</h3>
@@ -160,11 +160,11 @@ interface Props {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
 }
 .dark-alpine-popup .maplibregl-popup-tip {
-  border-top-color: rgba(255,255,255,0.95) !important;
-  border-bottom-color: rgba(255,255,255,0.95) !important;
+  border-top-color: rgba(5, 5, 5, 0.95) !important;
+  border-bottom-color: rgba(5, 5, 5, 0.95) !important;
 }
 .maplibregl-ctrl-group {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(10, 15, 24, 0.9) !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1);
 }
