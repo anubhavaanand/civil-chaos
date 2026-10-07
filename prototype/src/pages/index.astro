@@ -1,0 +1,515 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TrekCard from '../components/TrekCard.astro';
+import TrekMap from '../components/TrekMap.astro';
+import { getTreks, upcomingBatches, formatDate, seatsLeft } from '../lib/data';
+import { SITE_CONFIG } from '../lib/site';
+
+const treks = await getTreks();
+const departures = upcomingBatches(treks, 8);
+
+const heroImage = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop';
+---
+
+<Layout title="Dream of The Holy Himalayas | Small-Batch Himalayan Expeditions">
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': ['Organization', 'LocalBusiness', 'TouristInformationCenter'],
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.url,
+    telephone: `+${SITE_CONFIG.phoneRaw}`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Village Mautar',
+      addressLocality: 'Uttarkashi',
+      addressRegion: 'Uttarakhand',
+      postalCode: '249128',
+      addressCountry: 'IN',
+    },
+    geo: { '@type': 'GeoCoordinates', latitude: SITE_CONFIG.coordinates.lat, longitude: SITE_CONFIG.coordinates.lng },
+    description: 'Boutique, small-batch Himalayan trekking agency in Mautar, Uttarakhand. NIM and WFR certified local guides.',
+  })} />
+  <link rel="preload" as="image" href={heroImage} fetchpriority="high" slot="head" />
+
+  <main>
+    <!-- ============ HERO: MNTN-style split with Aave refraction glass strip ============ -->
+    <section class="relative min-h-[100dvh] flex items-center overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <img
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover scale-105"
+          loading="eager"
+          fetchpriority="high"
+          aria-hidden="true"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/80 via-alpine/60 to-obsidian" aria-hidden="true"></div>
+        <div class="absolute inset-0 bg-grid opacity-60" aria-hidden="true"></div>
+
+        <!-- Aave refraction: the photo strip behind the hero glass bends at its edges.
+             Decorative only - all text sits on a scrimmed glass panel above it. -->
+        <div class="absolute bottom-0 left-0 right-0 h-56 glass-refract opacity-70 bg-gradient-to-t from-glacier/10 to-transparent" aria-hidden="true"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-6 w-full pt-32 pb-24">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-glacier/10 border border-glacier/30 text-glacier text-xs font-mono font-bold tracking-widest uppercase mb-8 glass">
+            <span class="w-2 h-2 rounded-full bg-glacier ping-ring" aria-hidden="true"></span>
+            Mautar HQ Uplink &middot; 1,950m MSL
+          </div>
+
+          <h1 class="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight text-ink mb-6 leading-[1.08]">
+            Sacred Peaks. Intimate Expeditions.
+            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-ink via-silver to-glacier">
+              Led by Mautar's Native Mountain Guides.
+            </span>
+          </h1>
+
+          <p class="text-lg sm:text-xl text-ink/80 max-w-2xl mb-10 leading-relaxed font-light max-w-[65ch]">
+            Small-batch Himalayan journeys limited to 12-15 trekkers. 100% NIM and WFR certified local leadership, transparent pricing, and zero weather penalties.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 mb-16">
+            <a href="#treks" class="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-glacier text-obsidian font-bold text-xs font-mono uppercase tracking-widest btn-tactile hover:bg-alpine hover:text-glacier transition-colors">
+              <span>Explore Expeditions</span>
+              <span class="w-7 h-7 rounded-full bg-obsidian/10 flex items-center justify-center" aria-hidden="true">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </span>
+            </a>
+            <a href="#map" class="px-7 py-3.5 rounded-full border border-white/20 glass text-ink hover:border-glacier hover:text-glacier font-bold text-xs font-mono uppercase tracking-widest btn-tactile">
+              Regional Telemetry
+            </a>
+          </div>
+
+          <!-- Trust trio -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl">
+            <div class="glass lens-edge p-4 rounded-lg bg-alpine/85 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-glacier/10 border border-glacier/30 flex items-center justify-center text-glacier shrink-0" aria-hidden="true">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div class="text-left">
+                <div class="text-[11px] font-mono text-ink/80 uppercase">Local Heritage</div>
+                <div class="text-sm font-bold text-ink">100% NIM &amp; WFR Certified</div>
+              </div>
+            </div>
+
+            <div class="glass lens-edge p-4 rounded-lg bg-alpine/85 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-glacier/10 border border-glacier/30 flex items-center justify-center text-glacier shrink-0" aria-hidden="true">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div class="text-left">
+                <div class="text-[11px] font-mono text-ink/80 uppercase">Small Batches</div>
+                <div class="text-sm font-bold text-ink">Max 12-15 Trekkers</div>
+              </div>
+            </div>
+
+            <div class="glass lens-edge p-4 rounded-lg bg-alpine/85 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-easy/15 border border-easy/30 flex items-center justify-center text-easy shrink-0" aria-hidden="true">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="text-left">
+                <div class="text-[11px] font-mono text-ink/80 uppercase">Weather Policy</div>
+                <div class="text-sm font-bold text-ink">Zero Weather Penalty</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CURATED EXPEDITIONS: asymmetric bento ============ -->
+    <section id="treks" class="py-28 px-6 max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="h-[2px] w-8 bg-glacier" aria-hidden="true"></span>
+            <span class="text-glacier font-mono text-xs tracking-widest uppercase font-bold">Curated Objectives</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-ink tracking-tight">High-Altitude Expeditions</h2>
+          <p class="text-silver mt-3 max-w-xl text-base leading-relaxed">
+            Curated ridgelines, alpine passes, and sacred glacial meadows across Uttarakhand and Himachal.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2" id="trekFilterChips">
+          <button type="button" data-region="all" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-bold uppercase tracking-wider bg-glacier text-obsidian btn-tactile cursor-pointer">All Regions</button>
+          {['Garhwal', 'Kumaon', 'Himachal'].map((r) => (
+            <button type="button" data-region={r} class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-alpine border border-white/10 text-silver hover:border-glacier/50 hover:text-ink btn-tactile cursor-pointer">{r}</button>
+          ))}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="trekGridContainer">
+        {treks.slice(0, 6).map((trek, i) => <TrekCard trek={trek} featured={i === 0} />)}
+      </div>
+
+      <div class="mt-14 text-center">
+        <a href="/treks" class="inline-block border border-glacier/30 hover:border-glacier hover:bg-glacier/10 text-ink font-mono text-xs uppercase tracking-widest font-bold py-4 px-10 rounded-sm btn-tactile transition-colors">
+          View Full Roster ({treks.length} Treks)
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ INTERACTIVE MAP ============ -->
+    <TrekMap treks={treks} />
+
+    <!-- ============ 2027 FIXED DEPARTURES ============ -->
+    <section id="departures" class="py-28 px-6 max-w-7xl mx-auto border-t border-white/5">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="h-[2px] w-8 bg-glacier" aria-hidden="true"></span>
+            <span class="text-glacier font-mono text-xs tracking-widest uppercase font-bold">Confirmed Batches</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-ink tracking-tight">2027 Fixed Departures</h2>
+          <p class="text-silver mt-3 max-w-xl text-base leading-relaxed">
+            Every batch is strictly capped at 12-15 trekkers to preserve trail intimacy, safety ratios, and environmental sanctity.
+          </p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-glacier/10 border border-glacier/30 text-xs font-mono font-bold text-glacier uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-glacier ping-ring" aria-hidden="true"></span>
+          Live Availability
+        </div>
+      </div>
+
+      {departures.length > 0 ? (
+        <div class="overflow-x-auto rounded-lg border border-white/10 bg-alpine/90">
+          <table class="w-full text-left text-sm text-silver border-collapse">
+            <thead class="bg-obsidian/90 text-xs uppercase tracking-wider text-glacier border-b border-white/10 font-mono">
+              <tr>
+                <th class="py-4 px-6 font-semibold">Expedition</th>
+                <th class="py-4 px-6 font-semibold">Dates</th>
+                <th class="py-4 px-6 font-semibold">Seat Status</th>
+                <th class="py-4 px-6 font-semibold">All-Inclusive Price</th>
+                <th class="py-4 px-6 font-semibold text-right">Reservation</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 font-mono tnum">
+              {departures.map((batch) => {
+                const left = seatsLeft(batch);
+                const isFull = batch.status === 'full' || left === 0;
+                const isLow = left > 0 && left < 5;
+                const dates = `${formatDate(batch.startDate)} - ${formatDate(batch.endDate)}`;
+                return (
+                  <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="py-4 px-6 font-display font-medium text-ink text-base">
+                      <a href={`/treks/${batch.trekSlug}`} class="hover:text-glacier transition-colors">{batch.trekName}</a>
+                    </td>
+                    <td class="py-4 px-6 text-xs whitespace-nowrap">{dates}</td>
+                    <td class="py-4 px-6">
+                      {isFull ? (
+                        <span class="px-2.5 py-1 rounded-sm text-xs font-semibold bg-difficult/10 text-difficult border border-difficult/20">Full</span>
+                      ) : isLow ? (
+                        <span class="px-2.5 py-1 rounded-sm text-xs font-semibold bg-moderate/10 text-moderate border border-moderate/20">Only {left} seats left</span>
+                      ) : (
+                        <span class="px-2.5 py-1 rounded-sm text-xs font-semibold bg-glacier/10 text-glacier border border-glacier/25">Available ({left})</span>
+                      )}
+                    </td>
+                    <td class="py-4 px-6 font-bold text-glacier text-base">&#8377;{batch.pricePerPersonINR.toLocaleString('en-IN')}</td>
+                    <td class="py-4 px-6 text-right">
+                      {isFull ? (
+                        <span class="text-xs text-muted/60">Sold Out</span>
+                      ) : (
+                        <button
+                          type="button"
+                          class="open-booking-trigger btn-tactile inline-flex items-center gap-1.5 px-4 py-2 rounded-sm bg-glacier text-obsidian font-bold text-xs uppercase tracking-wider hover:bg-alpine hover:text-glacier transition-colors cursor-pointer"
+                          data-dates={dates}
+                          data-trek-slug={batch.trekSlug}
+                          data-trek-name={batch.trekName}
+                        >
+                          Reserve <span aria-hidden="true">&rarr;</span>
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div class="p-10 rounded-lg border border-white/10 bg-alpine/60 text-center">
+          <p class="text-sm text-silver">Fixed departures for 2027 are being scheduled. Message us on WhatsApp to plan a private batch.</p>
+        </div>
+      )}
+    </section>
+
+    <!-- ============ BOOKING GENERATOR ============ -->
+    <section id="booking" class="py-28 px-6 max-w-4xl mx-auto border-t border-white/5">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-ink tracking-tight">Reserve Your Himalayan Journey</h2>
+        <p class="text-silver mt-3 text-base leading-relaxed max-w-xl mx-auto">
+          Share your trek preferences to generate a pre-filled WhatsApp inquiry. Our team in Mautar responds directly with acclimatization details and departure openings.
+        </p>
+      </div>
+
+      <div class="double-bezel-outer">
+        <div class="double-bezel-inner p-8 sm:p-12">
+          <form id="waBookingForm" class="space-y-6" novalidate>
+            <div class="hidden" aria-hidden="true">
+              <label>Company<input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label for="hb-name" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">Your Full Name *</label>
+                <input type="text" id="hb-name" name="customerName" required placeholder="Anubhav Sharma" autocomplete="name"
+                  class="w-full px-4 py-3.5 rounded-sm bg-obsidian border border-white/15 text-ink placeholder-muted focus:outline-none focus:border-glacier focus:ring-1 focus:ring-glacier text-sm" />
+              </div>
+              <div>
+                <label for="hb-phone" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">WhatsApp Phone Number *</label>
+                <input type="tel" id="hb-phone" name="phone" required inputmode="numeric" maxlength="10" placeholder="9876543210" autocomplete="tel-national"
+                  class="w-full px-4 py-3.5 rounded-sm bg-obsidian border border-white/15 text-ink placeholder-muted focus:outline-none focus:border-glacier focus:ring-1 focus:ring-glacier text-sm font-mono tnum" />
+                <p id="hb-phone-error" class="hidden mt-1.5 text-xs font-mono text-difficult">Enter a valid 10-digit Indian mobile number starting 6-9.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label for="hb-trek" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">Select Trek Destination</label>
+                <select id="hb-trek" name="trekName"
+                  class="w-full px-4 py-3.5 rounded-sm bg-obsidian border border-white/15 text-ink focus:outline-none focus:border-glacier focus:ring-1 focus:ring-glacier text-sm cursor-pointer">
+                  {treks.map((t) => <option value={t.name} data-slug={t.slug}>{t.name} ({t.region} - {t.durationDays} Days)</option>)}
+                </select>
+              </div>
+              <div>
+                <label for="hb-dates" class="block text-xs font-mono font-bold text-silver uppercase tracking-wider mb-2">Preferred Dates or Season</label>
+                <input type="text" id="hb-dates" name="preferredDates" placeholder="e.g. April 2027 or Mid-May"
+                  class="w-full px-4 py-3.5 rounded-sm bg-obsidian border border-white/15 text-ink placeholder-muted focus:outline-none focus:border-glacier focus:ring-1 focus:ring-glacier text-sm" />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-tactile w-full py-4 rounded-sm bg-glacier hover:bg-alpine hover:text-glacier text-obsidian font-mono font-bold text-sm uppercase tracking-widest transition-colors cursor-pointer flex items-center justify-center gap-2">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+              </svg>
+              <span>Open WhatsApp with Booking Details</span>
+            </button>
+          </form>
+
+          <div id="waSuccessBox" class="hidden mt-8 p-6 rounded-sm bg-glacier/10 border border-glacier/30 text-center">
+            <p class="text-xs text-silver mb-4 font-mono">Click below if WhatsApp did not open automatically:</p>
+            <a id="waSuccessLink" href="#" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-easy/15 border border-easy/40 text-easy font-bold text-sm hover:bg-easy/25 transition-colors btn-tactile">
+              Message {SITE_CONFIG.phoneDisplay} <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Homepage booking modal (opened from departures table) -->
+  <dialog id="booking-dialog" class="fixed inset-0 z-50 m-auto w-full max-w-lg rounded-3xl border-0 bg-transparent p-4 text-ink shadow-2xl backdrop:bg-obsidian/85 backdrop:backdrop-blur-md" aria-labelledby="home-booking-title">
+    <div class="double-bezel-outer">
+      <div class="double-bezel-inner relative p-6 md:p-8">
+        <button id="close-dialog-btn" type="button" class="btn-tactile absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-silver hover:border-glacier/40 hover:text-ink transition-colors" aria-label="Close booking dialog">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div class="mb-6">
+          <span class="inline-flex items-center gap-2 rounded-full border border-glacier/30 bg-glacier/10 px-3 py-1 text-[10px] font-bold text-glacier uppercase font-mono tracking-widest mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-glacier animate-pulse" aria-hidden="true"></span>
+            Booking Request
+          </span>
+          <h3 id="home-booking-title" class="font-display text-2xl font-bold text-ink">Reserve <span id="bd-trek-name">Your Expedition</span></h3>
+          <p id="bd-batch-line" class="text-xs text-glacier mt-1 font-mono hidden"></p>
+        </div>
+
+        <form id="bd-form" class="space-y-4" novalidate>
+          <div class="hidden" aria-hidden="true"><label>Company<input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+
+          <div>
+            <label for="bd-name" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Your Full Name *</label>
+            <input type="text" id="bd-name" name="customerName" required autocomplete="name" placeholder="e.g. Rahul Sharma"
+              class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier" />
+          </div>
+          <div>
+            <label for="bd-phone" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Indian Mobile Number *</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-2.5 text-sm font-mono text-silver" aria-hidden="true">+91</span>
+              <input type="tel" id="bd-phone" name="phone" required inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="9876543210"
+                class="w-full rounded-xl border border-white/15 bg-obsidian pl-12 pr-4 py-2.5 text-sm font-mono tnum text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier" />
+            </div>
+            <p id="bd-phone-error" class="hidden mt-1.5 text-xs font-mono text-difficult">Enter a valid 10-digit Indian mobile number starting 6-9.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="bd-group" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Trekkers *</label>
+              <input type="number" id="bd-group" name="groupSize" min="1" max="15" value="1" required
+                class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm font-mono tnum text-ink focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier" />
+            </div>
+            <div>
+              <label for="bd-dates" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Target Window</label>
+              <input type="text" id="bd-dates" name="preferredDates" placeholder="e.g. October 2027"
+                class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-tactile w-full flex items-center justify-center gap-2 rounded-xl bg-glacier py-3.5 text-sm font-bold text-obsidian uppercase tracking-wider font-mono hover:bg-alpine hover:text-glacier transition-colors cursor-pointer">
+            <span>Dispatch Booking Request</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </form>
+
+        <div id="bd-success" class="hidden text-center py-6">
+          <div class="w-12 h-12 rounded-full border border-easy/40 bg-easy/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-easy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h4 class="font-display text-xl font-bold text-ink mb-2">Request Staged</h4>
+          <p class="text-sm text-silver mb-6">If WhatsApp did not open automatically, use the direct link below.</p>
+          <a id="bd-wa-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-easy/15 border border-easy/40 text-easy font-bold text-sm hover:bg-easy/25 transition-colors btn-tactile">
+            Open WhatsApp <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</Layout>
+
+<script>
+  import { SITE_CONFIG } from '../lib/site';
+
+  /* ---------- Bento region filter ---------- */
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
+  const trekCards = document.querySelectorAll<HTMLElement>('#trekGridContainer a[data-region]');
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach((b) => {
+        b.classList.remove('bg-glacier', 'text-obsidian');
+        b.classList.add('bg-alpine', 'text-silver', 'border-white/10', 'border');
+      });
+      btn.classList.add('bg-glacier', 'text-obsidian');
+      btn.classList.remove('bg-alpine', 'text-silver', 'border-white/10', 'border');
+
+      const region = btn.dataset.region;
+      trekCards.forEach((card) => {
+        card.style.display = region === 'all' || card.dataset.region === region ? 'flex' : 'none';
+      });
+    });
+  });
+
+  /* ---------- Shared booking dialog helpers ---------- */
+  const dialog = document.getElementById('booking-dialog') as HTMLDialogElement | null;
+  const closeBtn = document.getElementById('close-dialog-btn');
+
+  function openDialog(trekName: string, dates?: string) {
+    if (!dialog) return;
+    const nameEl = document.getElementById('bd-trek-name');
+    const batchLine = document.getElementById('bd-batch-line');
+    const datesInput = document.getElementById('bd-dates') as HTMLInputElement | null;
+    if (nameEl) nameEl.textContent = trekName;
+    if (batchLine) {
+      batchLine.textContent = dates ? `Selected window: ${dates}` : '';
+      batchLine.classList.toggle('hidden', !dates);
+    }
+    if (datesInput && dates) datesInput.value = dates;
+    dialog.showModal();
+  }
+
+  document.querySelectorAll<HTMLElement>('.open-booking-trigger').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      openDialog(trigger.dataset.trekName || 'Your Expedition', trigger.dataset.dates);
+    });
+  });
+
+  closeBtn?.addEventListener('click', () => dialog?.close());
+  dialog?.addEventListener('click', (e) => {
+    if (!dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    const inside =
+      rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
+      rect.left <= e.clientX && e.clientX <= rect.left + rect.width;
+    if (!inside) dialog.close();
+  });
+
+  function bindPhoneGuard(input: HTMLInputElement | null, error: HTMLElement | null) {
+    input?.addEventListener('input', () => {
+      if (input.value) input.value = input.value.replace(/\D/g, '').slice(0, 10);
+      error?.classList.add('hidden');
+    });
+  }
+  const bdPhone = document.getElementById('bd-phone') as HTMLInputElement | null;
+  const bdPhoneError = document.getElementById('bd-phone-error');
+  bindPhoneGuard(bdPhone, bdPhoneError);
+  const hbPhone = document.getElementById('hb-phone') as HTMLInputElement | null;
+  const hbPhoneError = document.getElementById('hb-phone-error');
+  bindPhoneGuard(hbPhone, hbPhoneError);
+
+  function waUrl(trekName: string, form: HTMLFormElement, dates: string): string {
+    const data = new FormData(form);
+    if (data.get('company')) return ''; // honeypot: silent bail
+    const name = String(data.get('customerName') || 'Trekker').trim();
+    const phone = String(data.get('phone') || '').trim();
+    const groupEl = document.getElementById('bd-group') as HTMLInputElement | null;
+    const group = form.id === 'bd-form' ? groupEl?.value || '1' : '1';
+    const message = String(data.get('message') || '').trim();
+    const lines = [
+      `Hi! I want to book *${trekName}* (${dates}), group of ${group}.`,
+      `- Name: ${name}`,
+      `- Mobile: +91 ${phone}`,
+      message ? `- Note: ${message}` : null,
+    ].filter(Boolean);
+    return `https://wa.me/${SITE_CONFIG.phoneRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
+  }
+
+  /* ---------- Dialog form ---------- */
+  const bdForm = document.getElementById('bd-form') as HTMLFormElement | null;
+  const bdSuccess = document.getElementById('bd-success');
+  const bdWaLink = document.getElementById('bd-wa-link') as HTMLAnchorElement | null;
+
+  bdForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = bdPhone?.value.trim() || '';
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      bdPhoneError?.classList.remove('hidden');
+      bdPhone?.focus();
+      return;
+    }
+    const trekName = document.getElementById('bd-trek-name')?.textContent || 'a trek';
+    const dates = (document.getElementById('bd-dates') as HTMLInputElement | null)?.value.trim() || 'Flexible dates';
+    const url = waUrl(trekName, bdForm, dates);
+    if (!url || !bdWaLink) return;
+    bdWaLink.href = url;
+    bdForm.classList.add('hidden');
+    bdSuccess?.classList.remove('hidden');
+    window.open(url, '_blank', 'noopener');
+  });
+
+  /* ---------- Inline homepage generator ---------- */
+  const waForm = document.getElementById('waBookingForm') as HTMLFormElement | null;
+  const waSuccessBox = document.getElementById('waSuccessBox');
+  const waSuccessLink = document.getElementById('waSuccessLink') as HTMLAnchorElement | null;
+
+  waForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = hbPhone?.value.trim() || '';
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      hbPhoneError?.classList.remove('hidden');
+      hbPhone?.focus();
+      return;
+    }
+    const trekSelect = document.getElementById('hb-trek') as HTMLSelectElement | null;
+    const trekName = trekSelect?.value || 'a trek';
+    const dates = (document.getElementById('hb-dates') as HTMLInputElement | null)?.value.trim() || 'Flexible dates';
+    const url = waUrl(trekName, waForm, dates);
+    if (!url || !waSuccessLink) return;
+    waSuccessLink.href = url;
+    waSuccessBox?.classList.remove('hidden');
+    window.open(url, '_blank', 'noopener');
+  });
+</script>

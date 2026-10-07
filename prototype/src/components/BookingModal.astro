@@ -1,0 +1,233 @@
+---
+import type { Trek } from '../lib/types';
+
+interface Props {
+  trek: Trek;
+}
+
+const { trek } = Astro.props;
+---
+
+<dialog
+  id="booking-dialog"
+  data-trek-name={trek.name}
+  class="fixed inset-0 z-50 m-auto w-full max-w-lg rounded-3xl border-0 bg-transparent p-4 text-ink shadow-2xl backdrop:bg-obsidian/85 backdrop:backdrop-blur-md"
+  aria-labelledby="booking-dialog-title"
+>
+  <div class="double-bezel-outer">
+    <div class="double-bezel-inner relative p-6 md:p-8">
+      <button
+        id="close-dialog-btn"
+        type="button"
+        class="btn-tactile absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-silver hover:border-glacier/40 hover:text-ink transition-colors"
+        aria-label="Close booking dialog"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="mb-6">
+        <span class="inline-flex items-center gap-2 rounded-full border border-glacier/30 bg-glacier/10 px-3 py-1 text-[10px] font-bold text-glacier uppercase font-mono tracking-widest mb-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-glacier animate-pulse" aria-hidden="true"></span>
+          Booking Request
+        </span>
+        <h3 id="booking-dialog-title" class="font-display text-2xl font-bold text-ink">Reserve {trek.name}</h3>
+        <p class="text-xs text-silver mt-1 font-mono tnum">From &#8377;{trek.fromPrice.toLocaleString('en-IN')} per trekker &middot; all permits included</p>
+      </div>
+
+      <!-- Batch banner (filled when opened from a batch row) -->
+      <div id="selected-batch-banner" class="hidden mb-4 rounded-xl border border-glacier/30 bg-glacier/10 p-3 text-xs font-semibold text-glacier justify-between items-center">
+        <span>Selected window: <strong id="selected-dates-text"></strong></span>
+        <button type="button" id="clear-batch-btn" class="underline text-ink/80 hover:text-ink cursor-pointer">Change</button>
+      </div>
+
+      <form id="booking-form" class="space-y-4" novalidate>
+        <!-- Honeypot: visually hidden, bots fill it -->
+        <div class="hidden" aria-hidden="true">
+          <label>Company<input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div>
+          <label for="bk-name" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Your Full Name *</label>
+          <input
+            type="text" id="bk-name" name="customerName" required autocomplete="name"
+            placeholder="e.g. Rahul Sharma"
+            class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier"
+          />
+        </div>
+
+        <div>
+          <label for="bk-phone" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Indian Mobile Number *</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-sm font-mono text-silver" aria-hidden="true">+91</span>
+            <input
+              type="tel" id="bk-phone" name="phone" required autocomplete="tel-national"
+              inputmode="numeric" maxlength="10"
+              placeholder="9876543210"
+              class="w-full rounded-xl border border-white/15 bg-obsidian pl-12 pr-4 py-2.5 text-sm font-mono tnum text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier"
+            />
+          </div>
+          <p id="bk-phone-error" class="hidden mt-1.5 text-xs font-mono text-difficult">Enter a valid 10-digit Indian mobile number starting 6-9.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="bk-group" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Trekkers *</label>
+            <input
+              type="number" id="bk-group" name="groupSize" min="1" max="15" value="1" required
+              class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm font-mono tnum text-ink focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier"
+            />
+          </div>
+          <div>
+            <label for="bk-dates" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Target Window</label>
+            <input
+              type="text" id="bk-dates" name="preferredDates"
+              placeholder="e.g. October 2027"
+              class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="bk-message" class="block text-[11px] font-semibold uppercase tracking-wider text-silver mb-1.5 font-mono">Notes</label>
+          <textarea
+            id="bk-message" name="message" rows="2"
+            placeholder="Offloading, medical background, dietary preferences..."
+            class="w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-ink placeholder-muted focus:border-glacier focus:outline-none focus:ring-1 focus:ring-glacier"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          id="submit-booking-btn"
+          class="btn-tactile w-full flex items-center justify-center gap-2 rounded-xl bg-glacier py-3.5 text-sm font-bold text-obsidian uppercase tracking-wider font-mono hover:bg-alpine hover:text-glacier transition-colors cursor-pointer"
+        >
+          <span>Dispatch Booking Request</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+
+        <p class="text-[11px] text-muted text-center font-mono">Opens WhatsApp with a pre-filled request. Our Mautar team confirms within a few hours.</p>
+      </form>
+
+      <!-- Success state -->
+      <div id="booking-success" class="hidden text-center py-6">
+        <div class="w-12 h-12 rounded-full border border-easy/40 bg-easy/10 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-easy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h4 class="font-display text-xl font-bold text-ink mb-2">Request Staged</h4>
+        <p class="text-sm text-silver mb-6">If WhatsApp did not open automatically, use the direct link below.</p>
+        <a
+          id="booking-wa-link"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-easy/15 border border-easy/40 text-easy font-bold text-sm hover:bg-easy/25 transition-colors btn-tactile"
+        >Open WhatsApp <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { SITE_CONFIG } from '../lib/site';
+
+  const dialog = document.getElementById('booking-dialog') as HTMLDialogElement | null;
+  const closeBtn = document.getElementById('close-dialog-btn');
+  const form = document.getElementById('booking-form') as HTMLFormElement | null;
+  const successBox = document.getElementById('booking-success');
+  const waLink = document.getElementById('booking-wa-link') as HTMLAnchorElement | null;
+  const phoneInput = document.getElementById('bk-phone') as HTMLInputElement | null;
+  const phoneError = document.getElementById('bk-phone-error');
+  const banner = document.getElementById('selected-batch-banner');
+  const bannerText = document.getElementById('selected-dates-text');
+  const clearBatchBtn = document.getElementById('clear-batch-btn');
+
+  let selectedDates = '';
+
+  document.querySelectorAll<HTMLElement>('.open-booking-trigger').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      if (!dialog) return;
+      selectedDates = trigger.getAttribute('data-dates') || '';
+      const datesInput = document.getElementById('bk-dates') as HTMLInputElement | null;
+      if (datesInput && selectedDates) datesInput.value = selectedDates;
+      if (banner && bannerText) {
+        bannerText.textContent = selectedDates || 'Flexible window';
+        banner.classList.toggle('hidden', !selectedDates);
+        banner.classList.toggle('flex', !!selectedDates);
+      }
+      form?.classList.remove('hidden');
+      successBox?.classList.add('hidden');
+      dialog.showModal();
+    });
+  });
+
+  closeBtn?.addEventListener('click', () => dialog?.close());
+
+  // Light dismiss on backdrop click
+  dialog?.addEventListener('click', (e) => {
+    if (!dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    const inside =
+      rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
+      rect.left <= e.clientX && e.clientX <= rect.left + rect.width;
+    if (!inside) dialog.close();
+  });
+
+  clearBatchBtn?.addEventListener('click', () => {
+    selectedDates = '';
+    banner?.classList.add('hidden');
+  });
+
+  function buildWhatsAppUrl(): string {
+    if (!form) return '#';
+    const data = new FormData(form);
+    if (data.get('company')) return '#'; // honeypot tripped: bail silently
+
+    const name = String(data.get('customerName') || 'Trekker').trim();
+    const phone = String(data.get('phone') || '').trim();
+    const group = String(data.get('groupSize') || '1').trim();
+    const dates = selectedDates || String(data.get('preferredDates') || '').trim() || 'Flexible dates';
+    const message = String(data.get('message') || '').trim();
+    const trekName = dialog?.getAttribute('data-trek-name') || 'a trek';
+
+    const lines = [
+      `Hi! I want to book *${trekName}* (${dates}), group of ${group}.`,
+      `- Name: ${name}`,
+      `- Mobile: +91 ${phone}`,
+      message ? `- Note: ${message}` : null,
+    ].filter(Boolean);
+    return `https://wa.me/${SITE_CONFIG.phoneRaw}?text=${encodeURIComponent(lines.join('\n'))}`;
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = phoneInput?.value.trim() || '';
+    const valid = /^[6-9]\d{9}$/.test(phone);
+
+    if (!valid) {
+      phoneError?.classList.remove('hidden');
+      phoneInput?.focus();
+      return;
+    }
+    phoneError?.classList.add('hidden');
+
+    const url = buildWhatsAppUrl();
+    if (url === '#' || !waLink) return;
+
+    waLink.href = url;
+    form.classList.add('hidden');
+    successBox?.classList.remove('hidden');
+    window.open(url, '_blank', 'noopener');
+  });
+
+  // Live digits-only enforcement on phone
+  phoneInput?.addEventListener('input', () => {
+    if (phoneInput.value) phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+    phoneError?.classList.add('hidden');
+  });
+</script>

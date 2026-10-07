@@ -1,0 +1,37 @@
+name: Prototype CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['prototype/**', '.github/workflows/prototype-ci.yml']
+  pull_request:
+    paths: ['prototype/**', '.github/workflows/prototype-ci.yml']
+
+defaults:
+  run:
+    working-directory: prototype
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: prototype/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: astro check
+        run: npm run check
+
+      - name: astro build
+        run: npm run build
+        env:
+          PUBLIC_STRAPI_URL: https://civil-chaos.onrender.com
+          # Falls back to the committed snapshot when Strapi is cold/down,
+          # so this build is deterministic.

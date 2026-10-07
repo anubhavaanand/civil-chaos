@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/geist-sans/300.css";
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-mono/700.css";
+
+/* Dark Alpine Glass tokens (DESIGN.md) */
+@theme {
+  --color-obsidian: #050505;
+  --color-alpine: #0a0f18;
+  --color-navy: #0f172a;
+  --color-glacier: #00f2fe;
+  --color-ink: #f8fafc;
+  --color-frost: #cbd5e1;
+  --color-silver: #94a3b8;
+  --color-muted: #64748b;
+  --color-easy: #34d399;
+  --color-moderate: #fbbf24;
+  --color-difficult: #fb7185;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Geist Sans", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+
+  /* Emil Kowalski motion easings */
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer utilities {
+  /* Base frosted panel: safe everywhere, the fallback under every refraction panel */
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  /* Aave-style refraction: SVG feDisplacementMap bends a decorative photo layer
+     at panel edges. Applied ONLY to image layers, never text. If the filter is
+     unsupported the layer renders unfiltered behind the scrim (fail-soft). */
+  .glass-refract {
+    filter: url(#alpine-refraction);
+  }
+
+  /* Specular edge: 1px inner highlight like a polished lens bevel */
+  .lens-edge {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .btn-tactile {
+    transition:
+      transform 120ms cubic-bezier(0.2, 0, 0, 1),
+      background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 200ms ease,
+      box-shadow 200ms ease,
+      color 200ms ease;
+    will-change: transform;
+  }
+  .btn-tactile:active {
+    transform: scale(0.975) translateY(1px);
+  }
+
+  .double-bezel-outer {
+    padding: 6px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  }
+  .double-bezel-inner {
+    border-radius: 18px;
+    background: rgba(10, 15, 24, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .dark-scrim {
+    background: rgba(5, 5, 5, 0.5);
+  }
+
+  .bg-grid {
+    background-size: 40px 40px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Perpetual basecamp telemetry ping (DESIGN.md 2.4s pulse) */
+  .ping-ring {
+    position: relative;
+  }
+  .ping-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgba(0, 242, 254, 0.5);
+    animation: ping-ring 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+    pointer-events: none;
+  }
+  @keyframes ping-ring {
+    0% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.4);
+    }
+  }
+}
+
+/* No backdrop-filter fallback: solid alpine panel */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .double-bezel-inner {
+    background: rgba(10, 15, 24, 0.95);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-glacier);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Native dialog choreography with @starting-style */
+dialog[open] {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+}
+dialog {
+  opacity: 0;
+  transform: scale(0.96) translateY(8px);
+  transition:
+    opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    display 0.25s allow-discrete,
+    overlay 0.25s allow-discrete;
+}
+dialog::backdrop {
+  background-color: rgba(5, 5, 5, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition:
+    display 0.25s allow-discrete,
+    overlay 0.25s allow-discrete,
+    background-color 0.25s ease-out,
+    backdrop-filter 0.25s ease-out;
+}
+dialog[open]::backdrop {
+  background-color: rgba(5, 5, 5, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  @starting-style {
+    background-color: rgba(5, 5, 5, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+}
+
+/* View Transitions choreography (DESIGN.md) */
+::view-transition-old(root) {
+  animation: 220ms cubic-bezier(0.2, 0, 0, 1) both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 320ms cubic-bezier(0.16, 1, 0.3, 1) both vt-fade-in;
+}
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.995);
+  }
+}
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.005) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
