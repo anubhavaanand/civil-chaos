@@ -17,5 +17,11 @@ export const SITE_CONFIG = {
     lng: 78.4354,
     dms: "30°43'36\" N, 78°26'07\" E",
     elevationM: 1950
+  },
+  googleReviews: {
+    rating: 5.0,
+    // Count of reviews mirrored into the homepage aggregateRating schema.
+    // Update when the Google Business profile review count changes.
+    schemaCount: 40
   }
 } as const;

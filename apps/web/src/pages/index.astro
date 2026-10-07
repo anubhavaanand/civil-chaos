@@ -58,7 +58,13 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
       "latitude": SITE_CONFIG.coordinates.lat,
       "longitude": SITE_CONFIG.coordinates.lng
     },
-    "description": "Boutique, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM and WFR certified local guides."
+    "description": "Boutique, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM and WFR certified local guides.",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": String(SITE_CONFIG.googleReviews.rating),
+      "reviewCount": SITE_CONFIG.googleReviews.schemaCount,
+      "bestRating": "5"
+    }
   })} />
 
   <GlassNav />
