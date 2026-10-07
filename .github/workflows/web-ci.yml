@@ -1,0 +1,33 @@
+name: Web CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['apps/web/**', 'package-lock.json', '.github/workflows/web-ci.yml']
+  pull_request:
+    paths: ['apps/web/**', 'package-lock.json', '.github/workflows/web-ci.yml']
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: astro check (apps/web)
+        run: npm run check --workspace=apps/web
+
+      - name: astro build (apps/web)
+        run: npm run build --workspace=apps/web
+        env:
+          PUBLIC_STRAPI_URL: https://civil-chaos.onrender.com
+          # Build tolerates Strapi 400s during prerender (known cold-start issue);
+          # CI here validates types and a successful build, not live data.
