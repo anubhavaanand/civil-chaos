@@ -1,0 +1,66 @@
+---
+import type { Batch } from '../lib/types';
+import { formatDate, seatsLeft } from '../lib/data';
+
+interface Props {
+  batches: Batch[];
+}
+
+const { batches } = Astro.props;
+const open = batches.filter((b) => b.status !== 'cancelled').sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+---
+
+{open.length > 0 ? (
+  <div class="overflow-x-auto rounded-xl border border-white/10 bg-alpine/80">
+    <table class="w-full text-left text-sm border-collapse">
+      <thead class="bg-obsidian/90 text-[11px] uppercase tracking-wider text-glacier border-b border-white/10 font-mono">
+        <tr>
+          <th class="py-3.5 px-5 font-semibold">Window</th>
+          <th class="py-3.5 px-5 font-semibold">Seats</th>
+          <th class="py-3.5 px-5 font-semibold">Price / Person</th>
+          <th class="py-3.5 px-5 font-semibold text-right">Reservation</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5 font-mono tnum text-silver">
+        {open.map((b) => {
+          const left = seatsLeft(b);
+          const isFull = b.status === 'full' || left === 0;
+          const isLow = left > 0 && left < 5;
+          const dates = `${formatDate(b.startDate)} - ${formatDate(b.endDate)}`;
+          return (
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-3.5 px-5 text-xs whitespace-nowrap">{dates}</td>
+              <td class="py-3.5 px-5">
+                {isFull ? (
+                  <span class="px-2 py-0.5 rounded-sm text-[11px] font-semibold bg-difficult/10 text-difficult border border-difficult/20">Full</span>
+                ) : isLow ? (
+                  <span class="px-2 py-0.5 rounded-sm text-[11px] font-semibold bg-moderate/10 text-moderate border border-moderate/20">Only {left} left</span>
+                ) : (
+                  <span class="px-2 py-0.5 rounded-sm text-[11px] font-semibold bg-glacier/10 text-glacier border border-glacier/25">{left} open</span>
+                )}
+              </td>
+              <td class="py-3.5 px-5 font-bold text-glacier">&#8377;{b.pricePerPersonINR.toLocaleString('en-IN')}</td>
+              <td class="py-3.5 px-5 text-right">
+                {isFull ? (
+                  <span class="text-[11px] text-muted">Sold Out</span>
+                ) : (
+                  <button
+                    type="button"
+                    class="open-booking-trigger btn-tactile inline-flex items-center gap-1.5 px-4 py-1.5 rounded-sm bg-glacier text-obsidian font-bold text-[11px] uppercase tracking-wider hover:bg-alpine hover:text-glacier transition-colors cursor-pointer"
+                    data-dates={dates}
+                  >
+                    Reserve <span aria-hidden="true">&rarr;</span>
+                  </button>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+) : (
+  <div class="p-6 rounded-xl border border-white/10 bg-alpine/60 text-center">
+    <p class="text-sm text-silver font-light">No fixed departures published yet. Message us on WhatsApp for a private batch date.</p>
+  </div>
+)}
