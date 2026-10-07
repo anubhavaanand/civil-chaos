@@ -71,6 +71,38 @@
   .double-bezel-inner {
     @apply rounded-[18px] bg-[#0f172a]/80 backdrop-blur-xl border border-white/5;
   }
+
+  /* Aave-style refraction glass: bends a decorative photo layer at panel edges.
+     Applied ONLY to image layers - never text. Requires #alpine-refraction
+     filter defs in Layout.astro; fail-soft if unsupported (unfiltered render). */
+  .glass-refract {
+    filter: url(#alpine-refraction);
+  }
+
+  /* Specular lens bevel: 1px inner highlight */
+  .lens-edge {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Perpetual basecamp telemetry ping (DESIGN.md 2.4s pulse) */
+  .ping-ring {
+    position: relative;
+  }
+  .ping-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgba(0, 242, 254, 0.5);
+    animation: ping-ring 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+    pointer-events: none;
+  }
+  @keyframes ping-ring {
+    0% { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0; transform: scale(2.4); }
+  }
 }
 
 :focus-visible {
