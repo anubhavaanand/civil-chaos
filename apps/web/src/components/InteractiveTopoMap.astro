@@ -379,7 +379,7 @@ const projectedTreks = treks.map((trek) => {
             </span>
             <span class="text-[10px] font-mono uppercase tracking-widest text-[#00f2fe] font-bold">Summit Telemetry</span>
           </div>
-          <span id="hud-difficulty" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#FBBF24/20 text-amber-300 border border-#FBBF24/30">
+          <span id="hud-difficulty" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-[#FBBF24]/20 text-amber-300 border border-[#FBBF24]/30">
             Moderate
           </span>
         </div>
@@ -402,7 +402,7 @@ const projectedTreks = treks.map((trek) => {
           </div>
           <div>
             <div class="text-[9px] text-silver uppercase">Est. O2 Level</div>
-            <div id="hud-oxygen" class="text-sm font-bold text-#34D399">64% <span class="text-[9px] text-silver font-normal">Sea Lvl</span></div>
+            <div id="hud-oxygen" class="text-sm font-bold text-[#34D399]">64% <span class="text-[9px] text-silver font-normal">Sea Lvl</span></div>
           </div>
           <div>
             <div class="text-[9px] text-silver uppercase">Ridge Temp</div>
@@ -761,11 +761,11 @@ const projectedTreks = treks.map((trek) => {
       if (hudDifficulty) {
         hudDifficulty.textContent = difficulty.toUpperCase();
         if (difficulty === 'easy') {
-          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#34D399/20 text-emerald-300 border border-#34D399/30';
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-[#34D399]/20 text-emerald-300 border border-[#34D399]/30';
         } else if (difficulty === 'moderate') {
-          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#FBBF24/20 text-amber-300 border border-#FBBF24/30';
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-[#FBBF24]/20 text-amber-300 border border-[#FBBF24]/30';
         } else {
-          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-#FB7185/20 text-rose-300 border border-#FB7185/30';
+          hudDifficulty.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-bold bg-[#FB7185]/20 text-rose-300 border border-[#FB7185]/30';
         }
       }
 

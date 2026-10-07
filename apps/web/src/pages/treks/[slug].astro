@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 
 const { trek } = Astro.props as { trek: Trek };
 
-const difficultyColor = trek.difficulty === 'easy' ? 'text-#34D399' : trek.difficulty === 'moderate' ? 'text-#FBBF24' : 'text-#FB7185';
+const difficultyColor = trek.difficulty === 'easy' ? 'text-[#34D399]' : trek.difficulty === 'moderate' ? 'text-[#FBBF24]' : 'text-[#FB7185]';
 
 // Schema.org TouristTrip + Product / Offer JSON-LD
 const touristTripSchema = {
@@ -191,15 +191,15 @@ const productSchema = {
             <WeatherWidget />
             
             <!-- Safety Protocol Warning Badge -->
-            <div class="p-1 rounded-2xl bg-#FBBF24/5 border border-#FBBF24/20 shadow-lg">
-              <div class="rounded-xl bg-[#090d16]/90 p-5 flex items-start gap-4 backdrop-blur-sm border border-#FBBF24/20">
-                <div class="w-9 h-9 rounded-full bg-#FBBF24/15 border border-#FBBF24/30 flex items-center justify-center text-#FBBF24 shrink-0">
+            <div class="p-1 rounded-2xl bg-[#FBBF24]/5 border border-[#FBBF24]/20 shadow-lg">
+              <div class="rounded-xl bg-[#090d16]/90 p-5 flex items-start gap-4 backdrop-blur-sm border border-[#FBBF24]/20">
+                <div class="w-9 h-9 rounded-full bg-[#FBBF24]/15 border border-[#FBBF24]/30 flex items-center justify-center text-[#FBBF24] shrink-0">
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                   </svg>
                 </div>
                 <div>
-                  <h4 class="text-#FBBF24 font-mono text-xs font-bold tracking-widest uppercase mb-1">Safety Protocol 4B Active</h4>
+                  <h4 class="text-[#FBBF24] font-mono text-xs font-bold tracking-widest uppercase mb-1">Safety Protocol 4B Active</h4>
                   <p class="text-silver/80 text-xs leading-relaxed font-light">High altitude moraine crossing requires twice-daily pulse oximeter monitoring. Effective O2 saturation drops significantly above 14,000 ft.</p>
                 </div>
               </div>
@@ -253,12 +253,12 @@ const productSchema = {
                 ))}
               </ul>
             </div>
-            <div class="rounded-2xl border border-#FB7185/20 bg-#FB7185/5 p-8 space-y-4">
-              <h3 class="font-display text-xl font-bold text-#FB7185 uppercase tracking-wide">Excluded</h3>
+            <div class="rounded-2xl border border-[#FB7185]/20 bg-[#FB7185]/5 p-8 space-y-4">
+              <h3 class="font-display text-xl font-bold text-[#FB7185] uppercase tracking-wide">Excluded</h3>
               <ul class="space-y-3 text-sm text-slate-300">
                 {trek.exclusions.map((exc) => (
                   <li class="flex items-start gap-3">
-                    <svg class="w-4 h-4 text-#FB7185 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <svg class="w-4 h-4 text-[#FB7185] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span>{exc}</span>

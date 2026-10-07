@@ -1,0 +1,71 @@
+---
+import type { Trek } from '../lib/types';
+import { difficultyLabel } from '../lib/data';
+
+interface Props {
+  trek: Trek;
+  featured?: boolean;
+}
+
+const { trek, featured = false } = Astro.props;
+
+const diffColor =
+  trek.difficulty === 'easy'
+    ? 'text-easy border-easy/30 bg-easy/10'
+    : trek.difficulty === 'moderate'
+      ? 'text-moderate border-moderate/30 bg-moderate/10'
+      : 'text-difficult border-difficult/30 bg-difficult/10';
+---
+
+<a
+  href={`/treks/${trek.slug}`}
+  data-region={trek.region}
+  data-name={trek.name.toLowerCase()}
+  data-altitude={trek.maxAltitudeM}
+  data-difficulty={trek.difficulty}
+  class:list={[
+    'group relative flex flex-col justify-between overflow-hidden rounded-lg border border-white/10 bg-alpine/90 hover:border-glacier/50 transition-colors duration-500 min-h-[440px]',
+    featured && 'md:col-span-2',
+  ]}
+  transition:name={`trek-${trek.slug}`}
+>
+  <!-- Photo layer: refraction-glass bends this at panel edges (decorative only) -->
+  <div class="absolute inset-0 z-0 overflow-hidden">
+    <img
+      src={trek.heroImage}
+      alt=""
+      class="w-full h-full object-cover opacity-40 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      loading="lazy"
+      aria-hidden="true"
+    />
+    <div class="absolute inset-0 glass-refract opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-t from-alpine/40 via-transparent to-alpine/20" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-alpine/75 to-transparent" aria-hidden="true"></div>
+  </div>
+
+  <!-- Top meta -->
+  <div class="relative z-10 p-6 sm:p-8 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="px-2.5 py-1 rounded-sm text-[10px] font-mono tracking-widest text-glacier border border-glacier/30 bg-obsidian/80 uppercase">{trek.region}</span>
+      <span class={`px-2.5 py-1 rounded-sm text-[10px] font-mono tracking-widest border uppercase ${diffColor}`}>{difficultyLabel(trek.difficulty)}</span>
+    </div>
+    <div class="w-8 h-8 rounded-sm border border-white/10 flex items-center justify-center text-ink/40 group-hover:text-glacier group-hover:border-glacier/40 transition-all" aria-hidden="true">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Bottom content -->
+  <div class="relative z-10 p-6 sm:p-8 mt-auto">
+    <h3 class="text-2xl sm:text-3xl font-display font-bold text-ink mb-2 group-hover:text-glacier transition-colors">{trek.name}</h3>
+    <p class="text-sm text-silver line-clamp-2 mb-6 font-light leading-relaxed">{trek.summary}</p>
+    <div class="flex items-center justify-between pt-5 border-t border-white/10 text-xs sm:text-sm font-mono tnum">
+      <div class="flex items-center gap-4 text-silver">
+        <span>{trek.durationDays} Days</span>
+        <span aria-hidden="true">&bull;</span>
+        <span>{trek.maxAltitudeM.toLocaleString('en-IN')}m</span>
+      </div>
+      <div class="text-lg font-bold text-glacier">&#8377;{trek.fromPrice.toLocaleString('en-IN')}</div>
+    </div>
+  </div>
+</a>

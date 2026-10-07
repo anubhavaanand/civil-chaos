@@ -1,0 +1,287 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BookingModal from '../../components/BookingModal.astro';
+import BatchesTable from '../../components/BatchesTable.astro';
+import ItineraryTimeline from '../../components/ItineraryTimeline.astro';
+import ElevationProfile from '../../components/ElevationProfile.astro';
+import { getTreks } from '../../lib/data';
+import { SITE_CONFIG } from '../../lib/site';
+import type { Trek } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const treks = await getTreks();
+  return treks.map((trek) => ({ params: { slug: trek.slug }, props: { trek } }));
+}
+
+const { trek } = Astro.props as { trek: Trek };
+
+const FALLBACK_HERO = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop';
+const heroImage = trek.heroImage || FALLBACK_HERO;
+
+const diffColor =
+  trek.difficulty === 'easy'
+    ? 'text-easy'
+    : trek.difficulty === 'moderate'
+      ? 'text-moderate'
+      : 'text-difficult';
+
+const touristTripSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristTrip',
+  name: `${trek.name} 2027`,
+  description: trek.description || trek.summary,
+  touristType: ['Trekkers', 'Adventurers', 'Hikers'],
+  provider: { '@type': 'TravelAgency', name: SITE_CONFIG.name, url: SITE_CONFIG.url },
+  itinerary: {
+    '@type': 'ItemList',
+    itemListElement: trek.itinerary.map((item, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: { '@type': 'TouristAttraction', name: item.title, description: item.description },
+    })),
+  },
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'INR',
+    price: trek.fromPrice,
+    availability: 'https://schema.org/InStock',
+  },
+};
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: trek.name,
+  description: trek.description || trek.summary,
+  image: heroImage,
+  offers: { '@type': 'Offer', priceCurrency: 'INR', price: trek.fromPrice, availability: 'https://schema.org/InStock' },
+};
+---
+
+<Layout title={`${trek.name} | ${SITE_CONFIG.name}`} description={trek.summary}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify([touristTripSchema, productSchema])} />
+
+  <main class="pb-40">
+    <!-- ============ HERO ============ -->
+    <header class="relative h-[78vh] min-h-[560px] w-full overflow-hidden flex items-end">
+      <img src={heroImage} alt={trek.name} class="absolute inset-0 w-full h-full object-cover" loading="eager" fetchpriority="high" transition:name={`hero-${trek.slug}`} />
+      <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/70 to-transparent" aria-hidden="true"></div>
+      <div class="absolute inset-0 dark-scrim opacity-40" aria-hidden="true"></div>
+
+      <!-- GPS crosshair telemetry -->
+      <div class="absolute top-28 right-6 lg:right-12 z-20 hidden md:block">
+        <div class="font-mono text-glacier text-xs tracking-[0.2em] bg-obsidian/70 backdrop-blur-md px-4 py-2 rounded-sm border border-glacier/30 flex items-center gap-3 tnum">
+          <span class="w-2 h-2 rounded-full bg-glacier ping-ring" aria-hidden="true"></span>
+          LAT {trek.coordinates[1]}&deg; N // LNG {trek.coordinates[0]}&deg; E
+        </div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-6 w-full pb-16">
+        <span class="text-glacier font-mono tracking-widest text-xs md:text-sm uppercase mb-4 block">// Expedition Objective</span>
+        <h1 class="text-5xl md:text-7xl lg:text-[5.5rem] font-display font-bold text-ink uppercase tracking-tighter leading-none mb-6" transition:name={`title-${trek.slug}`}>
+          {trek.name}
+        </h1>
+        <div class="flex flex-wrap items-center gap-3 md:gap-4 font-mono text-xs md:text-sm tnum" transition:name={`telemetry-${trek.slug}`}>
+          <span class="bg-glacier/10 text-glacier border border-glacier/30 px-3 py-1.5 rounded-sm uppercase">Alt: {trek.maxAltitudeM.toLocaleString('en-IN')} m</span>
+          <span class="bg-obsidian/70 text-frost border border-white/10 px-3 py-1.5 rounded-sm uppercase">Distance: {trek.trekDistanceKm} km</span>
+          <span class="bg-obsidian/70 text-frost border border-white/10 px-3 py-1.5 rounded-sm uppercase">{trek.region} Himalayas</span>
+          <span class={`bg-obsidian/70 border border-white/10 px-3 py-1.5 rounded-sm uppercase font-bold ${diffColor}`}>Grade: {trek.difficulty}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ TRUST STRIP ============ -->
+    <div class="max-w-7xl mx-auto px-6 -mt-10 relative z-20 mb-20">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { title: '100% Certified Guides', sub: 'NIM & WFR Certified', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+          { title: 'Micro Expeditions', sub: 'Strict Max 12-15 Trekkers', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
+          { title: 'All Permits Managed', sub: 'Forest & Wildlife Clearance', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+          { title: 'Transparent Pricing', sub: 'No Surprise Add-on Fees', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+        ].map((b) => (
+          <div class="double-bezel-outer">
+            <div class="rounded-2xl bg-alpine/90 backdrop-blur-xl border border-white/5 p-5 flex flex-col items-center justify-center text-center">
+              <div class="w-10 h-10 rounded-full bg-glacier/10 border border-glacier/30 flex items-center justify-center text-glacier mb-3" aria-hidden="true">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                  <path stroke-linecap="round" stroke-linejoin="round" d={b.icon} />
+                </svg>
+              </div>
+              <h4 class="text-ink font-display font-bold text-sm">{b.title}</h4>
+              <p class="text-muted text-xs font-mono mt-1">{b.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 space-y-24">
+      <!-- ============ TELEMETRY ============ -->
+      <section>
+        <div class="flex items-center gap-4 mb-8">
+          <div class="h-px bg-glacier/50 w-12" aria-hidden="true"></div>
+          <h2 class="text-glacier font-mono tracking-widest text-xs uppercase font-bold">Expedition Telemetry</h2>
+          <div class="h-px bg-white/10 flex-1" aria-hidden="true"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ElevationProfile points={trek.altitudeProfile} maxAltitudeM={trek.maxAltitudeM} />
+
+          <div class="flex flex-col gap-6">
+            <div class="double-bezel-outer">
+              <div class="double-bezel-inner p-6">
+                <h3 class="text-[11px] font-mono font-bold uppercase tracking-widest text-glacier mb-4">Basecamp Routing</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p class="font-mono text-glacier text-[10px] uppercase font-bold tracking-wider mb-1">Staging Point</p>
+                    <p class="text-frost">{trek.howToReach.baseTown || trek.startPoint || 'Contact us'}</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-glacier text-[10px] uppercase font-bold tracking-wider mb-1">Best Seasons</p>
+                    <p class="text-frost font-mono text-xs tnum">{trek.bestSeasons.length ? trek.bestSeasons.join(' / ') : 'Year-round on request'}</p>
+                  </div>
+                </div>
+                {trek.howToReach.commuteDetails && (
+                  <p class="text-sm text-silver pt-4 mt-4 border-t border-white/5 leading-relaxed">{trek.howToReach.commuteDetails}</p>
+                )}
+              </div>
+            </div>
+
+            <div class="p-1 rounded-2xl bg-moderate/5 border border-moderate/20">
+              <div class="rounded-xl bg-alpine/90 p-5 flex items-start gap-4 border border-moderate/20">
+                <div class="w-9 h-9 rounded-full bg-moderate/15 border border-moderate/30 flex items-center justify-center text-moderate shrink-0" aria-hidden="true">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="text-moderate font-mono text-xs font-bold tracking-widest uppercase mb-1">Safety Protocol 4B Active</h4>
+                  <p class="text-silver text-xs leading-relaxed font-light">
+                    High altitude moraine crossings require twice-daily pulse oximeter monitoring. Effective O2 saturation drops significantly above 14,000 ft.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ OVERVIEW ============ -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-4 mb-8">
+          <h2 class="text-3xl font-display font-bold text-ink uppercase tracking-tight">Expedition Overview</h2>
+          <div class="h-px bg-white/10 flex-1" aria-hidden="true"></div>
+        </div>
+        <p class="text-lg text-frost leading-relaxed font-light max-w-[65ch]">{trek.description || trek.summary}</p>
+      </section>
+
+      <!-- ============ DEPARTURES ============ -->
+      <section class="space-y-6">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <h2 class="text-2xl font-display font-bold text-ink uppercase">Fixed Departures</h2>
+          <span class="text-xs font-mono text-glacier hidden sm:inline-block">LIVE AVAILABILITY</span>
+        </div>
+        <BatchesTable batches={trek.batches} />
+      </section>
+
+      <!-- ============ ITINERARY ============ -->
+      <section class="space-y-8">
+        <h2 class="text-3xl font-display font-bold text-ink uppercase tracking-tight border-b border-white/10 pb-4">Daily Itinerary Log</h2>
+        <ItineraryTimeline days={trek.itinerary} />
+      </section>
+
+      <!-- ============ INCLUSIONS ============ -->
+      {(trek.inclusions.length > 0 || trek.exclusions.length > 0) && (
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {trek.inclusions.length > 0 && (
+            <div class="rounded-2xl border border-easy/20 bg-easy/5 p-8 space-y-4">
+              <h3 class="font-display text-xl font-bold text-easy uppercase tracking-wide">Included</h3>
+              <ul class="space-y-3 text-sm text-frost">
+                {trek.inclusions.map((inc) => (
+                  <li class="flex items-start gap-3">
+                    <svg class="w-4 h-4 text-easy shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>{inc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {trek.exclusions.length > 0 && (
+            <div class="rounded-2xl border border-difficult/20 bg-difficult/5 p-8 space-y-4">
+              <h3 class="font-display text-xl font-bold text-difficult uppercase tracking-wide">Excluded</h3>
+              <ul class="space-y-3 text-sm text-frost">
+                {trek.exclusions.map((exc) => (
+                  <li class="flex items-start gap-3">
+                    <svg class="w-4 h-4 text-difficult shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span>{exc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
+
+      <!-- ============ FAQ ============ -->
+      {trek.faqs.length > 0 && (
+        <section class="space-y-6">
+          <h2 class="text-2xl font-display font-bold text-ink uppercase border-b border-white/10 pb-4">Logistics &amp; FAQs</h2>
+          <div class="space-y-3">
+            {trek.faqs.map((f) => (
+              <details class="group rounded-xl border border-white/10 bg-alpine/80 open:border-glacier/30 transition-colors">
+                <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer text-sm font-medium text-ink list-none">
+                  {f.question}
+                  <svg class="w-4 h-4 text-glacier shrink-0 transition-transform group-open:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                </summary>
+                <p class="px-5 pb-5 text-sm text-silver leading-relaxed max-w-[65ch]">{f.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </main>
+
+  <!-- ============ STICKY BOOKING BAR (Much Better Adventures pattern) ============ -->
+  <div class="fixed bottom-0 left-0 w-full z-40 bg-obsidian/90 backdrop-blur-2xl border-t border-glacier/30 shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
+    <div class="max-w-7xl mx-auto px-6 h-20 md:h-24 flex items-center justify-between">
+      <div class="hidden md:flex items-center gap-6 font-mono text-xs lg:text-sm tnum">
+        <div class="text-frost flex flex-col">
+          <span class="text-glacier font-bold uppercase tracking-widest text-[10px]">Duration</span>
+          <span>{trek.durationDays} DAYS / {trek.durationDays - 1} NIGHTS</span>
+        </div>
+        <div class="w-px h-8 bg-white/10" aria-hidden="true"></div>
+        <div class="text-frost flex flex-col">
+          <span class="text-glacier font-bold uppercase tracking-widest text-[10px]">Max Altitude</span>
+          <span>{trek.maxAltitudeM.toLocaleString('en-IN')} m</span>
+        </div>
+        <div class="w-px h-8 bg-white/10" aria-hidden="true"></div>
+        <div class="text-frost flex flex-col">
+          <span class="text-glacier font-bold uppercase tracking-widest text-[10px]">Difficulty</span>
+          <span class="uppercase">{trek.difficulty}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between w-full md:w-auto gap-4 md:gap-8">
+        <div class="flex flex-col">
+          <span class="text-[10px] md:text-xs text-muted uppercase tracking-widest font-mono">Starts From</span>
+          <span class="text-2xl md:text-3xl font-display font-bold text-ink leading-none tnum">&#8377;{trek.fromPrice.toLocaleString('en-IN')}</span>
+        </div>
+        <button
+          type="button"
+          data-open-modal="booking-modal"
+          class="open-booking-trigger btn-tactile group relative px-6 md:px-8 py-3.5 md:py-4 bg-glacier hover:bg-alpine hover:text-glacier text-obsidian font-bold uppercase tracking-wider rounded-lg transition-colors whitespace-nowrap cursor-pointer text-sm"
+        >
+          Request Booking <span class="group-hover:translate-x-0.5 inline-block transition-transform" aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <BookingModal trek={trek} />
+</Layout>

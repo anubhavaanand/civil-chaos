@@ -1,0 +1,33 @@
+---
+import type { ItineraryDay } from '../lib/types';
+
+interface Props {
+  days: ItineraryDay[];
+}
+
+const { days } = Astro.props;
+---
+
+{days.length > 0 ? (
+  <ol class="relative border-l border-white/10 space-y-8 ml-3">
+    {days.map((d) => (
+      <li class="relative pl-8">
+        <span class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 border-glacier bg-obsidian flex items-center justify-center" aria-hidden="true">
+          <span class="w-1 h-1 rounded-full bg-glacier"></span>
+        </span>
+        <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1.5">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-widest text-glacier">Day {String(d.day).padStart(2, '0')}</span>
+          <h4 class="font-display font-bold text-ink">{d.title}</h4>
+          <span class="text-[10px] font-mono text-muted tnum ml-auto">
+            {d.altitudeM ? `${d.altitudeM.toLocaleString('en-IN')}m` : ''}{d.altitudeM && d.distanceKm ? ' · ' : ''}{d.distanceKm ? `${d.distanceKm}km` : ''}
+          </span>
+        </div>
+        <p class="text-sm text-silver leading-relaxed font-light max-w-[65ch]">{d.description}</p>
+      </li>
+    ))}
+  </ol>
+) : (
+  <div class="p-6 rounded-xl border border-white/10 bg-alpine/60 text-center">
+    <p class="text-sm text-silver font-light">Day-by-day itinerary is being published by the agency. Request the full route plan on WhatsApp.</p>
+  </div>
+)}

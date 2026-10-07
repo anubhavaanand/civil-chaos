@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import GlassNav from '../components/GlassNav.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Boutique, small-batch Himalayan trekking expeditions from Village Mautar, Uttarkashi. NIM and WFR certified local guides, transparent pricing, zero weather penalties.',
+} = Astro.props;
+
+// Aave-style refraction glass: an feDisplacementMap whose map encodes bend
+// direction per channel. Neutral core rgb(128,128,0) = no displacement.
+// Left edge R>128 pushes right, right edge R<128 pulls left, G encodes
+// vertical bend. feImage stretches the map across the filtered layer.
+const lensMapSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='80'>
+<defs>
+<linearGradient id='L' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='rgb(255,128,0)'/><stop offset='1' stop-color='rgb(128,128,0)'/></linearGradient>
+<linearGradient id='R' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='rgb(128,128,0)'/><stop offset='1' stop-color='rgb(0,128,0)'/></linearGradient>
+<linearGradient id='T' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='rgb(128,255,0)'/><stop offset='1' stop-color='rgb(128,128,0)'/></linearGradient>
+<linearGradient id='B' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='rgb(128,128,0)'/><stop offset='1' stop-color='rgb(128,0,0)'/></linearGradient>
+</defs>
+<rect width='120' height='80' fill='rgb(128,128,0)'/>
+<rect x='0' y='0' width='14' height='80' fill='url(#L)'/>
+<rect x='106' y='0' width='14' height='80' fill='url(#R)'/>
+<rect x='0' y='0' width='120' height='10' fill='url(#T)'/>
+<rect x='0' y='70' width='120' height='10' fill='url(#B)'/>
+</svg>`;
+const lensMapHref = `data:image/svg+xml;utf8,${encodeURIComponent(lensMapSvg)}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <ClientRouter />
+    <slot name="head" />
+  </head>
+
+  <body class="bg-obsidian text-silver font-body antialiased min-h-screen overflow-x-hidden selection:bg-glacier selection:text-obsidian">
+    <!-- Aave refraction filter defs: referenced by .glass-refract layers -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <filter
+          id="alpine-refraction"
+          x="-6%"
+          y="-6%"
+          width="112%"
+          height="112%"
+          color-interpolation-filters="sRGB"
+        >
+          <feImage
+            href={lensMapHref}
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            preserveAspectRatio="none"
+            result="lensmap"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="lensmap"
+            scale="22"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+
+    <GlassNav />
+    <slot />
+    <WhatsAppFab />
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,243 @@
+---
+import type { Trek } from '../lib/types';
+
+interface Props {
+  treks: Trek[];
+}
+
+const { treks } = Astro.props;
+
+// GeoJSON baked at build time - no client-side Strapi dependency
+const geojson = {
+  type: 'FeatureCollection',
+  features: treks
+    .filter((t) => t.coordinates[0] !== 0)
+    .map((t) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: t.coordinates },
+      properties: {
+        name: t.name,
+        slug: t.slug,
+        difficulty: t.difficulty,
+        maxAltitudeM: t.maxAltitudeM,
+        region: t.region,
+        fromPrice: t.fromPrice,
+        photoUrl: t.heroImage,
+      },
+    })),
+};
+---
+
+<section id="map" class="py-24 relative border-t border-white/10 bg-obsidian">
+  <div class="max-w-7xl mx-auto px-6 mb-8">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="h-[2px] w-8 bg-glacier" aria-hidden="true"></div>
+      <span class="text-glacier font-mono text-xs uppercase tracking-[0.2em] font-bold">Expedition Telemetry</span>
+    </div>
+    <h2 class="text-3xl md:text-5xl font-display font-bold text-ink tracking-tight">
+      Himalayan <span class="text-silver">Topography</span>
+    </h2>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    <div
+      id="maplibre-container"
+      class="w-full h-[560px] rounded-2xl overflow-hidden border border-white/10 relative shadow-2xl"
+      data-geojson={JSON.stringify(geojson)}
+    >
+      <div id="map-loader" class="absolute inset-0 bg-obsidian flex flex-col items-center justify-center z-10 transition-opacity duration-700">
+        <div class="w-12 h-12 border-2 border-glacier/20 border-t-glacier rounded-full animate-spin mb-4" aria-hidden="true"></div>
+        <span class="text-glacier font-mono text-xs tracking-widest animate-pulse">LINKING SATELLITE IMAGERY...</span>
+      </div>
+      <div id="map-canvas" class="w-full h-full"></div>
+    </div>
+
+    <!-- No-JS / SEO fallback: the map is an enhancement, never the only path -->
+    <noscript>
+      <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {treks.map((t) => (
+          <li>
+            <a href={`/treks/${t.slug}`} class="block p-4 rounded-lg border border-white/10 bg-alpine/80 text-sm text-frost hover:text-glacier transition-colors">
+              {t.name} &middot; {t.region}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </noscript>
+  </div>
+</section>
+
+<script>
+  import * as maplibregl from 'maplibre-gl';
+  import 'maplibre-gl/dist/maplibre-gl.css';
+  // Vite code-splitting breaks maplibre's relative worker URL - wire it explicitly
+  // @ts-expect-error - ?url import handled by Vite
+  import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
+  maplibregl.setWorkerUrl(maplibreWorkerUrl);
+
+  const container = document.getElementById('maplibre-container');
+
+  if (container) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadMap();
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(container);
+  }
+
+  function loadMap() {
+    const container = document.getElementById('maplibre-container');
+    if (!container) return;
+
+    let features: any[] = [];
+    try {
+      const geojson = JSON.parse(container.dataset.geojson || '{}');
+      features = geojson.features || [];
+    } catch {
+      /* fall through: map shows basemap only */
+    }
+
+    // Keyless raster basemap: Esri World Dark Gray Canvas (attribution required)
+    const style: maplibregl.StyleSpecification = {
+      version: 8,
+      sources: {
+        dark: {
+          type: 'raster',
+          tiles: [
+            'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+          ],
+          tileSize: 256,
+          attribution: 'Tiles &copy; Esri - Esri, HERE, Garmin, FAO, NOAA, USGS | &copy; OpenStreetMap contributors',
+        },
+      },
+      layers: [{ id: 'basemap', type: 'raster', source: 'dark' }],
+    };
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const map = new maplibregl.Map({
+      container: 'map-canvas',
+      style,
+      center: [79.0, 30.7],
+      zoom: 6.6,
+      maxZoom: 10,
+      touchPitch: false,
+      dragRotate: false,
+      cooperativeGestures: false,
+    });
+
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+    map.on('load', () => {
+      const loader = document.getElementById('map-loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 700);
+      }
+
+      map.addSource('treks', { type: 'geojson', data: { type: 'FeatureCollection', features } });
+
+      // Region glow halos under the pins
+      map.addLayer({
+        id: 'trek-halo',
+        type: 'circle',
+        source: 'treks',
+        paint: {
+          'circle-radius': 18,
+          'circle-color': '#00f2fe',
+          'circle-opacity': 0.12,
+          'circle-blur': 0.6,
+        },
+      });
+
+      map.addLayer({
+        id: 'trek-pin',
+        type: 'circle',
+        source: 'treks',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#00f2fe',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#050505',
+        },
+      });
+
+      const difficultyColor: Record<string, string> = {
+        easy: '#34d399',
+        moderate: '#fbbf24',
+        difficult: '#fb7185',
+      };
+
+      map.on('click', 'trek-pin', (e: maplibregl.MapLayerMouseEvent) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        const p = f.properties as any;
+        const html = `
+          <div class="min-w-[220px] bg-[#0a0f18]/95 border border-white/10 rounded-lg p-4 text-[#e8eef2]">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full" style="background:${difficultyColor[p.difficulty] || '#fbbf24'}"></span>
+              <span class="text-xs font-mono uppercase tracking-widest text-[#94a3b8]">${p.difficulty}</span>
+            </div>
+            <h3 class="font-bold text-base leading-tight mb-1" style="font-family:'Space Grotesk',sans-serif">${p.name}</h3>
+            <p class="text-[#00f2fe] font-mono text-xs mb-3">ALT ${Number(p.maxAltitudeM).toLocaleString('en-IN')}m &middot; FROM &#8377;${Number(p.fromPrice).toLocaleString('en-IN')}</p>
+            <a href="/treks/${p.slug}" class="block text-center py-2 text-xs font-mono uppercase tracking-wider rounded border border-[#00f2fe]/40 text-[#00f2fe] hover:bg-[#00f2fe]/10 transition-colors">View Expedition</a>
+          </div>`;
+        new maplibregl.Popup({ offset: 18, className: 'alpine-popup', closeButton: false })
+          .setLngLat((f.geometry as any).coordinates)
+          .setHTML(html)
+          .addTo(map);
+      });
+
+      map.on('mouseenter', 'trek-pin', () => (map.getCanvas().style.cursor = 'pointer'));
+      map.on('mouseleave', 'trek-pin', () => (map.getCanvas().style.cursor = ''));
+
+      // Fit bounds to all treks
+      if (features.length > 1) {
+        const lngs = features.map((f) => f.geometry.coordinates[0]);
+        const lats = features.map((f) => f.geometry.coordinates[1]);
+        map.fitBounds(
+          [
+            [Math.min(...lngs), Math.min(...lats)],
+            [Math.max(...lngs), Math.max(...lats)],
+          ],
+          { padding: 72, animate: !reduceMotion, maxZoom: 8 },
+        );
+      }
+    });
+  }
+</script>
+
+<style is:global>
+  .alpine-popup .maplibregl-popup-content {
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+    border-radius: 8px !important;
+  }
+  .alpine-popup .maplibregl-popup-tip {
+    border-top-color: rgba(5, 5, 5, 0.95) !important;
+    border-bottom-color: rgba(5, 5, 5, 0.95) !important;
+  }
+  .maplibregl-ctrl-group {
+    background: rgba(10, 15, 24, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  .maplibregl-ctrl-group button + button {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  .maplibregl-ctrl-attrib {
+    background: rgba(5, 5, 5, 0.7) !important;
+    color: #94a3b8 !important;
+    font-size: 10px !important;
+  }
+  .maplibregl-ctrl-attrib a {
+    color: #cbd5e1 !important;
+  }
+</style>

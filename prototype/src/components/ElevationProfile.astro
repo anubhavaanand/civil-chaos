@@ -1,0 +1,91 @@
+---
+import type { AltitudePoint } from '../lib/types';
+
+interface Props {
+  points: AltitudePoint[];
+  maxAltitudeM: number;
+}
+
+const { points, maxAltitudeM } = Astro.props;
+
+// SVG elevation profile: monotonic x by index (labels carry the distance),
+// y scaled so the max altitude sits near the top of the 200px viewBox.
+const W = 640;
+const H = 220;
+const PAD = { t: 24, r: 16, b: 34, l: 44 };
+
+const xs = points.map((_, i) => PAD.l + (i / Math.max(1, points.length - 1)) * (W - PAD.l - PAD.r));
+const ys = points.map((p) => {
+  const minA = Math.min(...points.map((q) => q.altitudeM), 0);
+  const range = Math.max(1, maxAltitudeM - minA);
+  const norm = (p.altitudeM - minA) / range;
+  return H - PAD.b - norm * (H - PAD.t - PAD.b);
+});
+
+const linePath = points.map((_, i) => `${i === 0 ? 'M' : 'L'}${xs[i].toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+const areaPath = `${linePath} L${xs[xs.length - 1]?.toFixed(1)},${H - PAD.b} L${xs[0]?.toFixed(1)},${H - PAD.b} Z`;
+
+const plotted = points.map((p, i) => ({
+  x: xs[i],
+  y: ys[i],
+  name: p.label ?? `Day ${i + 1}`,
+  title: `${p.label ?? `Day ${i + 1}`}: ${p.altitudeM}m`,
+  xLabel: p.label && p.label.length <= 12 ? p.label : `D${i + 1}`,
+}));
+
+const yTicks = [0.25, 0.5, 0.75, 1].map((f) => {
+  const altitude = Math.round((maxAltitudeM * f) / 100) * 100;
+  const minA = Math.min(...points.map((q) => q.altitudeM), 0);
+  const range = Math.max(1, maxAltitudeM - minA);
+  const y = H - PAD.b - ((altitude - minA) / range) * (H - PAD.t - PAD.b);
+  return { altitude, y: Math.max(PAD.t, Math.min(H - PAD.b, y)) };
+});
+---
+
+<div class="double-bezel-outer">
+  <div class="double-bezel-inner p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-[11px] font-mono font-bold uppercase tracking-widest text-glacier">Acclimatization Profile</h3>
+      <span class="text-[10px] font-mono text-muted tnum">MAX {maxAltitudeM.toLocaleString('en-IN')}m</span>
+    </div>
+
+    {points.length >= 2 ? (
+      <svg viewBox={`0 0 ${W} ${H}`} class="w-full h-auto" role="img" aria-label={`Elevation profile peaking at ${maxAltitudeM} meters`}>
+        <defs>
+          <linearGradient id="elev-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#00f2fe" stop-opacity="0.25" />
+            <stop offset="1" stop-color="#00f2fe" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+
+        {yTicks.map((t) => (
+          <g>
+            <line x1={PAD.l} y1={t.y} x2={W - PAD.r} y2={t.y} stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+            <text x={PAD.l - 8} y={t.y + 3} text-anchor="end" font-size="9" fill="#64748b" font-family="Geist Mono, monospace">{(t.altitude / 1000).toFixed(1)}k</text>
+          </g>
+        ))}
+
+        <path d={areaPath} fill="url(#elev-fill)" />
+        <path d={linePath} fill="none" stroke="#00f2fe" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round" />
+
+        {plotted.map((p) => (
+          <g>
+            <circle cx={p.x} cy={p.y} r="3" fill="#050505" stroke="#00f2fe" stroke-width="1.5" />
+            <title>{p.title}</title>
+          </g>
+        ))}
+
+        {plotted.map((p) => (
+          <text x={p.x} y={H - 12} text-anchor="middle" font-size="8.5" fill="#94a3b8" font-family="Geist Mono, monospace">
+            {p.xLabel}
+          </text>
+        ))}
+      </svg>
+    ) : (
+      <div class="py-10 text-center">
+        <p class="text-sm text-silver font-light">Profile plots once the agency publishes day-by-day altitudes in the CMS.</p>
+        <p class="text-[11px] font-mono text-muted mt-2 tnum">KNOWN SUMMIT DATUM: {maxAltitudeM.toLocaleString('en-IN')}m</p>
+      </div>
+    )}
+  </div>
+</div>
