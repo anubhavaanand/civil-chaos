@@ -8,6 +8,7 @@ import SocialCarousel from '../components/SocialCarousel.astro';
 import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
 import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
+import SectionRail from '../components/SectionRail.astro';
 import Footer from '../components/Footer.astro';
 import { getTreks } from '../lib/strapi';
 import { actions } from 'astro:actions';
@@ -70,6 +71,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop" fetchpriority="high" slot="head" />
 
   <GlassNav />
+  <SectionRail />
 
   <main class="bg-[#050505] text-[#94A3B8] font-body antialiased overflow-x-hidden w-full max-w-full selection:bg-[#00F2FE] selection:text-[#F9FAFB]">
     
