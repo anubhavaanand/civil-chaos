@@ -1,0 +1,42 @@
+---
+import { SITE_CONFIG } from '../lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="relative mt-24 border-t border-white/10 bg-alpine/80">
+  <div class="absolute inset-0 dark-scrim pointer-events-none" aria-hidden="true"></div>
+  <div class="relative max-w-7xl mx-auto px-6 py-14">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div>
+        <h2 class="text-xl font-display font-bold text-ink mb-3">{SITE_CONFIG.name}</h2>
+        <p class="text-sm text-silver leading-relaxed max-w-xs">
+          Boutique, small-batch Himalayan expeditions run by native Mautar guides. Max 12-15 trekkers per departure.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-[11px] font-mono uppercase tracking-widest text-glacier font-bold mb-4">Site</h3>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="/treks" class="text-frost hover:text-glacier transition-colors">Expedition Catalog</a></li>
+          <li><a href="/#map" class="text-frost hover:text-glacier transition-colors">Interactive Map</a></li>
+          <li><a href="/#departures" class="text-frost hover:text-glacier transition-colors">2027 Fixed Departures</a></li>
+          <li><a href="/#booking" class="text-frost hover:text-glacier transition-colors">Reserve a Batch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-[11px] font-mono uppercase tracking-widest text-glacier font-bold mb-4">Basecamp</h3>
+        <address class="not-italic text-sm text-silver space-y-2.5">
+          <p>{SITE_CONFIG.basecamp}</p>
+          <p class="font-mono tnum">{SITE_CONFIG.coordinates.dms} &middot; {SITE_CONFIG.coordinates.elevationM}m MSL</p>
+          <p>
+            <a href={`tel:+${SITE_CONFIG.phoneRaw}`} class="text-frost hover:text-glacier transition-colors">{SITE_CONFIG.phoneDisplay}</a>
+          </p>
+          <p><a href={`mailto:${SITE_CONFIG.email}`} class="text-frost hover:text-glacier transition-colors">{SITE_CONFIG.email}</a></p>
+        </address>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-muted font-mono">&copy; {year} {SITE_CONFIG.name}. All rights reserved.</p>
+      <p class="text-xs text-muted font-mono uppercase tracking-wider">Mautar HQ Uplink <span class="inline-block w-1.5 h-1.5 rounded-full bg-easy ml-1 align-middle"></span></p>
+    </div>
+  </div>
+</footer>
