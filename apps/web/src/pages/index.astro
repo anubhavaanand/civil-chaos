@@ -61,6 +61,8 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
     "description": "Boutique, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM and WFR certified local guides."
   })} />
 
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop" fetchpriority="high" slot="head" />
+
   <GlassNav />
 
   <main class="bg-[#050505] text-[#94A3B8] font-body antialiased overflow-x-hidden w-full max-w-full selection:bg-[#00F2FE] selection:text-[#F9FAFB]">
@@ -69,20 +71,22 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
     <section class="relative min-h-[92vh] flex items-center justify-center pt-20 md:pt-24 pb-20 overflow-hidden bg-[#050505]">
       <!-- Background Photography with Calibrated Dark Scrim for Readability -->
       <div class="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1522163723043-478ef79a5a22?q=80&w=2674&auto=format&fit=crop" 
-          alt="Sacred Himalayan mountain peaks at sunrise" 
+        <img
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop"
+          alt="Sacred Himalayan mountain peaks at sunrise"
           class="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
           loading="eager"
         />
         <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-[#0a0f18]/65 to-[#050505]"></div>
         <div class="absolute inset-0 bg-grid opacity-75"></div>
+        <!-- Aave-style refraction: photo light bends at the hero's base edge -->
+        <div class="absolute bottom-0 left-0 right-0 h-56 glass-refract opacity-70 bg-gradient-to-t from-[#00F2FE]/10 to-transparent" aria-hidden="true"></div>
       </div>
 
       <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
         <!-- Eyebrow with Glacier Accent Line -->
         <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#00F2FE]/10 border border-[#00F2FE]/30 text-[#00F2FE] text-xs font-mono font-bold tracking-widest uppercase mb-8 backdrop-blur-md">
-          <span class="w-2 h-2 rounded-full bg-[#00F2FE]  "></span>
+          <span class="w-2 h-2 rounded-full bg-[#00F2FE] ping-ring"></span>
           Boutique Alpine Expeditions
         </div>
 
