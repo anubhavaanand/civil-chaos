@@ -1,0 +1,76 @@
+---
+// AstroWind FAQ widget as native <details> accordions — zero-JS progressive
+// enhancement, glass card skin. Answers stay grounded in site policy copy.
+const faqs = [
+  {
+    q: 'What happens if weather closes the route?',
+    a: 'If unpassable weather closes a route, you reschedule to any future departure with zero penalty. Weather is the mountain\'s decision, never a charge on yours.',
+  },
+  {
+    q: 'What is included in the all-inclusive price?',
+    a: 'All forest permits, four-season alpine tents, nutritious local meals, and porter insurance are included upfront. The price you see is the price you pay.',
+  },
+  {
+    q: 'Who leads the expeditions?',
+    a: 'Every expedition leader is a native of Mautar trained at the Nehru Institute of Mountaineering (NIM) and holds international Wilderness First Responder (WFR) certification.',
+  },
+  {
+    q: 'How large is each batch?',
+    a: 'Batches are strictly capped at 12-15 trekkers to preserve trail intimacy, safety ratios, and the environmental sanctity of the routes.',
+  },
+  {
+    q: 'How do I check acclimatization and medical safety on the trail?',
+    a: 'We carry medical-grade oxygen canisters and pulse oximeters, with twice-daily acclimatization audits and evacuation protocols coordinated with regional mountain stations.',
+  },
+  {
+    q: 'How do I reserve my seat?',
+    a: 'Send the pre-filled inquiry below or message us directly on WhatsApp from Mautar. We confirm availability, dates, and acclimatization details personally.',
+  },
+];
+---
+
+<section id="faq" aria-label="Frequently asked questions" class="py-28 px-6 max-w-4xl mx-auto border-t border-white/5 bg-[#050505]">
+  <div class="text-center mb-14">
+    <div class="flex items-center justify-center gap-3 mb-3">
+      <span class="h-[2px] w-8 bg-[#00F2FE]"></span>
+      <span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase font-bold">Field Briefing</span>
+      <span class="h-[2px] w-8 bg-[#00F2FE]"></span>
+    </div>
+    <h2 class="text-3xl sm:text-4xl font-display font-bold text-[#F8FAFC] tracking-tight">
+      Questions Before The Trailhead
+    </h2>
+    <p class="text-[#94A3B8] mt-3 text-base leading-relaxed max-w-xl mx-auto">
+      The answers trekkers ask for most, straight from our base camp in Mautar.
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    {faqs.map((faq, i) => (
+      <details class="faq-item group rounded-lg bg-[#0a0f18]/90 backdrop-blur-md border border-white/10 hover:border-[#00F2FE]/30 open:border-[#00F2FE]/40 transition-colors" open={i === 0 ? true : undefined}>
+        <summary class="flex items-center justify-between gap-4 cursor-pointer list-none px-6 py-5 select-none">
+          <span class="font-display font-bold text-[#F8FAFC] text-base sm:text-lg">{faq.q}</span>
+          <span class="faq-icon shrink-0 w-8 h-8 rounded-sm border border-[#00F2FE]/30 bg-[#00F2FE]/10 text-[#00F2FE] flex items-center justify-center transition-transform duration-300" aria-hidden="true">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m-7-7h14" />
+            </svg>
+          </span>
+        </summary>
+        <p class="px-6 pb-6 text-sm text-[#94A3B8] leading-relaxed font-light">{faq.a}</p>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style>
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-icon {
+      transition: none !important;
+    }
+  }
+</style>

@@ -10,6 +10,8 @@ import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import SectionRail from '../components/SectionRail.astro';
 import StatsStrip from '../components/StatsStrip.astro';
+import BookingSteps from '../components/BookingSteps.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
 import Footer from '../components/Footer.astro';
 import { getTreks } from '../lib/strapi';
 import { actions } from 'astro:actions';
@@ -502,6 +504,9 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
         </p>
       </div>
 
+      <!-- Three-step reservation path (AstroWind steps widget) -->
+      <BookingSteps />
+
       <div class="p-8 sm:p-12 rounded-lg bg-[#0a0f18]/90 backdrop-blur-xl border border-white/10 shadow-2xl">
         <form id="waBookingForm" method="POST" action={actions.booking} class="space-y-6">
           <!-- Honeypot Field for Bots -->
@@ -613,6 +618,9 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
         </div>
       </div>
     </section>
+
+    <!-- Field Briefing FAQ (AstroWind accordion widget, zero-JS details) -->
+    <FaqAccordion />
 
   </main>
 
