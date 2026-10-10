@@ -1,0 +1,36 @@
+---
+// AstroWind "steps" widget restyled: MNTN-style mono numerals walk the
+// visitor from choosing an expedition to standing at the trailhead.
+const steps = [
+  {
+    num: '01',
+    title: 'Choose Your Objective',
+    body: 'Browse the curated roster of high-altitude expeditions and pick the ridge line, pass, or sacred meadow that calls to you.',
+  },
+  {
+    num: '02',
+    title: 'Reserve on WhatsApp',
+    body: 'Send a pre-filled inquiry below. Our team in Mautar responds directly with departure openings and acclimatization guidance.',
+  },
+  {
+    num: '03',
+    title: 'Walk With Native Guides',
+    body: 'Arrive in Uttarkashi, meet your 100% NIM & WFR certified leadership, and take the trail with a batch capped at 12-15 trekkers.',
+  },
+];
+---
+
+<ol class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14" aria-label="How booking works">
+  {steps.map((step) => (
+    <li class="relative p-8 rounded-lg bg-[#0a0f18]/90 backdrop-blur-md border border-white/10 hover:border-[#00F2FE]/40 transition-all">
+      <div class="flex items-baseline gap-4 mb-5">
+        <span class="font-display text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#00F2FE] to-[#00F2FE]/20" aria-hidden="true">
+          {step.num}
+        </span>
+        <span class="h-[2px] flex-1 bg-white/10"></span>
+      </div>
+      <h3 class="text-lg font-display font-bold text-[#F8FAFC] mb-3">{step.title}</h3>
+      <p class="text-sm text-[#94A3B8] leading-relaxed font-light">{step.body}</p>
+    </li>
+  ))}
+</ol>
