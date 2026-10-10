@@ -1,5 +1,7 @@
 // apps/web/src/lib/strapi.ts
 
+import snapshotJson from '../data/treks-snapshot.json';
+
 export interface AltitudePoint {
   distanceKm: number;
   altitudeM: number;
@@ -232,20 +234,47 @@ function normalizeTrek(rawItem: any): Trek {
   };
 }
 
+// populate=* only: naming scalar fields (difficulty, durationDays) in a
+// deep-populate list makes Strapi 5 reject the whole request with a 400.
+const TREKS_POPULATE = '/treks?populate=*&pagination[pageSize]=100';
+
+function snapshotTrekItems(): any[] {
+  const data = (snapshotJson as { data?: unknown }).data;
+  return Array.isArray(data) ? data : [];
+}
+
+/**
+ * Deterministic build floor: live Strapi wins, but Render cold starts and
+ * populate regressions must never publish an empty catalog again.
+ */
+function snapshotTreks(): Trek[] {
+  return snapshotTrekItems().map((item) => normalizeTrek(item));
+}
+
+/** Fill empty CMS galleries from the committed snapshot so cards never render bare. */
+function enrichFromSnapshot(trek: Trek): Trek {
+  if (trek.heroImage) return trek;
+  const fallback = snapshotTreks().find((t) => t.slug === trek.slug);
+  if (!fallback) return trek;
+  trek.heroImage = fallback.heroImage;
+  if (trek.gallery.length === 0) trek.gallery = fallback.gallery;
+  return trek;
+}
+
 export async function getTreks(): Promise<Trek[]> {
-  const data = await fetchStrapi<any[]>('/treks?populate=region,coordinates,heroGallery,difficulty,durationDays,batches,packages&pagination[pageSize]=100');
-  if (Array.isArray(data)) {
-    return data.map((item) => normalizeTrek(item));
+  const data = await fetchStrapi<any[]>(TREKS_POPULATE);
+  if (Array.isArray(data) && data.length > 0) {
+    return data.map((item) => enrichFromSnapshot(normalizeTrek(item)));
   }
-  return [];
+  return snapshotTreks();
 }
 
 export async function getTrekBySlug(slug: string): Promise<Trek | undefined> {
   const data = await fetchStrapi<any[]>(`/treks?filters[slug][$eq]=${slug}&populate=*`);
   if (Array.isArray(data) && data.length > 0) {
-    return normalizeTrek(data[0]);
+    return enrichFromSnapshot(normalizeTrek(data[0]));
   }
-  return undefined;
+  return snapshotTreks().find((t) => t.slug === slug);
 }
 
 export async function getOpenBatches(trekSlug?: string): Promise<Batch[]> {
