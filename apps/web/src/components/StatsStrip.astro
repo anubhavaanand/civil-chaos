@@ -33,8 +33,8 @@ const stats = [
 </section>
 
 <script>
-  const counters = document.querySelectorAll<HTMLElement>('.telemetry-count');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const counters = Array.from(document.querySelectorAll<HTMLElement>('.telemetry-count'));
+  const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const render = (el: HTMLElement, value: number) => {
     const decimals = Number(el.dataset.decimals || 0);
@@ -43,10 +43,13 @@ const stats = [
 
   const animate = (el: HTMLElement) => {
     const target = Number(el.dataset.target || 0);
-    if (reduceMotion || target === 0) {
+    if (target === 0) return;
+    if (mql.matches) {
       render(el, target);
       return;
     }
+    // Counters are zeroed at init (below the hero fold, so invisible) and
+    // counted up on first visibility; SSR values remain for no-JS visitors.
     const duration = 1400;
     const start = performance.now();
     const tick = (now: number) => {
@@ -69,5 +72,14 @@ const stats = [
     },
     { threshold: 0.4 }
   );
+
+  // Zero before first paint of the below-fold band so the final SSR value
+  // never flashes before the count-up; skipped entirely for reduced motion.
+  if (!mql.matches) {
+    counters.forEach((c) => render(c, 0));
+  }
   counters.forEach((c) => observer.observe(c));
+  mql.addEventListener('change', () => {
+    if (mql.matches) counters.forEach((c) => render(c, Number(c.dataset.target || 0)));
+  });
 </script>
