@@ -9,6 +9,7 @@ import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
 import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import SectionRail from '../components/SectionRail.astro';
+import StatsStrip from '../components/StatsStrip.astro';
 import Footer from '../components/Footer.astro';
 import { getTreks } from '../lib/strapi';
 import { actions } from 'astro:actions';
@@ -172,6 +173,9 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
         </div>
       </div>
     </section>
+
+    <!-- Expedition Telemetry (AstroWind stats band, mono telemetry skin) -->
+    <StatsStrip />
 
     <!-- Curated Expeditions (Bento Grid matching Himalayas Homepage Redesign) -->
     <section id="treks" class="py-32 px-6 max-w-7xl mx-auto bg-[#050505] relative">
