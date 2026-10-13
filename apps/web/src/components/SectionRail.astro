@@ -1,0 +1,94 @@
+---
+// MNTN-style vertical progress rail: mono numerals track the visitor's
+// position through the homepage's five acts. Desktop-width only.
+const sections = [
+  { id: 'treks', num: '01', label: 'Expeditions' },
+  { id: 'interactive-map', num: '02', label: 'Telemetry' },
+  { id: 'guardians', num: '03', label: 'Guardians' },
+  { id: 'departures', num: '04', label: 'Departures' },
+  { id: 'booking', num: '05', label: 'Reserve' },
+];
+---
+
+<nav aria-label="Page sections" class="section-rail hidden xl:block fixed left-3 top-1/2 -translate-y-1/2 z-40">
+  <ul class="flex flex-col items-start gap-5">
+    {sections.map((s) => (
+      <li>
+        <a
+          href={`#${s.id}`}
+          data-rail-link={s.id}
+          class="rail-item group flex items-center gap-3 text-[#94A3B8]/60 hover:text-[#F8FAFC] transition-colors duration-300"
+        >
+          <span class="rail-dash block h-[2px] w-5 bg-current transition-all duration-300 ease-out"></span>
+          <span class="font-mono text-[11px] tracking-widest">{s.num}</span>
+          <span class="rail-label font-mono text-[10px] uppercase tracking-widest opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+            {s.label}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .rail-item[data-active='true'] {
+    color: #00F2FE;
+  }
+  .rail-item[data-active='true'] .rail-dash {
+    width: 2.5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rail-item,
+    .rail-dash,
+    .rail-label {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-rail-link]'));
+  if (links.length > 0) {
+    const sections = links
+      .map((l) => {
+        const el = document.getElementById(l.getAttribute('data-rail-link')!);
+        return el ? { link: l, el } : null;
+      })
+      .filter((entry): entry is { link: HTMLAnchorElement; el: HTMLElement } => entry !== null);
+
+    const setActive = (id: string | null) => {
+      links.forEach((l) => {
+        const active = l.getAttribute('data-rail-link') === id;
+        l.toggleAttribute('data-active', active);
+        if (active) l.setAttribute('aria-current', 'true');
+        else l.removeAttribute('aria-current');
+      });
+    };
+
+    // Deterministic scroll tracking: the active section is the last one whose
+    // top has crossed the upper third of the viewport. Works at any viewport
+    // height and leaves the rail honest while the hero fills the screen.
+    const pick = () => {
+      const line = window.innerHeight * 0.33;
+      let current: string | null = null;
+      for (const { link, el } of sections) {
+        if (el.getBoundingClientRect().top <= line) current = link.getAttribute('data-rail-link');
+      }
+      setActive(current);
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        pick();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    pick();
+  }
+</script>

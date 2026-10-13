@@ -8,6 +8,10 @@ import SocialCarousel from '../components/SocialCarousel.astro';
 import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
 import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
+import SectionRail from '../components/SectionRail.astro';
+import StatsStrip from '../components/StatsStrip.astro';
+import BookingSteps from '../components/BookingSteps.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
 import Footer from '../components/Footer.astro';
 import { getTreks } from '../lib/strapi';
 import { actions } from 'astro:actions';
@@ -33,6 +37,34 @@ const formatDate = (dateStr: string) => {
 };
 
 const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
+
+// Homepage FAQ — grounded in site policy copy, fed to the shared FAQAccordion.
+const homepageFaqs = [
+  {
+    question: 'What happens if weather closes the route?',
+    answer: 'If unpassable weather closes a route, you reschedule to any future departure with zero penalty. Weather is the mountain\'s decision, never a charge on yours.',
+  },
+  {
+    question: 'What is included in the all-inclusive price?',
+    answer: 'All forest permits, four-season alpine tents, nutritious local meals, and porter insurance are included upfront. The price you see is the price you pay.',
+  },
+  {
+    question: 'Who leads the expeditions?',
+    answer: 'Every expedition leader is a native of Mautar trained at the Nehru Institute of Mountaineering (NIM) and holds international Wilderness First Responder (WFR) certification.',
+  },
+  {
+    question: 'How large is each batch?',
+    answer: 'Batches are strictly capped at 12-15 trekkers to preserve trail intimacy, safety ratios, and the environmental sanctity of the routes.',
+  },
+  {
+    question: 'How is acclimatization and medical safety handled on the trail?',
+    answer: 'We carry medical-grade oxygen canisters and pulse oximeters, with twice-daily acclimatization audits and evacuation protocols coordinated with regional mountain stations.',
+  },
+  {
+    question: 'How do I reserve my seat?',
+    answer: 'Send the pre-filled inquiry below or message us directly on WhatsApp from Mautar. We confirm availability, dates, and acclimatization details personally.',
+  },
+];
 ---
 
 <Layout title="Dream of The Holy Himalayas | Premier Small-Batch Expeditions">
@@ -70,6 +102,7 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop" fetchpriority="high" slot="head" />
 
   <GlassNav />
+  <SectionRail />
 
   <main class="bg-[#050505] text-[#94A3B8] font-body antialiased overflow-x-hidden w-full max-w-full selection:bg-[#00F2FE] selection:text-[#F9FAFB]">
     
@@ -170,6 +203,9 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
         </div>
       </div>
     </section>
+
+    <!-- Expedition Telemetry (AstroWind stats band, mono telemetry skin) -->
+    <StatsStrip />
 
     <!-- Curated Expeditions (Bento Grid matching Himalayas Homepage Redesign) -->
     <section id="treks" class="py-32 px-6 max-w-7xl mx-auto bg-[#050505] relative">
@@ -496,6 +532,9 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
         </p>
       </div>
 
+      <!-- Three-step reservation path (AstroWind steps widget) -->
+      <BookingSteps />
+
       <div class="p-8 sm:p-12 rounded-lg bg-[#0a0f18]/90 backdrop-blur-xl border border-white/10 shadow-2xl">
         <form id="waBookingForm" method="POST" action={actions.booking} class="space-y-6">
           <!-- Honeypot Field for Bots -->
@@ -606,6 +645,24 @@ const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
           </a>
         </div>
       </div>
+    </section>
+
+    <!-- Field Briefing FAQ (shared FAQAccordion, zero-JS details) -->
+    <section id="faq" aria-label="Frequently asked questions" class="py-28 px-6 max-w-4xl mx-auto border-t border-white/5 bg-[#050505]">
+      <div class="text-center mb-14">
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <span class="h-[2px] w-8 bg-[#00F2FE]"></span>
+          <span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase font-bold">Field Briefing</span>
+          <span class="h-[2px] w-8 bg-[#00F2FE]"></span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-[#F8FAFC] tracking-tight">
+          Questions Before The Trailhead
+        </h2>
+        <p class="text-[#94A3B8] mt-3 text-base leading-relaxed max-w-xl mx-auto">
+          The answers trekkers ask for most, straight from our base camp in Mautar.
+        </p>
+      </div>
+      <FAQAccordion items={homepageFaqs} />
     </section>
 
   </main>

@@ -1,0 +1,85 @@
+---
+// AstroWind-style stats band restyled as mono "expedition telemetry".
+// Count-up runs once on first intersection; reduced-motion users see final values.
+import { SITE_CONFIG } from '../config/site';
+
+const stats = [
+  { value: 5.0, decimals: 1, suffix: '★', label: 'Google Rating', note: `${SITE_CONFIG.googleReviews.schemaCount} verified reviews` },
+  { value: 100, decimals: 0, suffix: '%', label: 'Certified Leaders', note: 'NIM & WFR credentialed' },
+  { value: 15, decimals: 0, suffix: '', label: 'Max Batch Size', note: 'Never overbooked trails' },
+  { value: 0, decimals: 0, suffix: '', label: 'Weather Penalties', note: 'Free reschedule, always' },
+];
+---
+
+<section aria-label="Expedition telemetry" class="relative border-y border-white/5 bg-[#0a0f18]/60 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/5">
+    {stats.map((s) => (
+      <div class="py-10 px-4 sm:px-8 text-center">
+        <div class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#00F2FE] tracking-tight">
+          <span
+            class="telemetry-count"
+            data-target={s.value}
+            data-decimals={s.decimals}
+            data-suffix={s.suffix}
+            aria-hidden="true"
+          >{s.value.toFixed(s.decimals)}{s.suffix}</span>
+          <span class="sr-only">{s.value}{s.suffix}</span>
+        </div>
+        <div class="mt-3 font-mono text-[11px] font-bold uppercase tracking-widest text-[#F8FAFC]">{s.label}</div>
+        <div class="mt-1 font-mono text-[10px] uppercase tracking-wider text-[#94A3B8]/70">{s.note}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  const counters = Array.from(document.querySelectorAll<HTMLElement>('.telemetry-count'));
+  const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const render = (el: HTMLElement, value: number) => {
+    const decimals = Number(el.dataset.decimals || 0);
+    el.textContent = value.toFixed(decimals) + (el.dataset.suffix || '');
+  };
+
+  const animate = (el: HTMLElement) => {
+    const target = Number(el.dataset.target || 0);
+    if (target === 0) return;
+    if (mql.matches) {
+      render(el, target);
+      return;
+    }
+    // Counters are zeroed at init (below the hero fold, so invisible) and
+    // counted up on first visibility; SSR values remain for no-JS visitors.
+    const duration = 1400;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      render(el, target * eased);
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animate(entry.target as HTMLElement);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  // Zero before first paint of the below-fold band so the final SSR value
+  // never flashes before the count-up; skipped entirely for reduced motion.
+  if (!mql.matches) {
+    counters.forEach((c) => render(c, 0));
+  }
+  counters.forEach((c) => observer.observe(c));
+  mql.addEventListener('change', () => {
+    if (mql.matches) counters.forEach((c) => render(c, Number(c.dataset.target || 0)));
+  });
+</script>
