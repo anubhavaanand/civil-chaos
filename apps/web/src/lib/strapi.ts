@@ -1,6 +1,7 @@
 // apps/web/src/lib/strapi.ts
 
 import snapshotJson from '../data/treks-snapshot.json';
+import rawSeedData from '../../../../apps/cms/data/seed-data.json';
 
 export interface AltitudePoint {
   distanceKm: number;
@@ -172,7 +173,7 @@ function normalizeTrek(rawItem: any): Trek {
     gallery: Array.isArray(item.heroGallery) 
       ? item.heroGallery.map((g: any) => unwrap(g).url) 
       : [],
-    altitudeProfile: [], // You can map this if it's stored in Strapi, else keep empty array
+    altitudeProfile: [],
     itinerary: Array.isArray(item.itinerary) 
       ? item.itinerary.map((it: any) => {
           const uIt = unwrap(it);
@@ -238,6 +239,99 @@ function normalizeTrek(rawItem: any): Trek {
 // deep-populate list makes Strapi 5 reject the whole request with a 400.
 const TREKS_POPULATE = '/treks?populate=*&pagination[pageSize]=100';
 
+/* ---------- editorial seed floor ---------- */
+
+interface SeedTrek {
+  slug: string;
+  heroImage?: string;
+  gallery?: string[];
+  itinerary?: ItineraryDay[];
+  altitudeProfile?: AltitudePoint[];
+  inclusions?: string[];
+  exclusions?: string[];
+  faqs?: FAQItem[];
+  howToReach?: Partial<Trek['howToReach']>;
+  description?: string;
+}
+
+const seedBySlug = new Map<string, SeedTrek>(
+  (rawSeedData as unknown as SeedTrek[]).map((s) => [s.slug, s]),
+);
+
+// normalizeTrek emits these for the fields the Trek schema keeps as richtext;
+// they mean "the CMS has no structured value", so the seed may replace them.
+const CONTACT_PLACEHOLDER = 'Please contact us';
+
+function isPlaceholder(value: string): boolean {
+  return !value || value === CONTACT_PLACEHOLDER;
+}
+
+/**
+ * Strapi returns inclusions/exclusions as a richtext blob, so accept either an
+ * array or a multiline string; anything else becomes an empty list.
+ */
+function toStringList(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String).filter(Boolean);
+  if (typeof value === 'string' && value.trim()) {
+    return value
+      .split('\n')
+      .map((line) => line.replace(/^[-*\d.)\s]+/, '').trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+/**
+ * Live Strapi wins, snapshot fills galleries, seed fills the editorial depth
+ * the CMS does not model: altitudeProfile (absent from the Trek schema),
+ * itinerary, inclusions/exclusions/faqs and the how-To-Reach block.
+ */
+function enrich(trek: Trek): Trek {
+  const seed = seedBySlug.get(trek.slug);
+  if (!seed) return trek;
+
+  const itinerary = trek.itinerary.length ? trek.itinerary : (seed.itinerary ?? []);
+  const fallbackProfile: AltitudePoint[] = itinerary.length
+    ? [
+        { distanceKm: 0, altitudeM: 1950, label: 'Mautar Basecamp' },
+        ...itinerary.map((d) => ({
+          distanceKm: d.distanceKm,
+          altitudeM: d.altitudeM,
+          label: d.title,
+        })),
+      ]
+    : [];
+
+  return {
+    ...trek,
+    heroImage: trek.heroImage || seed.heroImage || '',
+    gallery: trek.gallery.length ? trek.gallery : (seed.gallery ?? []),
+    itinerary,
+    altitudeProfile: trek.altitudeProfile.length
+      ? trek.altitudeProfile
+      : (seed.altitudeProfile ?? fallbackProfile),
+    inclusions: trek.inclusions.length ? trek.inclusions : toStringList(seed.inclusions),
+    exclusions: trek.exclusions.length ? trek.exclusions : toStringList(seed.exclusions),
+    faqs: trek.faqs.length ? trek.faqs : (seed.faqs ?? []),
+    description: trek.description || (seed.description ?? ''),
+    // commuteDetails can hold live richtext from Strapi, so only the seed fills
+    // it when normalizeTrek has nothing real to offer.
+    howToReach: {
+      baseTown: trek.howToReach.baseTown || seed.howToReach?.baseTown || '',
+      nearestAirport: isPlaceholder(trek.howToReach.nearestAirport)
+        ? seed.howToReach?.nearestAirport || ''
+        : trek.howToReach.nearestAirport,
+      nearestRailway: isPlaceholder(trek.howToReach.nearestRailway)
+        ? seed.howToReach?.nearestRailway || ''
+        : trek.howToReach.nearestRailway,
+      commuteDetails: isPlaceholder(trek.howToReach.commuteDetails)
+        ? seed.howToReach?.commuteDetails || ''
+        : trek.howToReach.commuteDetails,
+      mapEmbedUrl: trek.howToReach.mapEmbedUrl || seed.howToReach?.mapEmbedUrl || '',
+    },
+  };
+}
+
 function snapshotTrekItems(): any[] {
   const data = (snapshotJson as { data?: unknown }).data;
   return Array.isArray(data) ? data : [];
@@ -248,7 +342,7 @@ function snapshotTrekItems(): any[] {
  * populate regressions must never publish an empty catalog again.
  */
 function snapshotTreks(): Trek[] {
-  return snapshotTrekItems().map((item) => normalizeTrek(item));
+  return snapshotTrekItems().map((item) => enrich(normalizeTrek(item)));
 }
 
 /** Fill empty CMS galleries from the committed snapshot so cards never render bare. */
@@ -264,7 +358,7 @@ function enrichFromSnapshot(trek: Trek): Trek {
 export async function getTreks(): Promise<Trek[]> {
   const data = await fetchStrapi<any[]>(TREKS_POPULATE);
   if (Array.isArray(data) && data.length > 0) {
-    return data.map((item) => enrichFromSnapshot(normalizeTrek(item)));
+    return data.map((item) => enrich(enrichFromSnapshot(normalizeTrek(item))));
   }
   return snapshotTreks();
 }
@@ -272,7 +366,7 @@ export async function getTreks(): Promise<Trek[]> {
 export async function getTrekBySlug(slug: string): Promise<Trek | undefined> {
   const data = await fetchStrapi<any[]>(`/treks?filters[slug][$eq]=${slug}&populate=*`);
   if (Array.isArray(data) && data.length > 0) {
-    return enrichFromSnapshot(normalizeTrek(data[0]));
+    return enrich(enrichFromSnapshot(normalizeTrek(data[0])));
   }
   return snapshotTreks().find((t) => t.slug === slug);
 }

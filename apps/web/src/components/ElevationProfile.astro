@@ -10,14 +10,22 @@ interface Props {
 
 const { points, maxAltitudeM } = Astro.props;
 
+// A trek with no route data renders the header, not a crash: normalizeTrek
+// empties altitudeProfile and ElevationProfileSwiss/strapi may hand it through
+// with zero points, which would otherwise make every Math.* below NaN.
+const hasRoute = points.length > 0;
+
 // SVG chart dimensions
 const svgWidth = 840;
 const svgHeight = 280;
 const padding = { top: 40, right: 40, bottom: 50, left: 60 };
 
-const minAlt = Math.min(...points.map((p) => p.altitudeM)) - 250;
-const maxAlt = Math.max(...points.map((p) => p.altitudeM), maxAltitudeM) + 200;
-const maxDist = Math.max(...points.map((p) => p.distanceKm));
+const altitudes = points.map((p) => p.altitudeM);
+const distances = points.map((p) => p.distanceKm);
+
+const minAlt = (hasRoute ? Math.min(...altitudes, maxAltitudeM) : 0) - 250;
+const maxAlt = (hasRoute ? Math.max(...altitudes, maxAltitudeM) : maxAltitudeM) + 200;
+const maxDist = hasRoute ? Math.max(...distances) : 0;
 
 // Map coordinate helpers
 const getX = (dist: number) => {
@@ -33,7 +41,10 @@ const getY = (alt: number) => {
 
 // Generate SVG polyline and area path coordinates
 const svgPathPoints = points.map((p) => `${getX(p.distanceKm).toFixed(1)},${getY(p.altitudeM).toFixed(1)}`).join(' L ');
-const areaPath = `M ${getX(points[0].distanceKm).toFixed(1)},${svgHeight - padding.bottom} L ${svgPathPoints} L ${getX(points[points.length - 1].distanceKm).toFixed(1)},${svgHeight - padding.bottom} Z`;
+const lastPoint = points[points.length - 1];
+const areaPath = hasRoute && svgPathPoints
+  ? `M ${getX(points[0].distanceKm).toFixed(1)},${svgHeight - padding.bottom} L ${svgPathPoints} L ${getX(lastPoint.distanceKm).toFixed(1)},${svgHeight - padding.bottom} Z`
+  : '';
 
 // Barometric formula helper (Effective O2 saturation drops with altitude)
 const getO2Percentage = (altM: number) => {
@@ -66,6 +77,7 @@ const getO2Percentage = (altM: number) => {
     </div>
 
     <!-- Live Scrubber Telemetry HUD (Updated via hover/touch) -->
+    {hasRoute ? (
     <div id="elevation-scrubber-hud" class="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#050505]/70 border border-white/10 font-mono text-xs">
       <div>
         <span class="text-[10px] text-silver/60 uppercase block">Active Waypoint</span>
@@ -84,8 +96,14 @@ const getO2Percentage = (altM: number) => {
         <span id="hud-point-o2" class="text-[#34D399] font-bold block">{getO2Percentage(points[0]?.altitudeM || 0)}% of Sea Level</span>
       </div>
     </div>
+    ) : (
+      <p class="mb-6 rounded-xl border border-white/10 bg-[#050505]/50 p-4 font-mono text-xs text-silver">
+        Route elevation data is being updated for this trek — our base camp can share the day-by-day profile.
+      </p>
+    )}
 
     <!-- SVG Elevation Diagram -->
+    {hasRoute && (
     <div class="w-full overflow-x-auto select-none">
       <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} class="w-full min-w-[700px] h-auto overflow-visible font-mono">
         <defs>
@@ -206,17 +224,18 @@ const getO2Percentage = (altM: number) => {
         })}
 
         <!-- Bottom Base Axis -->
-        <line 
-          x1={padding.left} 
-          y1={svgHeight - padding.bottom} 
-          x2={svgWidth - padding.right} 
-          y2={svgHeight - padding.bottom} 
-          stroke="#ffffff" 
-          stroke-opacity="0.15" 
-          stroke-width="1" 
+        <line
+          x1={padding.left}
+          y1={svgHeight - padding.bottom}
+          x2={svgWidth - padding.right}
+          y2={svgHeight - padding.bottom}
+          stroke="#ffffff"
+          stroke-opacity="0.15"
+          stroke-width={1}
         />
       </svg>
     </div>
+    )}
   </div>
 </div>
 
