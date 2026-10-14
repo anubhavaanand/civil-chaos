@@ -9,7 +9,7 @@ interface Props {
 const { trek } = Astro.props;
 const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage, summary } = trek;
 ---
-<a href={`/treks/${slug}`} class="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-white/20 shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-400">
+<a href={`/treks/${slug}`} class="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-white/20 shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#00f2fe]">
   <div class="absolute inset-0 bg-slate-900/85 pointer-events-none supports-[backdrop-filter:blur(0)]:hidden"></div>
   <div class="absolute inset-0 bg-[#0a0f18]/10 backdrop-blur-md backdrop-saturate-150 pointer-events-none"></div>
   <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
@@ -49,7 +49,7 @@ const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage
       </div>
       <div class="text-right">
         <div class="text-xs text-slate-400 mb-0.5">from</div>
-        <div class="text-lg font-bold text-teal-400">₹{fromPrice.toLocaleString('en-IN')}</div>
+        <div class="text-lg font-bold text-[#00f2fe]">₹{fromPrice.toLocaleString('en-IN')}</div>
       </div>
     </div>
   </div>

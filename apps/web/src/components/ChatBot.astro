@@ -56,12 +56,30 @@
         if (!res.ok) throw new Error('Strapi unreachable');
         const data = await res.json();
         
-        trekContext = data.data.map((t: any) => ({
-          name: t.attributes?.title || t.title || t.attributes?.slug,
-          difficulty: t.attributes?.difficulty || t.difficulty,
-          days: t.attributes?.durationDays || t.durationDays,
-          price: t.attributes?.priceFrom || t.priceFrom
-        }));
+        trekContext = data.data.map((t: any) => {
+          // Strapi 5 returns attributes flat on the row; the Trek schema field is
+          // `name` (there is no `title` and no top-level price -- price lives on
+          // the related batch/package rows).
+          const row = t.attributes ? { ...t, ...t.attributes } : t;
+          const batchPrices = (row.batches || [])
+            .flatMap((b: any) => (Array.isArray(b) ? b : [b]))
+            .map((b: any) => b.pricePerPersonINR)
+            .filter((p: any) => typeof p === 'number' && p > 0);
+          const packagePrices = (row.packages || [])
+            .flatMap((p: any) => (Array.isArray(p) ? p : [p]))
+            .map((p: any) => p.priceINR)
+            .filter((p: any) => typeof p === 'number' && p > 0);
+
+          return {
+            name: row.name || row.slug,
+            slug: row.slug,
+            difficulty: row.difficulty,
+            days: row.durationDays,
+            maxAltitudeM: row.maxAltitudeM,
+            startPoint: row.startPoint,
+            fromPrice: Math.min(...batchPrices, ...packagePrices) || null
+          };
+        });
       } catch (e) {
         console.warn('Failed to fetch trek context', e);
         trekContext = { error: 'Live data unavailable' };
@@ -126,9 +144,16 @@
         loadingDiv.remove();
         addMessage(data.response || 'Sorry, I could not understand that. Please use WhatsApp for booking!', false);
       } catch (e) {
+        // /api/chat depends on a Cloudflare Workers AI binding. When it is absent
+        // (undeployed, or the binding is not configured) the endpoint 404s, so
+        // point the visitor at a channel that always works instead of failing
+        // silently.
         console.error('Chat error', e);
         loadingDiv.remove();
-        addMessage('Sorry, something went wrong. Please reach out to us via WhatsApp!', false);
+        addMessage(
+          'Automated help is temporarily offline. For booking, permits or route questions please message us on WhatsApp — the basecamp replies within the hour during working hours.',
+          false
+        );
       }
     });
   });
