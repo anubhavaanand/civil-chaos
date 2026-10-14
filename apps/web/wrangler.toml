@@ -5,7 +5,10 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 PUBLIC_STRAPI_URL = "https://civil-chaos.onrender.com"
-PUBLIC_SITE_URL = "https://civil-chaos.pages.dev"
+# Must match the primary custom domain in astro.config.mjs `site`; the cache
+# purge in api/revalidate.ts builds absolute URLs from this value, so pointing
+# it at the preview host would purge the wrong URLs once the domain is attached.
+PUBLIC_SITE_URL = "https://dreamoftheholyhimalayas.com"
 # Add PUBLIC_MAPTILER_KEY, STRAPI_API_TOKEN, STRAPI_WEBHOOK_SECRET, RESEND_API_KEY in Cloudflare dashboard
 
 [ai]
