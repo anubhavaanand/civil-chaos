@@ -1,6 +1,6 @@
 ---
 // ElevationProfile.astro
-// Satoshiactive Swiss Telemetry SVG Elevation Profile with Barometric Altitude Physics
+// Swiss Telemetry SVG Elevation Profile with Barometric Altitude Physics
 import type { AltitudePoint } from '../lib/strapi';
 
 interface Props {
@@ -145,7 +145,7 @@ const getO2Percentage = (altM: number) => {
           stroke-linejoin="round" 
         />
 
-        <!-- Waypoint Nodes with Satoshiactive Data Trigger -->
+        <!-- Waypoint Nodes with Waypoint Data Trigger -->
         {points.map((p, idx) => {
           const cx = getX(p.distanceKm);
           const cy = getY(p.altitudeM);

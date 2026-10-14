@@ -11,7 +11,7 @@ interface Props {
   <div class="max-w-7xl mx-auto px-6 mb-8">
     <div class="flex items-center gap-3 mb-4">
       <div class="h-[1px] w-8 bg-[#00F2FE]"></div>
-      <span class="text-[#00F2FE] font-mono text-xs uppercase tracking-[0.2em]">Live Satellite Telemetry</span>
+      <span class="text-[#00F2FE] font-mono text-xs uppercase tracking-[0.2em]">Expedition Cartography</span>
     </div>
     <h2 class="text-3xl md:text-5xl font-bold text-[#F8FAFC] mb-6 tracking-tight">Himalayan <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F8FAFC] to-[#F8FAFC]/60">Topography</span></h2>
   </div>
@@ -71,23 +71,59 @@ interface Props {
         console.error("Failed to load treks GeoJSON:", err);
       }
       
-      // We will fallback to a public demo MapTiler key if the .env one is missing locally
-      // DO NOT USE THIS FALLBACK IN HEAVY PROD.
-      const mapKey = import.meta.env.PUBLIC_MAPTILER_KEY || 'get_your_own_OpIi9Z3yfLbfbZ'; 
+      // A MapTiler key unlocks satellite terrain (set PUBLIC_MAPTILER_KEY). Without
+      // one we fall back to CARTO's keyless dark style, which renders the pins and
+      // the region geometry correctly and needs no account.
+      const mapKey = import.meta.env.PUBLIC_MAPTILER_KEY;
+      const hasMaptiler = Boolean(mapKey && mapKey.length > 0);
 
       const map = new maplibregl.Map({
         container: 'map',
-        // Dark matter + Satellite blend for a cinematic technical look
-        style: `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapKey}`,
+        style: hasMaptiler
+          ? `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapKey}`
+          : {
+              version: 8,
+              glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
+              sources: {
+                carto: {
+                  type: 'raster',
+                  tiles: [
+                    'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                    'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                    'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                  ],
+                  tileSize: 256,
+                  attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+                }
+              },
+              layers: [
+                {
+                  id: 'carto-dark',
+                  type: 'raster',
+                  source: 'carto',
+                  minzoom: 0,
+                  maxzoom: 20
+                }
+              ]
+            },
         center: [79.0, 30.7], // Center on Uttarakhand
         zoom: 7.5,
-        pitch: 65,
-        bearing: -15,
         maxPitch: 85,
         attributionControl: false
       });
 
       map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+
+      map.on('error', (e: any) => {
+        // A broken style URL used to leave the loader pinned on screen forever,
+        // because only the 'load' handler hid it.
+        console.error("MapLibre tile/style error:", e);
+        const loader = document.getElementById('map-loader');
+        if (loader) {
+          loader.innerHTML =
+            '<div class="text-center px-6"><span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase block mb-2">Basemap Unavailable</span><span class="text-silver/60 font-mono text-[11px] block">Route coordinates are still listed in the expedition catalog below.</span></div>';
+        }
+      });
 
       map.on('load', () => {
         // Fade out loader
@@ -97,12 +133,14 @@ interface Props {
           setTimeout(() => loader.style.display = 'none', 700);
         }
 
-        // Inject 3D Terrain
-        map.addSource('terrain-source', {
-          type: 'raster-dem',
-          url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${mapKey}`
-        });
-        map.setTerrain({ source: 'terrain-source', exaggeration: 1.5 });
+        // Inject 3D Terrain (MapTiler DEM requires a key; CARTO has no DEM tiles)
+        if (hasMaptiler) {
+          map.addSource('terrain-source', {
+            type: 'raster-dem',
+            url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${mapKey}`
+          });
+          map.setTerrain({ source: 'terrain-source', exaggeration: 1.5 });
+        }
 
         // Add Trek Pins
         treks.forEach((trek: any) => {
@@ -137,10 +175,10 @@ interface Props {
         // Add subtle fog/atmosphere for realism if supported
         if (typeof (map as any).setFog === 'function') {
           (map as any).setFog({
-            'color': 'rgba(249, 250, 251, 0.9)',
-            'high-color': 'rgba(234, 88, 12, 0.1)',
+            'color': 'rgba(5, 5, 5, 0.9)',
+            'high-color': 'rgba(15, 23, 42, 0.1)',
             'horizon-blend': 0.1,
-            'space-color': 'rgba(226, 232, 240, 1)'
+            'space-color': 'rgba(15, 23, 42, 1)'
           });
         }
       });
