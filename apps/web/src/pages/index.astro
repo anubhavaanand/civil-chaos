@@ -13,6 +13,7 @@ import StatsStrip from '../components/StatsStrip.astro';
 import BookingSteps from '../components/BookingSteps.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
 import Footer from '../components/Footer.astro';
+import FitnessQuiz from '../components/FitnessQuiz.astro';
 import { getTreks } from '../lib/strapi';
 import { actions } from 'astro:actions';
 import { SITE_CONFIG } from '../config/site';
@@ -520,6 +521,12 @@ const homepageFaqs = [
           </tbody>
         </table>
       </div>
+    </section>
+
+    <!-- Readiness self-assessment, placed before the reservation form so a
+         visitor knows which grade of route suits them before enquiring. -->
+    <section id="readiness" class="py-28 px-6 max-w-5xl mx-auto border-t border-white/5 bg-[#050505]">
+      <FitnessQuiz />
     </section>
 
     <!-- Direct WhatsApp Booking Generator (#booking) -->

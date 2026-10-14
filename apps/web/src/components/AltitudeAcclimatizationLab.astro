@@ -1,6 +1,6 @@
 ---
 // AltitudeAcclimatizationLab.astro
-// Satoshiactive High-Altitude Physiology & Lake Louise AMS Diagnostic Telemetry Lab
+// High-Altitude Physiology & Lake Louise AMS Diagnostic Telemetry Lab
 // Grounded in Himalayan high-altitude medical protocols, barometric lapse equations, and SDRF Uttarakhand emergency staging
 
 interface Props {
@@ -22,7 +22,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
           <span class="text-[10px] font-mono text-[#00F2FE] uppercase tracking-widest font-bold">Himalayan Medical Protocol</span>
         </div>
         <h3 class="text-2xl font-display font-bold text-[#F8FAFC]">High-Altitude Physiology & Acclimatization Lab</h3>
-        <p class="text-xs text-[#94A3B8] mt-1 font-light">Satoshiactive barometric telemetry and Lake Louise AMS (Acute Mountain Sickness) clinical screener.</p>
+        <p class="text-xs text-[#94A3B8] mt-1 font-light">Barometric telemetry and Lake Louise AMS (Acute Mountain Sickness) clinical screener.</p>
       </div>
 
       <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#0F172A]/10 bg-[#050505]/5 font-mono text-xs text-[#94A3B8] self-start sm:self-auto">
@@ -31,7 +31,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
       </div>
     </div>
 
-    <!-- Satoshiactive Elevation Scrubber -->
+    <!-- Elevation Scrubber -->
     <div class="mb-8 p-5 rounded-xl bg-[#050505]/80 border border-[#0F172A]/10">
       <div class="flex items-center justify-between mb-3 font-mono text-xs">
         <label for="altitudeRange" class="uppercase text-[#94A3B8] font-bold tracking-wider">
@@ -95,7 +95,7 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
 
     </div>
 
-    <!-- Lake Louise Acute Mountain Sickness (AMS) Satoshiactive Clinical Diagnostic -->
+    <!-- Lake Louise Acute Mountain Sickness (AMS) Clinical Diagnostic -->
     <div class="p-6 rounded-2xl border border-[#0F172A]/10 bg-[#050505]/90 mb-8">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-5 border-b border-[#0F172A]/10">
         <div>
@@ -252,10 +252,10 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
           scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-[#34D399]/20 text-[#34D399] border border-[#34D399]/30';
         } else if (total < 3) {
           scoreBadge.textContent = `${total} / 12 (Mild Strain)`;
-          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-[#0a0f18]mber-500/20 text-[#FBBF24] border border-[#FBBF24]/30';
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-[#FBBF24]/20 text-[#FBBF24] border border-[#FBBF24]/30';
         } else if (total < 6) {
           scoreBadge.textContent = `${total} / 12 (AMS Alert)`;
-          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30';
+          scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-[#FBBF24]/20 text-[#FBBF24] border border-[#FBBF24]/30';
         } else {
           scoreBadge.textContent = `${total} / 12 (Severe AMS / Evacuate)`;
           scoreBadge.className = 'px-2.5 py-0.5 rounded text-sm font-bold bg-[#FB7185]/20 text-[#FB7185] border border-[#FB7185]/30';
@@ -269,13 +269,13 @@ const { initialAltitudeM = 3876, trekName = "Kuari Pass Summit" } = Astro.props;
           triageTitle.textContent = 'Clinical Triage: Optimal Physiology';
           triageText.textContent = 'Zero acute mountain symptoms recorded. Maintain hydration pace and proceed with standard ascent schedule.';
         } else if (total < 3) {
-          triageBox.className = 'p-4 rounded-xl border border-[#FBBF24]/20 bg-[#0a0f18]mber-500/5 flex items-start gap-3.5';
+          triageBox.className = 'p-4 rounded-xl border border-[#FBBF24]/20 bg-[#FBBF24]/5 flex items-start gap-3.5';
           triageTitle.className = 'font-bold text-[#FBBF24] uppercase tracking-wider';
           triageTitle.textContent = 'Clinical Triage: Mild Hypoxia Staging';
           triageText.textContent = 'Mild fatigue or light symptoms observed. Rest at current camp datum, consume hot electrolyte fluids, and audit pulse oximeter saturation.';
         } else if (total < 6) {
-          triageBox.className = 'p-4 rounded-xl border border-orange-500/20 bg-orange-500/5 flex items-start gap-3.5';
-          triageTitle.className = 'font-bold text-orange-400 uppercase tracking-wider';
+          triageBox.className = 'p-4 rounded-xl border border-[#FBBF24]/20 bg-[#FBBF24]/5 flex items-start gap-3.5';
+          triageTitle.className = 'font-bold text-[#FBBF24] uppercase tracking-wider';
           triageTitle.textContent = 'Clinical Triage: Acute Mountain Sickness Confirmed';
           triageText.textContent = 'DO NOT ASCEND FURTHER. Halt movement, administer medical oxygen if saturation drops below 75%, and prepare for descending 300 to 500 meters.';
         } else {
