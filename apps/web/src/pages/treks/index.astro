@@ -11,10 +11,7 @@ const treks = await getTreks();
 
 // Pre-calculate filter category counts
 const regionCounts = {
-  all: treks.length,
-  Garhwal: treks.filter(t => t.region === 'Garhwal').length,
-  Kumaon: treks.filter(t => t.region === 'Kumaon').length,
-  Himachal: treks.filter(t => t.region === 'Himachal').length
+  all: treks.length
 };
 
 const altitudeCounts = {
@@ -32,7 +29,10 @@ const difficultyCounts = {
 };
 ---
 
-<Layout title="Expedition Catalog | Dream of The Holy Himalayas">
+<Layout
+  title="Expedition Catalog | Dream of The Holy Himalayas"
+  description="Ten precision-scouted Himalayan routes across Garhwal and Himachal Pradesh, from Kuari Pass and Kedarkantha to the high passes of Pin Parvati and Bali Pass."
+>
   <GlassNav />
 
   <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
@@ -49,7 +49,7 @@ const difficultyCounts = {
             EXPEDITION CATALOG
           </h1>
           <p class="text-silver text-sm sm:text-base mt-2 max-w-2xl font-light">
-            Ten precision-scouted alpine routes across Garhwal, Kumaon, and Himachal Pradesh. Intimate micro-batches led by native Mautar mountain guides.
+            Ten precision-scouted alpine routes across Garhwal and Himachal Pradesh. Intimate micro-batches led by native Mautar mountain guides.
           </p>
         </div>
 
@@ -138,15 +138,16 @@ const difficultyCounts = {
                 <button data-value="all" class="filter-pill btn-tactile active px-2.5 py-1 rounded-md text-xs font-mono border border-[#00f2fe] bg-[#00f2fe] text-[#050505] font-bold">
                   All ({regionCounts.all})
                 </button>
-                <button data-value="Garhwal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
-                  Garhwal ({regionCounts.Garhwal})
-                </button>
-                <button data-value="Kumaon" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
-                  Kumaon ({regionCounts.Kumaon})
-                </button>
-                <button data-value="Himachal" class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40">
-                  Himachal ({regionCounts.Himachal})
-                </button>
+                {/* Regions are derived from the live catalog, so a region with no
+                    routes never appears as a filter that returns nothing. */}
+                {[...new Set(treks.map(t => t.region))].sort().map(region => (
+                  <button
+                    data-value={region}
+                    class="filter-pill btn-tactile px-2.5 py-1 rounded-md text-xs font-mono border border-white/10 bg-[#0a0f18]/5 text-ink hover:border-[#00f2fe]/40"
+                  >
+                    {region} ({treks.filter(t => t.region === region).length})
+                  </button>
+                ))}
               </div>
             </div>
 

@@ -1,13 +1,12 @@
 ---
 // AstroWind-style stats band restyled as mono "expedition telemetry".
 // Count-up runs once on first intersection; reduced-motion users see final values.
-import { SITE_CONFIG } from '../config/site';
 
 const stats = [
-  { value: 5.0, decimals: 1, suffix: '★', label: 'Google Rating', note: `${SITE_CONFIG.googleReviews.schemaCount} verified reviews` },
   { value: 100, decimals: 0, suffix: '%', label: 'Certified Leaders', note: 'NIM & WFR credentialed' },
   { value: 15, decimals: 0, suffix: '', label: 'Max Batch Size', note: 'Never overbooked trails' },
   { value: 0, decimals: 0, suffix: '', label: 'Weather Penalties', note: 'Free reschedule, always' },
+  { value: 12, decimals: 0, suffix: '+', label: 'Years Guiding', note: 'Mautar native leadership' },
 ];
 ---
 

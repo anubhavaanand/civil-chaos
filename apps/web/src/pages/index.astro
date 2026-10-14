@@ -5,7 +5,7 @@ import ThreeDPeakViewer from '../components/ThreeDPeakViewer.astro';
 import MapLibreTrekMap from '../components/MapLibreTrekMap.astro';
 import SacredPeaksLore from '../components/SacredPeaksLore.astro';
 import SocialCarousel from '../components/SocialCarousel.astro';
-import GoogleReviewsWall from '../components/GoogleReviewsWall.astro';
+import FieldNotes from '../components/FieldNotes.astro';
 import AudioSoundscape from '../components/AudioSoundscape.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import SectionRail from '../components/SectionRail.astro';
@@ -38,6 +38,11 @@ const formatDate = (dateStr: string) => {
 
 const isLowSeatsCheck = (seats: number) => seats > 0 && seats < 5;
 
+// Region chips are derived from the live catalog so the filter never advertises
+// a region with no departures.
+const sortedTreks = [...treks].sort((a, b) => a.name.localeCompare(b.name));
+const trekRegions = [...new Set(sortedTreks.map(t => t.region))].sort();
+
 // Homepage FAQ — grounded in site policy copy, fed to the shared FAQAccordion.
 const homepageFaqs = [
   {
@@ -67,15 +72,18 @@ const homepageFaqs = [
 ];
 ---
 
-<Layout title="Dream of The Holy Himalayas | Premier Small-Batch Expeditions">
+<Layout
+  title="Dream of The Holy Himalayas | Premier Small-Batch Expeditions"
+  description="Small-batch Himalayan trekking from Mautar, Uttarkashi. Ten alpine routes, 100% NIM and WFR certified native guides, batches capped at 12-15, and zero weather penalties."
+>
   <!-- Schema.org TouristInformationCenter Markup -->
   <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": ["Organization", "LocalBusiness", "TouristInformationCenter"],
     "name": SITE_CONFIG.name,
     "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2071&auto=format&fit=crop",
-    "@id": "https://www.dreamoftheholyhimalayas.com",
-    "url": "https://www.dreamoftheholyhimalayas.com",
+    "@id": SITE_CONFIG.canonicalUrl,
+    "url": SITE_CONFIG.canonicalUrl,
     "telephone": SITE_CONFIG.phoneTel,
     "address": {
       "@type": "PostalAddress",
@@ -90,13 +98,7 @@ const homepageFaqs = [
       "latitude": SITE_CONFIG.coordinates.lat,
       "longitude": SITE_CONFIG.coordinates.lng
     },
-    "description": "Boutique, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM and WFR certified local guides.",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": String(SITE_CONFIG.googleReviews.rating),
-      "reviewCount": SITE_CONFIG.googleReviews.schemaCount,
-      "bestRating": "5"
-    }
+    "description": "Boutique, small-batch Himalayan trekking agency based in Mautar, Uttarakhand. Led by 100% NIM and WFR certified local guides."
   })} />
 
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop" fetchpriority="high" slot="head" />
@@ -228,15 +230,14 @@ const homepageFaqs = [
           <button data-region="all" class="filter-chip active-filter px-4 py-2 rounded-sm text-xs font-mono font-bold uppercase tracking-wider bg-[#00F2FE] text-[#F9FAFB] transition-all cursor-pointer">
             All Regions
           </button>
-          <button data-region="Garhwal" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0a0f18] border border-white/10 text-[#94A3B8] hover:border-[#00F2FE]/50 hover:text-[#F8FAFC] transition-all cursor-pointer">
-            Garhwal
-          </button>
-          <button data-region="Kumaon" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0a0f18] border border-white/10 text-[#94A3B8] hover:border-[#00F2FE]/50 hover:text-[#F8FAFC] transition-all cursor-pointer">
-            Kumaon
-          </button>
-          <button data-region="Himachal" class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0a0f18] border border-white/10 text-[#94A3B8] hover:border-[#00F2FE]/50 hover:text-[#F8FAFC] transition-all cursor-pointer">
-            Himachal
-          </button>
+          {trekRegions.map(region => (
+            <button
+              data-region={region}
+              class="filter-chip px-4 py-2 rounded-sm text-xs font-mono font-medium uppercase tracking-wider bg-[#0a0f18] border border-white/10 text-[#94A3B8] hover:border-[#00F2FE]/50 hover:text-[#F8FAFC] transition-all cursor-pointer"
+            >
+              {region}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -423,7 +424,7 @@ const homepageFaqs = [
     <SocialCarousel />
 
     <!-- Climber Field Notes & Expedition Logs Wall -->
-    <GoogleReviewsWall />
+    <FieldNotes />
 
     <!-- 2027 Fixed Departures Schedule -->
     <section id="departures" class="py-28 px-6 max-w-7xl mx-auto border-t border-white/5 bg-[#050505]">
