@@ -9,6 +9,7 @@ import ItineraryTimeline from '../../components/ItineraryTimeline.astro';
 import UpcomingBatchesTable from '../../components/UpcomingBatchesTable.astro';
 import WeatherWidget from '../../components/WeatherWidget.astro';
 import GearChecklist from '../../components/GearChecklist.astro';
+import AltitudeAcclimatizationLab from '../../components/AltitudeAcclimatizationLab.astro';
 import BookingModal from '../../components/BookingModal.astro';
 import { getTreks } from '../../lib/strapi';
 import type { Trek } from '../../lib/strapi';
@@ -241,6 +242,17 @@ const productSchema = {
           <section class="space-y-8">
             <h2 class="text-3xl font-display font-bold text-white uppercase tracking-tight border-b border-white/10 pb-4">Daily Itinerary Log</h2>
             <ItineraryTimeline days={trek.itinerary} />
+          </section>
+
+          <section class="space-y-6">
+            <h2 class="text-3xl font-display font-bold text-white uppercase tracking-tight border-b border-white/10 pb-4">
+              Acclimatization &amp; Physiology
+            </h2>
+            <p class="text-slate-400 font-light">
+              Drag the ascent datum to see effective oxygen and air pressure at each camp altitude,
+              then screen yourself against the Lake Louise AMS checklist we brief before every departure.
+            </p>
+            <AltitudeAcclimatizationLab initialAltitudeM={trek.maxAltitudeM} trekName={`${trek.name} Summit`} />
           </section>
 
           <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
