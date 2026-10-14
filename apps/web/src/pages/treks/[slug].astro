@@ -12,6 +12,7 @@ import GearChecklist from '../../components/GearChecklist.astro';
 import BookingModal from '../../components/BookingModal.astro';
 import { getTreks } from '../../lib/strapi';
 import type { Trek } from '../../lib/strapi';
+import { SITE_CONFIG } from '../../config/site';
 
 
 export async function getStaticPaths() {
@@ -36,7 +37,7 @@ const touristTripSchema = {
   "provider": {
     "@type": "TravelAgency",
     "name": "Dream of The Holy Himalayas",
-    "url": "https://holyhimalayas.com"
+    "url": SITE_CONFIG.canonicalUrl
   },
   "itinerary": {
     "@type": "ItemList",
@@ -74,7 +75,10 @@ const productSchema = {
 };
 ---
 
-<Layout title={`${trek.name} | Dream of The Holy Himalayas`}>
+<Layout
+  title={`${trek.name} | Dream of The Holy Himalayas`}
+  description={trek.summary || `${trek.durationDays}-day ${trek.difficulty} Himalayan trek from ${trek.startPoint}, reaching ${trek.maxAltitudeM.toLocaleString()} m.`}
+>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify([touristTripSchema, productSchema])} is:inline />
   <GlassNav />
 

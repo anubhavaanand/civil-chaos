@@ -1,0 +1,92 @@
+---
+// FieldNotes.astro
+// Replaces the previous "Google Reviews Wall".
+//
+// The wall it replaces listed six invented reviewers with names, cities, treks
+// and dates, and the homepage asserted a 5.0* / 40-review aggregateRating to
+// back them. Nothing in the repo substantiates either, so both were removed
+// rather than shipped as social proof. This section states only what is
+// actually verifiable: the operating policy of the agency.
+
+interface Note {
+  title: string;
+  body: string;
+}
+
+// Operating commitments, not testimonials: each claim below is policy the
+// agency controls, not a rating it cannot prove.
+const notes: Note[] = [
+  {
+    title: 'Small batches, held at 12-15',
+    body: 'Every departure is capped at fifteen trekking seats. The cap is a safety ratio and a trail-ethics decision first, and it is not raised to fill a calendar.',
+  },
+  {
+    title: 'Leadership from Mautar',
+    body: 'Expeditions are led by guides raised in the valleys around Mautar, trained at the Nehru Institute of Mountaineering and certified in wilderness first response.',
+  },
+  {
+    title: 'Weather is not a charge',
+    body: 'If a route closes, departure moves to a future date at no penalty. The mountain decides; the itinerary absorbs it.',
+  },
+  {
+    title: 'Quoted price is final price',
+    body: 'Permits, four-season tents, local meals and porter insurance are named upfront. No rental surcharges appear at basecamp.',
+  },
+];
+---
+
+<section id="field-notes" class="py-24 relative border-t border-[#0F172A]/10 bg-[#050505]">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-[#0F172A]/10">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <span class="h-[2px] w-8 bg-[#00F2FE]"></span>
+          <span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase font-bold">How We Operate</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-[#F8FAFC] tracking-tight">
+          THE STANDARDS WE HOLD
+        </h2>
+        <p class="text-[#94A3B8] text-sm sm:text-base mt-2 max-w-xl font-light">
+          These are the operating commitments behind every departure. They are
+          policy we control, not ratings we cannot verify.
+        </p>
+      </div>
+
+      <!-- Basecamp Credential Card -->
+      <div class="double-bezel-outer self-start lg:self-auto">
+        <div class="double-bezel-inner p-4 sm:p-5 bg-[#0a0f18]/90 backdrop-blur-xl flex items-center gap-5">
+          <div class="flex flex-col items-center justify-center p-3 rounded-xl bg-[#00F2FE]/10 border border-[#00F2FE]/30 shrink-0">
+            <!-- Mountain Peak Icon -->
+            <svg class="w-7 h-7 text-[#00F2FE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8 3 4 8 5-5 5 15H2L8 3z" />
+            </svg>
+            <div class="text-[10px] font-mono font-bold text-[#00F2FE] mt-1 uppercase tracking-wider">Basecamp</div>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl sm:text-2xl font-display font-bold text-[#F8FAFC] leading-none">100% Native</span>
+            </div>
+            <div class="text-xs font-mono text-[#00F2FE] font-bold mt-1">NIM &amp; WFR Certified Guides</div>
+            <div class="text-[11px] font-mono text-[#94A3B8]/60 mt-0.5">Village Mautar, Uttarkashi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operating Commitments Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="field-notes-container">
+      {notes.map((n) => (
+        <div class="double-bezel-outer">
+          <div class="double-bezel-inner p-6 sm:p-7 bg-[#0a0f18]/90 backdrop-blur-xl h-full flex flex-col">
+            <h3 class="font-display text-lg font-bold text-[#F8FAFC] tracking-tight mb-3">{n.title}</h3>
+            <p class="text-[#94A3B8]/90 text-sm leading-relaxed font-light">{n.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
