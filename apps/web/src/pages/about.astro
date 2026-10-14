@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import GlassNav from '../components/GlassNav.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import Footer from '../components/Footer.astro';
+import { SITE_CONFIG } from '../config/site';
 
 // Core values and telemetry for Swiss Editorial spread
 const values = [
@@ -93,7 +94,7 @@ const credentials = [
               <div class="text-white font-display text-lg font-bold">Village Mautar, Upper Bhagirathi Basin</div>
             </div>
             <div class="text-right font-mono text-xs text-silver">
-              Elev. 1,950m MSL &middot; 30&deg;44&apos; N, 78&deg;26&apos; E
+              Elev. 1,950m MSL &middot; {SITE_CONFIG.coordinates.dms}
             </div>
           </div>
         </div>
