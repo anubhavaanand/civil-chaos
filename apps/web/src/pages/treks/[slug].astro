@@ -96,7 +96,7 @@ const productSchema = {
 
     <!-- High-Altitude GPS Crosshairs -->
     <div class="absolute top-28 right-6 lg:right-12 z-20 hidden md:block">
-      <div class="font-mono text-[#00f2fe] text-xs tracking-[0.2em] bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-sm border border-[#00f2fe]/30 flex items-center gap-3 shadow-[0_0_20px_rgba(0,242,254,0.15)]">
+      <div class="font-mono text-[#00f2fe] text-xs tracking-[0.2em] bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-sm border border-[#00f2fe]/30 flex items-center gap-3">
         <span class="w-2 h-2 rounded-full bg-[#00f2fe] animate-pulse"></span>
         LAT {trek.coordinates[1]}° N // LNG {trek.coordinates[0]}° E
       </div>
@@ -359,7 +359,7 @@ const productSchema = {
         
         <button
           data-open-modal="booking-modal"
-          class="btn-tactile open-booking-trigger group relative px-6 md:px-8 py-3.5 md:py-4 bg-[#00f2fe] hover:bg-[#00d4e0] text-[#06090E] font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_rgba(0,242,254,0.3)] transition-all overflow-hidden whitespace-nowrap cursor-pointer"
+          class="btn-tactile open-booking-trigger group relative px-6 md:px-8 py-3.5 md:py-4 bg-[#00f2fe] hover:bg-[#00d4e0] text-[#06090E] font-bold uppercase tracking-wider rounded-lg shadow-lg lens-edge transition-all overflow-hidden whitespace-nowrap cursor-pointer"
         >
           <span class="relative z-10 flex items-center gap-2">
             Request Booking 

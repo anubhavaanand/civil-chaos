@@ -238,7 +238,7 @@
     // Create 3D Summit Markers
     createSummitMarkers();
 
-    // Unified Pointer Satoshiaction (Touch + Mouse Orbit via Pointer Events API)
+    // Unified Pointer handling (touch + mouse orbit via Pointer Events API)
     container.addEventListener('pointerdown', (e) => {
       isDragging = true;
       previousMousePosition = { x: e.clientX, y: e.clientY };

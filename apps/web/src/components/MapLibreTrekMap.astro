@@ -19,10 +19,22 @@ interface Props {
   <div class="max-w-7xl mx-auto px-6">
     <div id="maplibre-container" class="w-full h-[600px] rounded-2xl overflow-hidden border border-white/10 relative shadow-xl" data-treks-url="/treks-geojson.json">
       
-      <!-- LCP-friendly Loading State -->
-      <div id="map-loader" class="absolute inset-0 bg-[#050505] flex flex-col items-center justify-center z-10 transition-opacity duration-700">
-        <div class="w-12 h-12 border-2 border-[#00F2FE]/20 border-t-[#00f2fe] rounded-full animate-spin mb-4"></div>
-        <span class="text-[#00F2FE] font-mono text-xs tracking-widest animate-pulse">LINKING SATELLITE IMAGERY...</span>
+      <!-- Loading state: a skeletal placeholder shaped like the map panel, not a spinner -->
+      <div id="map-loader" class="absolute inset-0 bg-[#050505] z-10 transition-opacity duration-700 overflow-hidden">
+        <div class="absolute inset-0 opacity-60">
+          <!-- Contour lines standing in for the terrain tiles still loading -->
+          <div class="absolute inset-x-0 top-[18%] h-px bg-white/5"></div>
+          <div class="absolute inset-x-0 top-[38%] h-px bg-white/5"></div>
+          <div class="absolute inset-x-0 top-[58%] h-px bg-white/5"></div>
+          <div class="absolute inset-x-0 top-[78%] h-px bg-white/5"></div>
+          <div class="absolute inset-y-0 left-[22%] w-px bg-white/5"></div>
+          <div class="absolute inset-y-0 left-[48%] w-px bg-white/5"></div>
+          <div class="absolute inset-y-0 left-[74%] w-px bg-white/5"></div>
+        </div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
+          <span class="ping-ring w-3 h-3 rounded-full bg-[#00F2FE]"></span>
+          <span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase">Linking satellite imagery</span>
+        </div>
       </div>
 
       <div id="map" class="w-full h-full"></div>
@@ -121,7 +133,10 @@ interface Props {
         const loader = document.getElementById('map-loader');
         if (loader) {
           loader.innerHTML =
-            '<div class="text-center px-6"><span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase block mb-2">Basemap Unavailable</span><span class="text-silver/60 font-mono text-[11px] block">Route coordinates are still listed in the expedition catalog below.</span></div>';
+            '<div class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">'
+            + '<span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase">Basemap Unavailable</span>'
+            + '<span class="text-silver/60 font-mono text-[11px] max-w-sm">Route coordinates are still listed in the expedition catalog below.</span>'
+            + '</div>';
         }
       });
 

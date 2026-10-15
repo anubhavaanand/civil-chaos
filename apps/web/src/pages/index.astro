@@ -110,7 +110,9 @@ const homepageFaqs = [
   <main class="bg-[#050505] text-[#94A3B8] font-body antialiased overflow-x-hidden w-full max-w-full selection:bg-[#00F2FE] selection:text-[#F9FAFB]">
     
     <!-- Hero Section (Obsidian, Glacier Blue, Silver Theme with 40px grid) -->
-    <section class="relative min-h-[92vh] flex items-center justify-center pt-20 md:pt-24 pb-20 overflow-hidden bg-[#050505]">
+    <!-- Asymmetric split: type block occupies the left 7/12, the right 5/12 stays
+         open so the photography reads through. Design system bans centered heroes. -->
+    <section class="relative min-h-[92vh] flex items-center pt-20 md:pt-24 pb-20 overflow-hidden bg-[#050505]">
       <!-- Background Photography with Calibrated Dark Scrim for Readability -->
       <div class="absolute inset-0 z-0">
         <img
@@ -126,6 +128,8 @@ const homepageFaqs = [
       </div>
 
       <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-7">
         <!-- Eyebrow with Glacier Accent Line -->
         <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#00F2FE]/10 border border-[#00F2FE]/30 text-[#00F2FE] text-xs font-mono font-bold tracking-widest uppercase mb-8 backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-[#00F2FE] ping-ring"></span>
@@ -141,7 +145,7 @@ const homepageFaqs = [
         </h1>
 
         <!-- Subtext: Exactly 20 words -->
-        <p class="text-lg sm:text-xl text-[#F8FAFC]/80 max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+        <p class="text-lg sm:text-xl text-[#F8FAFC]/80 max-w-3xl mb-10 leading-relaxed font-light">
           Small-batch Himalayan journeys limited to 12-15 trekkers. 100% NIM and WFR certified local leadership, transparent pricing, and zero weather penalties.
         </p>
 
@@ -203,6 +207,7 @@ const homepageFaqs = [
               <div class="text-sm font-bold text-[#F8FAFC]">Zero Weather Penalty</div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -681,7 +686,7 @@ const homepageFaqs = [
     <Footer />
   </div>
 
-  <!-- Client-side Satoshiactivity Script -->
+  <!-- Client-side interaction script -->
   <script>
     // Region Filter for Expeditions Bento Grid
     const filterButtons = document.querySelectorAll('.filter-chip');
