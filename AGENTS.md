@@ -1,47 +1,61 @@
-# AGENTS.md  -  Project Rules (read this first)
+# AGENTS.md — Project rules (read this first)
 
-Project: **Dream of The Holy Himalayas**  -  trekking agency website (Uttarakhand, India)
-Owner agency site (single company, NOT a marketplace). Urgent: ship a working prototype fast.
+Project: **Dream of The Holy Himalayas** — trekking agency website (Uttarakhand, India).
+Single company, not a marketplace. Proprietary software, not open source.
 
-## What this project is
-Astro (frontend) + Strapi 5 (headless CMS) + MapLibre GL interactive Himalayan trek map.
-Booking = request form (NO live payments in Phase 1). Razorpay is Phase 2.
-Detailed specs live in `/docs/*.md` (this file only summarizes + sets guardrails).
+## What this is
+Astro 4 (frontend) + Strapi 5 (headless CMS) + MapLibre GL trek map, deployed on Cloudflare
+Pages and Render. Booking is a request form — no live payments.
+Detailed specs live in `/docs/*.md`; this file only summarizes and sets guardrails.
 
-## Spec map (read the relevant one before touching that area)
+## Spec map — read the relevant one before touching that area
 | File | Covers |
 |---|---|
 | docs/PRD.md | Goals, scope, users, phases |
 | docs/ARCHITECTURE.md | Stack, infra, repo layout, env vars, deploy |
-| docs/DATABASE_SCHEMA.md | All Strapi content types + fields |
+| docs/DATABASE_SCHEMA.md | Strapi content types and fields |
 | docs/API_CONTRACT.md | REST endpoints, webhook, action contract |
 | docs/MAP_COMPONENT_SPEC.md | Homepage interactive map |
 | docs/FRONTEND_DESIGN_SPEC.md | Pages, glass design system, SEO |
 | docs/BOOKING_FLOW.md | Booking action, validation, notifications |
 
-## Hard rules / guardrails
-1. NEVER commit secrets. Env vars only (see ARCHITECTURE.md). Add `.env` to `.gitignore` on sight.
-2. Do NOT introduce a payment gateway, auth system, or GraphQL. Phase 1 is deliberately small.
-3. Do NOT add SSR to static marketing pages. Render mode: `output: 'hybrid'`  -  prerender everything EXCEPT the booking action endpoint and webhook receiver.
-4. All content must be editable in Strapi  -  never hard-code trek names, prices, dates, or itineraries in the frontend.
-5. Strapi writes from the frontend go ONLY through the Astro booking action (server-side token)  -  the public Strapi API is read-only.
-6. Booking schema changes must stay backward-compatible (Phase 2 Razorpay adds fields, never rewrites).
-7. Keep commits atomic and phase-scoped (foundation / content / map / booking / polish).
-8. Run `npm run check` (astro check) and build before declaring any task done.
-9. Self-host nothing (no self-hosted OSM tiles, no VPS) until MapTiler free tier (100k loads/mo) is exhausted.
+## Guardrails
+1. **Never commit secrets.** Env vars only (see ARCHITECTURE.md). Add `.env` to `.gitignore` on sight.
+2. **All trek content is managed in Strapi.** Never hard-code names, prices, dates, or
+   itineraries in the frontend — PRs that do will not be merged. The only exceptions are the
+   committed snapshot and `apps/cms/data/seed-data.json`, which exist as the deliberate build
+   floor when Strapi is unreachable.
+3. **Strapi writes go only through the Astro booking action** (server-side token). The public
+   Strapi API is read-only.
+4. **Do not add SSR to static marketing pages.** `output: 'hybrid'` — prerender everything
+   except the booking action endpoint and webhook receiver.
+5. **Booking schema changes stay backward-compatible.** Phase 2 payments add fields, never rewrite.
+6. **Do not self-host infrastructure** (tiles, VPS) while free tiers suffice.
+7. **Do not introduce a payment gateway, auth system, or GraphQL** without explicit approval.
 
-## Tech decisions already made (do not revisit without explicit ask)
-- REST from Strapi (not GraphQL) · Astro Actions for booking form · MapLibre GL + MapTiler tiles
-- Deploy: Cloudflare Pages (web) + Render (Strapi, persistent disk) + Neon Postgres + Cloudinary
-- WhatsApp deep-link = primary booking notification; email = backup/record
-- Map scope: Uttarakhand + Himachal Pradesh only (not all-India)
+## Before declaring a task done
+- `npm run check --workspace=apps/web` — 0 errors
+- `npm run build --workspace=apps/web` — completes
+- If the booking flow changed, run the Playwright suite in `apps/web/tests/`
+- **Verify against what is actually committed/deployed, not a dirty working tree.** Build from
+  the commit you intend to ship.
 
-## Current Project State (Phase 1 Backend Complete)
-- ✅ **Strapi CMS**: Live at `civil-chaos.onrender.com`. All schemas created.
-- ✅ **Neon DB**: Fully seeded (10 treks, 3 regions, 23 batches, 11 packages). Public read permissions are enabled.
-- ✅ **Astro Frontend**: Live at `civil-chaos.pages.dev`. E2E Playwright tests implemented in `apps/web/tests/booking.spec.ts`.
-- **Current Focus**: Frontend UI/UX (Google Stitch), booking action wiring, map integration.
+## Conventions
+- Commits atomic and phase-scoped (foundation / content / map / booking / polish).
+- One concern per PR; split refactors from behaviour changes.
+- UI changes need before/after screenshots.
+- Seed-data changes belong in `apps/cms/scripts/seed.mjs`, never in frontend fixtures.
 
 ## Commands
-- Web: `npm run dev` / `npm run build` / `npm run check` (in `apps/web`)
-- CMS: `npm run develop` / `npm run build` (in `apps/cms`)
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Astro dev server → localhost:4321 |
+| `npm run build` | Production build of `apps/web` |
+| `npm run dev:cms` | Strapi admin → localhost:1337/admin |
+| `npm run build:cms` | Production build of `apps/cms` |
+| `npm run check --workspace=apps/web` | `astro check` (types + diagnostics) |
+
+## Current state
+Frontend and CMS are both live. The catalog renders ten treks across Garhwal and Himachal
+Pradesh with itineraries, elevation profiles, batch calendars and logistics. Editorial content
+is managed entirely in Strapi. See the README for the platform overview.

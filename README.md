@@ -6,7 +6,11 @@
 
   <h1 align="center">Dream of The Holy Himalayas</h1>
 
-  <p align="center"><strong>Boutique Himalayan trekking platform — built for a small-batch expedition agency in Mautar, Uttarkashi.</strong></p>
+  <p align="center"><strong>Booking &amp; expedition platform for a boutique Himalayan trekking agency.</strong></p>
+
+  <p align="center">
+    <i>Proprietary in-house platform — HQ: Village Mautar, Uttarkashi, Uttarakhand</i>
+  </p>
 
   <p align="center">
     <a href="https://civil-chaos.pages.dev"><img src="https://img.shields.io/badge/Live_site-civil--chaos.pages.dev-0ea5e9?style=flat-square" alt="Live site" /></a>
@@ -28,19 +32,30 @@
 
 ## Overview
 
-A decoupled content platform for **Dream of The Holy Himalayas**, a 5.0-star small-batch trekking
-agency operating from Village Mautar in the Upper Bhagirathi basin. The agency runs expeditions
-capped at 12–15 trekkers, led entirely by guides native to the region and certified by the
-Nehru Institute of Mountaineering (NIM) and Wilderness First Responder (WFR).
+A decoupled content platform for **Dream of The Holy Himalayas**, a small-batch trekking agency
+operating from Village Mautar in the Upper Bhagirathi basin. The agency runs expeditions capped
+at 12–15 trekkers, led entirely by guides native to the region and certified by the Nehru
+Institute of Mountaineering (NIM) and Wilderness First Responder (WFR).
 
 The platform publishes ten precision-scouted routes across Garhwal and Himachal Pradesh, each
-with full day-by-day itineraries, elevation profiles, batch calendars with live seat counts, and
-logistics. Editorial operations run through a headless CMS, so the agency can manage departures,
+with full day-by-day itineraries, elevation profiles, batch calendars with live seat counts and
+logistics. Editorial operations run through a headless CMS, so the agency manages departures,
 pricing and FAQ content without a developer.
 
 **Design direction.** A bespoke *Alpine Glass* design system: obsidian surfaces, a single glacier
 cyan accent, and telemetry readouts drawn from the agency's own field logs. The aesthetic
 deliberately distances the product from the conventional budget-tour-operator look.
+
+## Platform highlights
+
+| | |
+|---|---|
+| **Expedition catalog** | Ten routes with itineraries, elevation profiles and batch calendars across Garhwal and Himachal |
+| **Acclimatization lab** | Per-trek altitude scrubber with effective-oxygen and barometric readouts, plus a Lake Louise AMS screener |
+| **Readiness quiz** | Four-question self-assessment scoring trekker fitness and suggesting suitable routes |
+| **Secure booking relay** | Bot-hardened form → server-side Strapi write → WhatsApp deep link to basecamp |
+| **Zero-deploy content** | Treks, batches, pricing, itineraries, FAQs and SEO metadata all edited in Strapi admin |
+| **Edge delivery** | Astro hybrid rendering on Cloudflare Pages; marketing pages ship as static HTML |
 
 ---
 
@@ -138,10 +153,11 @@ Strapi is unreachable, so a local build works without the CMS running. See
 
 ---
 
-## Contributing
+## Contributors
 
-Contributions welcome from contracted collaborators. See [CONTRIBUTING.md](CONTRIBUTING.md) and
-open an issue using the templates in `.github/ISSUE_TEMPLATE/`.
+This is an in-house platform maintained for a single agency. Contributions are limited to
+contracted collaborators; the project rules, guardrails and review checklist live in
+[AGENTS.md](AGENTS.md).
 
 ---
 
