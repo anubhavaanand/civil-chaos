@@ -1,6 +1,15 @@
 @import "tailwindcss";
-@import "@fontsource/space-grotesk";
-// Inter font removed per Dark Alpine Glass theme
+/* Space Grotesk for display headings; weights used by font-display/black/extrabold. */
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+/* Geist for body copy. DESIGN.md allows Satoshi or Geist for --font-body;
+   Satoshi is a Fontshare font with no fontsource package, so Geist is used. */
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+/* Telemetry mono for elevations, coordinates and figures (DESIGN.md 3). */
+@import "@fontsource/geist-mono/400.css";
+/* Inter font removed per Dark Alpine Glass theme */
 
 @theme {
   --color-obsidian: #050505;
@@ -13,8 +22,11 @@
   --color-ink: #e8eef2;
   --color-ink-dim: #a9b8c0;
   --color-brand: #00f2fe;
+  /* Tailwind v4 derives the font-* utilities from these keys, so the utility
+     names must match exactly: --font-display generates .font-display. */
   --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Satoshi", sans-serif;
+  --font-body: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
 
   /* Emil Kowalski Motion Easing Tokens */
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
