@@ -1,0 +1,87 @@
+// apps/web/src/styles/tokens.css
+// Central design tokens for the Alpine Glass design system.
+// All components should reference these CSS variables instead of hardcoded colors.
+// Import this file in global.css before @theme definitions.
+
+@layer base {
+  /* ===== Surface Colors (dark obsidian theme) ===== */
+  --color-surface: #050505;
+  --color-surface-deep: #0a0f18;
+  --color-surface-elevated: #0f172a;
+  --color-surface-hover: #141e2e;
+
+  /* ===== Brand Colors (glacier cyan) ===== */
+  --color-brand: #00f2fe;
+  --color-brand-deep: #00b4d8;
+  --color-brand-glow: rgba(0, 242, 254, 0.15);
+  --color-brand-surface: rgba(0, 242, 254, 0.10);
+  --color-brand-border: rgba(0, 242, 254, 0.30);
+
+  /* ===== Semantic Colors ===== */
+  --color-success: #34D399;
+  --color-success-surface: rgba(52, 211, 153, 0.10);
+  --color-success-border: rgba(52, 211, 153, 0.30);
+
+  --color-warning: #FBBF24;
+  --color-warning-surface: rgba(251, 191, 36, 0.10);
+  --color-warning-border: rgba(251, 191, 36, 0.30);
+
+  --color-error: #FB7185;
+  --color-error-surface: rgba(251, 113, 133, 0.10);
+  --color-error-border: rgba(251, 113, 133, 0.30);
+
+  /* ===== Text Colors ===== */
+  --color-text-primary: #e8eef2;
+  --color-text-dim: #a9b8c0;
+  --color-text-muted: #718096;
+  --color-text-inverse: #050505;
+
+  /* ===== Border & Divider ===== */
+  --color-border: rgb(255 255 255 / 0.10);
+  --color-border-bright: rgb(255 255 255 / 0.20);
+  --color-divider: rgb(255 255 255 / 0.05);
+
+  /* ===== Glass ===== */
+  --color-glass: rgb(255 255 255 / 0.10);
+  --color-glass-border: rgb(255 255 255 / 0.20);
+  --color-glass-dark: rgb(255 255 255 / 0.03);
+
+  /* ===== Shadows ===== */
+  --shadow-glass: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-bezel: 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-lens: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  /* ===== Border Radius ===== */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+}
+
+/* Make tokens available to Tailwind utilities via @theme */
+@theme {
+  --color-obsidian: var(--color-surface);
+  --color-slate: #0f172a;
+  --color-silver: #d4d4d8;
+  --color-glacier: var(--color-brand);
+  --color-glacier-deep: var(--color-brand-deep);
+  --color-glass: var(--color-glass);
+  --color-glass-border: var(--color-glass-border);
+  --color-ink: var(--color-text-primary);
+  --color-ink-dim: var(--color-text-dim);
+  --color-brand: var(--color-brand);
+  --color-brand-deep: var(--color-brand-deep);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+
+  /* Emil Kowalski Motion Easing Tokens */
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
