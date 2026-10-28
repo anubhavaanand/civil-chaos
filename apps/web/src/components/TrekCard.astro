@@ -1,5 +1,6 @@
 ---
 import DifficultyBadge from './DifficultyBadge.astro';
+import OptimizedImage from './OptimizedImage.astro';
 import type { Trek } from '../lib/strapi';
 
 interface Props {
@@ -15,11 +16,13 @@ const { name, slug, difficulty, durationDays, maxAltitudeM, fromPrice, heroImage
   <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
   
   <div class="relative w-full aspect-video overflow-hidden shrink-0 bg-slate-800">
-    <img 
-      src={heroImage} 
-      alt={name} 
-      loading="lazy" 
+    <OptimizedImage
+      src={heroImage}
+      alt={name}
+      loading="lazy"
       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      widths={[400, 800, 1200, 1600]}
+      quality={85}
     />
     <div class="absolute top-3 right-3 z-10">
       <DifficultyBadge difficulty={difficulty} />

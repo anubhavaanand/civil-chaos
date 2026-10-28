@@ -1,0 +1,62 @@
+---
+// apps/web/src/components/OptimizedImage.astro
+// Drop-in replacement for  with Astro Image optimization:
+// responsive widths, AVIF/WebP formats, lazy loading below fold,
+// fetchpriority on LCP hero, blur-up placeholder support.
+//
+// Props:
+//   src        — image URL or local asset import (required)
+//   alt        — alt text (required)
+//   widths     — responsive widths array (default [400, 800, 1200, 1600])
+//   quality    — 1-100 (default 85)
+//   loading    — 'eager' | 'lazy' (default 'lazy')
+//   fetchpriority — 'high' | 'low' (default undefined)
+//   class      — additional CSS classes
+//   sizes      — sizes attribute (default '100vw')
+//   blurUp     — show blurred placeholder while loading (default false)
+
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: string;
+  alt: string;
+  widths?: number[];
+  quality?: number;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low';
+  class?: string;
+  sizes?: string;
+  blurUp?: boolean;
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  widths = [400, 800, 1200, 1600],
+  quality = 85,
+  loading = 'lazy',
+  fetchpriority,
+  class: className = '',
+  sizes = '100vw',
+  blurUp = false,
+  width,
+  height,
+} = Astro.props;
+---
+
+<Image
+  src={src}
+  alt={alt}
+  widths={widths}
+  formats={['avif', 'webp']}
+  quality={quality}
+  loading={loading}
+  {fetchpriority}
+  {width}
+  {height}
+  class={className}
+  sizes={sizes}
+  {blurUp}
+/>

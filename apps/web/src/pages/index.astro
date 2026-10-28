@@ -7,6 +7,7 @@ import SacredPeaksLore from '../components/SacredPeaksLore.astro';
 import SocialCarousel from '../components/SocialCarousel.astro';
 import FieldNotes from '../components/FieldNotes.astro';
 import AudioSoundscape from '../components/AudioSoundscape.astro';
+import OptimizedImage from '../components/OptimizedImage.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
 import SectionRail from '../components/SectionRail.astro';
 import StatsStrip from '../components/StatsStrip.astro';
@@ -115,11 +116,14 @@ const homepageFaqs = [
     <section class="relative min-h-[92vh] flex items-center pt-20 md:pt-24 pb-20 overflow-hidden bg-[#050505]">
       <!-- Background Photography with Calibrated Dark Scrim for Readability -->
       <div class="absolute inset-0 z-0">
-        <img
+        <OptimizedImage
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2674&auto=format&fit=crop"
           alt="Sacred Himalayan mountain peaks at sunrise"
           class="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
           loading="eager"
+          fetchpriority="high"
+          widths={[800, 1200, 1600, 2000, 2674]}
+          quality={85}
         />
         <div class="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-[#0a0f18]/65 to-[#050505]"></div>
         <div class="absolute inset-0 bg-grid opacity-75"></div>
@@ -322,8 +326,8 @@ const homepageFaqs = [
       </div>
     </section>
 
-    <!-- Topography & Telemetry Map Engine -->
-    <MapLibreTrekMap treks={treks} />
+    <!-- Topography & Telemetry Map Engine (lazy: client:visible protects LCP) -->
+    <MapLibreTrekMap treks={treks} client:visible />
 
     <!-- 3D Peak Viewport Section (#peak-viewer) -->
     <section id="peak-viewer" class="py-24 bg-[#050505] border-t border-white/5">
@@ -690,7 +694,7 @@ const homepageFaqs = [
   </div>
 
   <!-- Client-side interaction script -->
-  <script>
+  <script type="module">
     // Region Filter for Expeditions Bento Grid
     const filterButtons = document.querySelectorAll('.filter-chip');
     const trekCards = document.querySelectorAll('.trek-card');

@@ -42,165 +42,139 @@ interface Props {
   </div>
 </section>
 
-<script>
-  // Lazy Load MapLibre JS & CSS to protect Page LCP (Largest Contentful Paint)
+<script is:inline>
+  // MapLibre GL initialization — runs when client:visible hydrates this component.
+  // Lazy-loaded to protect Page LCP (Largest Contentful Paint).
   const container = document.getElementById('maplibre-container');
 
   if (container) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          loadMapLibre();
-          observer.disconnect();
-        }
-      });
-    }, { rootMargin: "200px" }); // Pre-load 200px before scrolling into view
-
-    observer.observe(container);
-  }
-
-  async function loadMapLibre() {
-    try {
-      // Dynamically import MapLibre
-      const maplibregl = await import('maplibre-gl');
-      await import('maplibre-gl/dist/maplibre-gl.css');
-
-      const treksUrl = container?.dataset.treksUrl;
-      if (!treksUrl) return;
-      
-      let treks = [];
+    async function loadMapLibre() {
       try {
-        const res = await fetch(treksUrl);
-        const geojson = await res.json();
-        treks = geojson.features.map((f: any) => ({
-          coordinates: f.geometry.coordinates,
-          name: f.properties.name,
-          slug: f.properties.slug,
-          difficulty: f.properties.difficulty,
-          maxAltitudeM: f.properties.maxAltitudeM
-        }));
-      } catch (err) {
-        console.error("Failed to load treks GeoJSON:", err);
-      }
-      
-      // A MapTiler key unlocks satellite terrain (set PUBLIC_MAPTILER_KEY). Without
-      // one we fall back to CARTO's keyless dark style, which renders the pins and
-      // the region geometry correctly and needs no account.
-      const mapKey = import.meta.env.PUBLIC_MAPTILER_KEY;
-      const hasMaptiler = Boolean(mapKey && mapKey.length > 0);
+        // Dynamically import MapLibre JS & CSS
+        const maplibreModule = await import('maplibre-gl');
+        const maplibregl = maplibreModule.default || maplibreModule;
+        await import('maplibre-gl/dist/maplibre-gl.css');
 
-      const map = new maplibregl.Map({
-        container: 'map',
-        style: hasMaptiler
-          ? `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapKey}`
-          : {
-              version: 8,
-              glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
-              sources: {
-                carto: {
-                  type: 'raster',
-                  tiles: [
-                    'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-                    'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-                    'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                  ],
-                  tileSize: 256,
-                  attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-                }
+        const treksUrl = container?.dataset.treksUrl;
+        if (!treksUrl) return;
+        
+        let treks = [];
+        try {
+          const res = await fetch(treksUrl);
+          const geojson = await res.json();
+          treks = geojson.features.map((f: any) => ({
+            coordinates: f.geometry.coordinates,
+            name: f.properties.name,
+            slug: f.properties.slug,
+            difficulty: f.properties.difficulty,
+            maxAltitudeM: f.properties.maxAltitudeM,
+          }));
+        } catch (err) {
+          console.error("Failed to load treks GeoJSON:", err);
+        }
+        
+        // A MapTiler key unlocks satellite terrain (set PUBLIC_MAPTILER_KEY). Without
+        // one we fall back to CARTO's keyless dark style, which renders the pins and
+        // the region geometry correctly and needs no account.
+        const mapKey = import.meta.env.PUBLIC_MAPTILER_KEY;
+        const hasMaptiler = Boolean(mapKey && mapKey.length > 0);
+
+        const map = new maplibregl.Map({
+          container: 'map',
+          style: hasMaptiler
+            ? `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapKey}`
+            : {
+                version: 8,
+                glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
+                sources: {
+                  carto: {
+                    type: 'raster',
+                    tiles: [
+                      'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                      'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                      'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    ],
+                    tileSize: 256,
+                    attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+                  }
+                },
+                layers: [
+                  {
+                    id: 'carto-dark',
+                    type: 'raster',
+                    source: 'carto',
+                    minzoom: 0,
+                    maxzoom: 20
+                  }
+                ]
               },
-              layers: [
-                {
-                  id: 'carto-dark',
-                  type: 'raster',
-                  source: 'carto',
-                  minzoom: 0,
-                  maxzoom: 20
-                }
-              ]
-            },
-        center: [79.0, 30.7], // Center on Uttarakhand
-        zoom: 7.5,
-        maxPitch: 85,
-        attributionControl: false
-      });
-
-      map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
-
-      map.on('error', (e: any) => {
-        // A broken style URL used to leave the loader pinned on screen forever,
-        // because only the 'load' handler hid it.
-        console.error("MapLibre tile/style error:", e);
-        const loader = document.getElementById('map-loader');
-        if (loader) {
-          loader.innerHTML =
-            '<div class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">'
-            + '<span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase">Basemap Unavailable</span>'
-            + '<span class="text-silver/60 font-mono text-[11px] max-w-sm">Route coordinates are still listed in the expedition catalog below.</span>'
-            + '</div>';
-        }
-      });
-
-      map.on('load', () => {
-        // Fade out loader
-        const loader = document.getElementById('map-loader');
-        if (loader) {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.style.display = 'none', 700);
-        }
-
-        // Inject 3D Terrain (MapTiler DEM requires a key; CARTO has no DEM tiles)
-        if (hasMaptiler) {
-          map.addSource('terrain-source', {
-            type: 'raster-dem',
-            url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${mapKey}`
-          });
-          map.setTerrain({ source: 'terrain-source', exaggeration: 1.5 });
-        }
-
-        // Add Trek Pins
-        treks.forEach((trek: any) => {
-          if (!trek.coordinates || trek.coordinates.length < 2) return;
-
-          const el = document.createElement('div');
-          el.className = 'w-4 h-4 bg-[#00F2FE] rounded-full shadow-md border-2 border-white cursor-pointer hover:scale-150 hover:bg-[#0a0f18] transition-all duration-300';
-          
-          const popupHtml = `
-            <div class="bg-[#0a0f18]/95 border border-white/10 p-4 rounded-lg backdrop-blur-md min-w-[200px]">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="w-2 h-2 rounded-full ${trek.difficulty === 'easy' ? 'bg-[#34D399]' : trek.difficulty === 'moderate' ? 'bg-[#FBBF24]' : 'bg-[#FB7185]'}"></span>
-                <span class="text-xs font-mono text-[#94A3B8] uppercase">${trek.difficulty}</span>
-              </div>
-              <h3 class="text-[#F8FAFC] font-bold text-base leading-tight mb-1">${trek.name}</h3>
-              <p class="text-[#00F2FE] font-mono text-xs mb-3">ALT: ${trek.maxAltitudeM}m</p>
-              <a href="/treks/${trek.slug}" class="inline-block w-full text-center py-2 bg-[#050505]/5 text-[#F8FAFC] hover:bg-[#0a0f18]/10 text-[#F8FAFC] text-xs font-mono uppercase tracking-wider rounded transition-colors">
-                View Telemetry
-              </a>
-            </div>
-          `;
-
-          const popup = new maplibregl.Popup({ offset: 25, className: 'dark-alpine-popup' })
-            .setHTML(popupHtml);
-
-          new maplibregl.Marker({ element: el })
-            .setLngLat(trek.coordinates)
-            .setPopup(popup)
-            .addTo(map);
+          center: [79.0, 30.7], // Center on Uttarakhand
+          zoom: 7.5,
+          maxPitch: 0,           // Spec: NO pitch, NO 3D terrain
+          attributionControl: true, // Spec: visible OSM + MapTiler attribution
+          cooperativeGestures: true, // Spec: page scroll isn't trapped
+          touchPitch: false,     // Spec: mobile touch pitch disabled
         });
 
-        // Add subtle fog/atmosphere for realism if supported
-        if (typeof (map as any).setFog === 'function') {
-          (map as any).setFog({
-            'color': 'rgba(5, 5, 5, 0.9)',
-            'high-color': 'rgba(15, 23, 42, 0.1)',
-            'horizon-blend': 0.1,
-            'space-color': 'rgba(15, 23, 42, 1)'
-          });
-        }
-      });
+        map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-    } catch (err) {
-      console.error("MapLibre load failed:", err);
+        map.on('error', (e: any) => {
+          console.error("MapLibre tile/style error:", e);
+          const loader = document.getElementById('map-loader');
+          if (loader) {
+            loader.innerHTML =
+              '<div class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">'
+              + '<span class="text-[#00F2FE] font-mono text-xs tracking-widest uppercase">Basemap Unavailable</span>'
+              + '<span class="text-silver/60 font-mono text-[11px] max-w-sm">Route coordinates are still listed in the expedition catalog below.</span>'
+              + '</div>';
+          }
+        });
+
+        map.on('load', () => {
+          // Fade out loader
+          const loader = document.getElementById('map-loader');
+          if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 700);
+          }
+
+          // Add Trek Pins
+          treks.forEach((trek: any) => {
+            if (!trek.coordinates || trek.coordinates.length < 2) return;
+
+            const el = document.createElement('div');
+            el.className = 'w-4 h-4 bg-[#00F2FE] rounded-full shadow-md border-2 border-white cursor-pointer hover:scale-150 hover:bg-[#0a0f18] transition-all duration-300';
+            
+            const popupHtml = `
+              <div class="bg-[#0a0f18]/95 border border-white/10 p-4 rounded-lg backdrop-blur-md min-w-[200px]">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="w-2 h-2 rounded-full ${trek.difficulty === 'easy' ? 'bg-[#34D399]' : trek.difficulty === 'moderate' ? 'bg-[#FBBF24]' : 'bg-[#FB7185]'}"></span>
+                  <span class="text-xs font-mono text-[#94A3B8] uppercase">${trek.difficulty}</span>
+                </div>
+                <h3 class="text-[#F8FAFC] font-bold text-base leading-tight mb-1">${trek.name}</h3>
+                <p class="text-[#00F2FE] font-mono text-xs mb-3">ALT: ${trek.maxAltitudeM}m</p>
+                <a href="/treks/${trek.slug}" class="inline-block w-full text-center py-2 bg-[#050505]/5 text-[#F8FAFC] hover:bg-[#0a0f18]/10 text-[#F8FAFC] text-xs font-mono uppercase tracking-wider rounded transition-colors">
+                  View Telemetry
+                </a>
+              </div>
+            `;
+
+            const popup = new maplibregl.Popup({ offset: 25, className: 'dark-alpine-popup' })
+              .setHTML(popupHtml);
+
+            new maplibregl.Marker({ element: el })
+              .setLngLat(trek.coordinates)
+              .setPopup(popup)
+              .addTo(map);
+          });
+        });
+
+      } catch (err) {
+        console.error("MapLibre load failed:", err);
+      }
     }
+
+    loadMapLibre();
   }
 </script>
 
