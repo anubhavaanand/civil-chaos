@@ -9,7 +9,7 @@
 4. Agency side: Strapi `afterCreate` lifecycle on booking-request → email to agency (customer details + trek + dates) + entry appears in Strapi admin with status `new`.
 
 ## Server-side implementation
-- Astro Action with zod schema: `customerName (2-60)`, `phone ^[6-9]\d{9}$`, `email? email`, `groupSize int 1-30`, relations resolved server-side by slug/id (never trust client ids for trek price).
+- Astro Action with zod schema: `customerName (2-60)`, `phone ^[6-9]\d{9}$`, `email? email`, `groupSize int 1-15`, relations resolved server-side by slug/id (never trust client ids for trek price).
 - Honeypot: hidden `company` field; if filled → return 200 `{ok:false}` quietly.
 - Rate limit: 3 submissions / min / IP (KV/in-memory edge map; on Pages use a simple Workers KV or Durable Object; acceptable: token bucket in action module for prototype + Cloudflare rate-limiting rule as backstop).
 - Create Strapi entry with server token; set `sourceIp`; never expose Strapi admin token to client.

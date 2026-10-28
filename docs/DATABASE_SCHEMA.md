@@ -69,7 +69,7 @@ Media fields → Cloudinary via upload provider. Timestamps + publishedAt on all
 | customerName | string | required |
 | phone | string | required, validated `^[6-9]\d{9}$` (Indian mobile) |
 | email | email | optional |
-| groupSize | integer | default 1, max 30 |
+| groupSize | integer | default 1, max 15 |
 | message | text | optional |
 | preferredDates | string | free text, e.g. "first week of Oct" |
 | status | enum | new \| contacted \| confirmed \| closed (admin-managed) |

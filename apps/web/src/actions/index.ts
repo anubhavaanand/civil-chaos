@@ -55,7 +55,7 @@ export const server = {
       customerName: z.string().min(2, "Name must be at least 2 characters"),
       phone: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid 10-digit Indian mobile number (e.g. 9876543210)"),
       email: z.string().email("Invalid email address").or(z.literal('')).optional(),
-      groupSize: z.coerce.number().min(1).max(30).default(1),
+      groupSize: z.coerce.number().min(1).max(15).default(1),
       preferredDates: z.string().optional(),
       bookingType: z.enum(['whatsapp_inquiry', 'token_deposit']).default('whatsapp_inquiry'),
       message: z.string().optional(),
