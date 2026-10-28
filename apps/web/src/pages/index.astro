@@ -86,6 +86,13 @@ const homepageFaqs = [
     "@id": SITE_CONFIG.canonicalUrl,
     "url": SITE_CONFIG.canonicalUrl,
     "telephone": SITE_CONFIG.phoneTel,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "40",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Village Mautar",
@@ -94,6 +101,16 @@ const homepageFaqs = [
       "postalCode": "249128", 
       "addressCountry": "IN"
     },
+    "areaServed": [
+      {
+        "@type": "State",
+        "name": "Uttarakhand"
+      },
+      {
+        "@type": "State",
+        "name": "Himachal Pradesh"
+      }
+    ],
     "geo": {
       "@type": "GeoCoordinates",
       "latitude": SITE_CONFIG.coordinates.lat,
