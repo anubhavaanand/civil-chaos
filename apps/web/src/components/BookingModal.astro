@@ -54,12 +54,13 @@ const { trek } = Astro.props;
 
         <!-- Customer Name -->
         <div>
-          <label for="customerName" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Your Full Name *</label>
+          <label for="customerName" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Your Full Name <span class="text-[#FB7185]">*</span></label>
           <input
             type="text"
             id="customerName"
             name="customerName"
             required
+            aria-required="true"
             placeholder="e.g. Rahul Sharma"
             class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
           />
@@ -67,25 +68,29 @@ const { trek } = Astro.props;
 
         <!-- Phone Number -->
         <div>
-          <label for="phone" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Indian Mobile Number *</label>
+          <label for="phone" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Indian Mobile Number <span class="text-[#FB7185]">*</span></label>
           <div class="relative">
             <span class="absolute left-3.5 top-2.5 text-sm font-mono text-ink-dim">+91</span>
             <input
               type="tel"
               id="phone"
               name="phone"
+              inputmode="tel"
               required
+              aria-required="true"
+              aria-describedby="phone-feedback"
               pattern="^[6-9]\\d{9}$"
               placeholder="9876543210"
               class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 pl-14 pr-4 py-2.5 text-sm font-mono text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
             />
+            <div id="phone-feedback" class="hidden text-[10px] text-[#FB7185] mt-1 font-mono"></div>
           </div>
         </div>
 
         <!-- Group Size & Flexible Dates -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="groupSize" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Climbers *</label>
+            <label for="groupSize" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Climbers <span class="text-[#FB7185]">*</span></label>
             <input
               type="number"
               id="groupSize"
@@ -94,6 +99,7 @@ const { trek } = Astro.props;
               max="15"
               value="1"
               required
+              aria-required="true"
               class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm font-mono text-white focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
             />
           </div>
@@ -149,20 +155,71 @@ const { trek } = Astro.props;
     const batchBanner = document.getElementById('selected-batch-banner');
     const batchText = document.getElementById('selected-dates-text');
     const clearBatchBtn = document.getElementById('clear-batch-btn');
+    let lastTrigger = null; // track which trigger opened the dialog
 
-    triggers.forEach((trigger) => {
+    // Focusable elements within the dialog (for focus trap)
+    const FOCUSABLE_SELECTORS = [
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      'a[href]',
+    ].join(',');
+
+    function trapFocus(element) {
+      const focusable = element.querySelectorAll(FOCUSABLE_SELECTORS);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      element.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    }
+
+    traps: for (const trigger of triggers) {
       trigger.addEventListener('click', () => {
+        lastTrigger = trigger;
         const dates = trigger.getAttribute('data-dates');
         if (dates) {
           batchInput.value = dates;
           batchText.textContent = dates;
           batchBanner.classList.remove('hidden');
         }
-        if (dialog) dialog.showModal();
+        if (dialog) {
+          dialog.showModal();
+          trapFocus(dialog);
+          // Focus first focusable element after dialog opens
+          requestAnimationFrame(() => {
+            const focusable = dialog.querySelectorAll(FOCUSABLE_SELECTORS);
+            if (focusable.length > 0) {
+              focusable[0].focus();
+            }
+          });
+        }
       });
+    }
+
+    closeBtn?.addEventListener('click', () => {
+      dialog?.close();
+      lastTrigger?.focus();
     });
 
-    closeBtn?.addEventListener('click', () => dialog?.close());
+    // Return focus to trigger on dialog close (ESC or backdrop)
+    dialog?.addEventListener('close', () => {
+      lastTrigger?.focus();
+    });
 
     // Light dismiss on backdrop click
     dialog?.addEventListener('click', (e) => {
@@ -173,7 +230,10 @@ const { trek } = Astro.props;
         rect.left <= e.clientX &&
         e.clientX <= rect.left + rect.width
       );
-      if (!isInDialog) dialog.close();
+      if (!isInDialog) {
+        dialog.close();
+        lastTrigger?.focus();
+      }
     });
 
     clearBatchBtn?.addEventListener('click', () => {
@@ -184,6 +244,7 @@ const { trek } = Astro.props;
     // Handle form submit redirect to WhatsApp URL
     const form = document.getElementById('booking-form');
     const feedback = document.getElementById('booking-feedback');
+    const phoneFeedback = document.getElementById('phone-feedback');
 
     form?.addEventListener('submit', async (e) => {
       const phoneInput = document.getElementById('phone');
@@ -194,6 +255,11 @@ const { trek } = Astro.props;
           feedback.textContent = 'Please enter a valid 10-digit Indian mobile number.';
           feedback.classList.remove('hidden');
         }
+        if (phoneFeedback) {
+          phoneFeedback.textContent = 'Please enter a valid 10-digit Indian mobile number.';
+          phoneFeedback.classList.remove('hidden');
+        }
+        phoneInput?.focus();
       }
     });
   });
