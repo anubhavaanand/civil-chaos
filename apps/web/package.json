@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run generate:geojson && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro"
+    "astro": "astro",
+    "generate:geojson": "node ../../scripts/generate-geojson.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^11.2.0",
