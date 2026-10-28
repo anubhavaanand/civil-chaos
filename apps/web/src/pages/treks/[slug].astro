@@ -29,6 +29,22 @@ const { trek } = Astro.props as { trek: Trek };
 const difficultyColor = trek.difficulty === 'easy' ? 'text-[#34D399]' : trek.difficulty === 'moderate' ? 'text-[#FBBF24]' : 'text-[#FB7185]';
 
 // Schema.org TouristTrip + Product / Offer JSON-LD
+// Determine Offer availability from batch status
+const openBatches = trek.batches.filter((b) => b.status === 'open');
+const fullBatches = trek.batches.filter((b) => b.status === 'full');
+const availability = openBatches.length > 0
+  ? 'https://schema.org/InStock'
+  : fullBatches.length > 0
+    ? 'https://schema.org/SoldOut'
+    : 'https://schema.org/Discontinued';
+
+// Wa.me deep link for potentialAction
+const waPhone = SITE_CONFIG.phoneRaw;
+const waText = encodeURIComponent(
+  `Hi! I want to book *${trek.name}* trek. Group size and dates flexible. Please share availability.`
+);
+const waUrl = `https://wa.me/${waPhone}?text=${waText}`;
+
 const touristTripSchema = {
   "@context": "https://schema.org",
   "@type": "TouristTrip",
@@ -39,6 +55,10 @@ const touristTripSchema = {
     "@type": "TravelAgency",
     "name": "Dream of The Holy Himalayas",
     "url": SITE_CONFIG.canonicalUrl
+  },
+  "areaServed": {
+    "@type": "State",
+    "name": trek.region === 'Himachal Pradesh' ? 'Himachal Pradesh' : 'Uttarakhand'
   },
   "itinerary": {
     "@type": "ItemList",
@@ -56,8 +76,21 @@ const touristTripSchema = {
     "@type": "Offer",
     "priceCurrency": "INR",
     "price": trek.fromPrice,
-    "availability": "https://schema.org/InStock",
-    "validFrom": "2026-01-01"
+    "priceSpecification": {
+      "@type": "PriceSpecification",
+      "priceCurrency": "INR",
+      "price": trek.fromPrice
+    },
+    "availability": availability,
+    "validFrom": "2026-01-01",
+    "seller": {
+      "@type": "Organization",
+      "name": "Dream of The Holy Himalayas"
+    }
+  },
+  "potentialAction": {
+    "@type": "ReserveAction",
+    "target": waUrl
   }
 };
 
@@ -71,16 +104,50 @@ const productSchema = {
     "@type": "Offer",
     "priceCurrency": "INR",
     "price": trek.fromPrice,
-    "availability": "https://schema.org/InStock"
+    "availability": availability
   }
 };
+
+// BreadcrumbList schema
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": SITE_CONFIG.canonicalUrl
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Expedition Catalog",
+      "item": `${SITE_CONFIG.canonicalUrl}/treks`
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": trek.name,
+      "item": `${SITE_CONFIG.canonicalUrl}/treks/${trek.slug}`
+    }
+  ]
+};
+
+// Per-trek OG image: hero at 1200x630 via Cloudinary transform
+const ogImage = trek.heroImage
+  ? trek.heroImage.includes('cloudinary.com')
+    ? trek.heroImage.replace('/upload/', '/upload/c_fill,w_1200,h_630/')
+    : trek.heroImage
+  : `${SITE_CONFIG.canonicalUrl}/images/hero/sunrise-basecamp.png`;
 ---
 
 <Layout
   title={`${trek.name} | Dream of The Holy Himalayas`}
   description={trek.summary || `${trek.durationDays}-day ${trek.difficulty} Himalayan trek from ${trek.startPoint}, reaching ${trek.maxAltitudeM.toLocaleString()} m.`}
+  ogImage={ogImage}
 >
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify([touristTripSchema, productSchema])} is:inline />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify([touristTripSchema, productSchema, breadcrumbSchema])} is:inline />
   <GlassNav />
 
   <!-- 1. The Elite Exped Authority Hero -->
