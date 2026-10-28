@@ -1,0 +1,18 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://wa.me https://api.maptiler.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: https://images.unsplash.com https://api.maptiler.com; connect-src 'self' https://cms.<domain>.com https://api.cloudflare.com https://wa.me https://api.maptiler.com; frame-src https://wa.me; base-uri 'self'; form-action 'self';
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+/_actions/booking
+  Cache-Control: no-store
+/api/revalidate
+  Cache-Control: no-store
+/treks/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+/treks/[slug]
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/regions/[slug]
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/.*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
