@@ -3,6 +3,47 @@ import { z } from 'astro:schema';
 import { SITE_CONFIG } from '../config/site';
 import { fetchStrapi } from '../lib/strapi';
 
+// ---------------------------------------------------------------------------
+// IP rate limit: 3 booking submissions per minute per IP (per BOOKING_FLOW.md)
+// In-memory token bucket, keyed by client IP. Prototype-acceptable; shared
+// state across edge nodes is not required for Phase 1. Cloudflare dashboard
+// rate-limiting rules are the recommended production backstop.
+// ---------------------------------------------------------------------------
+
+interface RateBucket { tokens: number; last: number; }
+const rateBuckets = new Map<string, RateBucket>();
+const RATE_CAP = 3;
+const RATE_PER_MIN = 3;
+const MS_PER_MIN = 60_000;
+
+function clientIP(context: any): string {
+  return (
+    context?.clientAddress ??
+    context?.request?.headers?.get('cf-connecting-ip') ??
+    context?.request?.headers?.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    'unknown'
+  );
+}
+
+function rateLimit(ip: string): { allowed: boolean; retryAfterSec: number } {
+  const now = Date.now();
+  let b = rateBuckets.get(ip);
+  if (!b) {
+    b = { tokens: RATE_CAP, last: now };
+    rateBuckets.set(ip, b);
+  }
+  // Refill tokens at RATE_PER_MIN per minute, capped at RATE_CAP.
+  b.tokens = Math.min(RATE_CAP, b.tokens + ((now - b.last) / MS_PER_MIN) * RATE_PER_MIN);
+  b.last = now;
+
+  if (b.tokens < 1) {
+    const waitMs = Math.ceil(((1 - b.tokens) / RATE_PER_MIN) * MS_PER_MIN);
+    return { allowed: false, retryAfterSec: Math.max(1, Math.ceil(waitMs / 1000)) };
+  }
+  b.tokens -= 1;
+  return { allowed: true, retryAfterSec: 0 };
+}
+
 export const server = {
   // 1. Direct WhatsApp Booking Request Handler with Honeypot Anti-Bot Filter
   booking: defineAction({
@@ -20,7 +61,19 @@ export const server = {
       message: z.string().optional(),
       company: z.string().optional() // Honeypot field (must remain empty)
     }),
-    handler: async (input) => {
+    handler: async (input, context) => {
+      // IP rate limit: max 3 submissions per minute per IP.
+      const ip = clientIP(context);
+      const limit = rateLimit(ip);
+      if (!limit.allowed) {
+        return {
+          ok: false,
+          error: 'Too many booking requests. Please try again shortly.',
+          status: 429,
+          retryAfter: limit.retryAfterSec
+        };
+      }
+
       // Honeypot check for bots
       if (input.company && input.company.trim() !== '') {
         return {
