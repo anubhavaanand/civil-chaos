@@ -19,11 +19,11 @@ Strapi `populate=*` is acceptable here (bounded content). All list endpoints pag
 `POST /_actions/booking`  -  Astro Action (serverless fn), never direct Strapi POST from browser.
 Request JSON:
 ```
-{ trekSlug, batchId?, packageId?, customerName, phone, email?, groupSize, preferredDates?, message?, company? /* honeypot, must be empty */ }
+{ trekName, trekSlug, batchDates?, customerName, phone, email?, groupSize?, preferredDates?, bookingType?, message?, company? /* honeypot, must be empty */ }
 ```
 Success 200: `{ ok: true, whatsappUrl: "https://wa.me/91XXXXXXXXXX?text=..." }`
-Failure 400 (zod messages) / 429 (rate limited) / 409 (honeypot tripped  -  silently return 200 ok:false to not tip off bots).
-Server-side sequence: validate → honeypot → IP rate limit (max 3/min/IP) → create Strapi booking-request (server token, set sourceIp) → return wa.me deep link to customer + agency notification fires from the Strapi `afterCreate` lifecycle (email).
+Failure 400 (zod messages) / 429 (rate limited, max 3/min/IP) / 409 (honeypot tripped  -  silently return 200 ok:false to not tip off bots).
+Server-side sequence: validate → IP rate limit → honeypot → create Strapi booking-request (server token, set sourceIp) → return wa.me deep link to customer + agency notification fires from the Strapi `afterCreate` lifecycle (email).
 
 ## Revalidation webhook (inbound)
 `POST /api/revalidate` header `x-revalidate-secret: {STRAPI_WEBHOOK_SECRET}`
