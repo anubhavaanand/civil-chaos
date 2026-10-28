@@ -1,0 +1,177 @@
+---
+import OptimizedImage from './OptimizedImage.astro';
+
+// apps/web/src/components/GalleryLightbox.astro
+// Image gallery lightbox for trek detail pages.
+// Click any thumbnail to open a full-screen lightbox with navigation.
+//
+// Props:
+//   images — array of image URLs
+//   currentIndex — initially active image index (default 0)
+---
+
+interface Props {
+  images: string[];
+  currentIndex?: number;
+}
+
+const { images, currentIndex = 0 } = Astro.props;
+
+if (images.length === 0) {
+  // Render nothing if no images
+} else {
+  <>
+    {/* Thumbnail grid */}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      {images.map((img, idx) => (
+        <button
+          data-index={idx}
+          class="aspect-square rounded-lg overflow-hidden border var(--color-border) hover:border-var(--color-brand)/50 transition-colors focus:outline-none focus:ring-2 focus:ring-var(--color-brand)"
+          aria-label={`Image ${idx + 1} of ${images.length}`}
+          aria-current={idx === currentIndex ? 'true' : undefined}
+        >
+          <OptimizedImage
+            src={img}
+            alt={`Gallery image ${idx + 1}`}
+            loading="lazy"
+            class="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity"
+            widths={[400, 800]}
+            quality={80}
+          />
+        </button>
+      ))}
+    </div>
+
+    {/* Lightbox (hidden by default, opened via JS) */}
+    <div
+      id="gallery-lightbox"
+      class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="lightbox-title"
+    >
+      <button
+        id="lightbox-close"
+        class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+        aria-label="Close gallery"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <h2 id="lightbox-title" class="sr-only">Image Gallery Lightbox</h2>
+
+      <button
+        id="lightbox-prev"
+        class="absolute left-4 z-10 w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+        aria-label="Previous image"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <img
+        id="lightbox-image"
+        src={images[currentIndex]}
+        alt={images[currentIndex] ? `Gallery image ${currentIndex + 1}` : ''}
+        class="max-w-90vh max-h-80vh object-contain rounded-lg shadow-2xl"
+        loading="lazy"
+      />
+
+      <button
+        id="lightbox-next"
+        class="absolute right-4 z-10 w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+        aria-label="Next image"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <div class="mt-4 flex items-center gap-2 text-xs font-mono text-var(--color-text-dim)">
+        <span id="lightbox-current">{currentIndex + 1}</span>
+        <span>/</span>
+        <span id="lightbox-total">{images.length}</span>
+      </div>
+    </div>
+  </>
+}
+---
+
+<script is:inline>
+  const lightbox = document.getElementById('gallery-lightbox');
+  const closeBtn = document.getElementById('lightbox-close');
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
+  const lightboxImage = document.getElementById('lightbox-image');
+  const currentEl = document.getElementById('lightbox-current');
+  const totalEl = document.getElementById('lightbox-total');
+  const thumbnails = document.querySelectorAll('[data-index]');
+
+  let current = {currentIndex};
+
+  function openLightbox(index: number) {
+    current.currentIndex = index;
+    updateLightbox();
+    lightbox?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox?.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function updateLightbox() {
+    if (!lightboxImage) return;
+    lightboxImage.src = images[current.currentIndex];
+    lightboxImage.alt = `Gallery image ${current.currentIndex + 1}`;
+    if (currentEl) currentEl.textContent = String(current.currentIndex + 1);
+    if (totalEl) totalEl.textContent = String(images.length);
+
+    // Update thumbnail active state
+    thumbnails.forEach((thumb, idx) => {
+      const isActive = idx === current.currentIndex;
+      thumb.setAttribute('aria-current', isActive ? 'true' : undefined);
+      thumb.classList.toggle('border-var(--color-brand)/50', isActive);
+      thumb.classList.toggle('opacity-100', isActive);
+      thumb.classList.toggle('opacity-70', !isActive);
+    });
+  }
+
+  thumbnails.forEach((thumb, idx) => {
+    thumb.addEventListener('click', () => openLightbox(idx));
+  });
+
+  closeBtn?.addEventListener('click', closeLightbox);
+  prevBtn?.addEventListener('click', () => {
+    current.currentIndex = (current.currentIndex - 1 + images.length) % images.length;
+    updateLightbox();
+  });
+  nextBtn?.addEventListener('click', () => {
+    current.currentIndex = (current.currentIndex + 1) % images.length;
+    updateLightbox();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !lightbox?.classList.contains('hidden')) {
+      closeLightbox();
+    }
+    if (e.key === 'ArrowLeft') {
+      current.currentIndex = (current.currentIndex - 1 + images.length) % images.length;
+      updateLightbox();
+    }
+    if (e.key === 'ArrowRight') {
+      current.currentIndex = (current.currentIndex + 1) % images.length;
+      updateLightbox();
+    }
+  });
+
+  // Close on backdrop click
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+</script>

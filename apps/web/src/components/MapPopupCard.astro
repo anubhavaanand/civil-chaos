@@ -1,0 +1,38 @@
+---
+// apps/web/src/components/MapPopupCard.astro
+// Reusable popup card for MapLibre markers. Extracted from inline JS in
+// MapLibreTrekMap.astro so it can be shared between map popups and any
+// future clickable marker implementations.
+//
+// Props:
+//   name — trek name
+//   slug — trek slug
+//   difficulty — 'easy' | 'moderate' | 'difficult'
+//   maxAltitudeM — max altitude in meters
+---
+
+interface Props {
+  name: string;
+  slug: string;
+  difficulty: 'easy' | 'moderate' | 'difficult';
+  maxAltitudeM: number;
+}
+
+const { name, slug, difficulty, maxAltitudeM } = Astro.props;
+
+const difficultyColor = difficulty === 'easy' ? 'var(--color-success)' : difficulty === 'moderate' ? 'var(--color-warning)' : 'var(--color-error)';
+---
+<div class="bg-var(--color-surface-deep)/95 border var(--color-border-bright) p-4 rounded-lg backdrop-blur-md min-w-[200px]">
+  <div class="flex items-center gap-2 mb-2">
+    <span class="w-2 h-2 rounded-full" style={{ backgroundColor: difficultyColor }}></span>
+    <span class="text-xs font-mono text-var(--color-text-dim) uppercase">{difficulty}</span>
+  </div>
+  <h3 class="text-var(--color-text-primary) font-bold text-base leading-tight mb-1">{name}</h3>
+  <p class="text-var(--color-brand) font-mono text-xs mb-3">ALT: {maxAltitudeM}m</p>
+  <a
+    href={`/treks/${slug}`}
+    class="inline-block w-full text-center py-2 bg-var(--color-surface-deep)/5 text-var(--color-text-primary) hover:bg-var(--color-surface-hover)/10 text-xs font-mono uppercase tracking-wider rounded transition-colors"
+  >
+    View Telemetry
+  </a>
+</div>
