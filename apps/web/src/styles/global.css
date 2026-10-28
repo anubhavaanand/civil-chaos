@@ -198,3 +198,16 @@ dialog[open]::backdrop {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;
 }
+
+/* Content-visibility for below-fold sections — improves paint performance */
+section:not(:first-child),
+main > section + section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
+}
+
+/* Map container: never skip painting — it's a visual landmark */
+#interactive-map, #maplibre-container, #map {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 600px;
+}
