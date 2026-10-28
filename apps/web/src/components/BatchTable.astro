@@ -1,0 +1,102 @@
+---
+// apps/web/src/components/BatchTable.astro
+// Filterable batch availability table for catalog and trek detail pages.
+//
+// Props:
+//   batches — array of Batch objects
+//   trekName — trek name (for WhatsApp deep links)
+//   trekSlug — trek slug (for WhatsApp deep links)
+//   showTrekColumn — hide trek column when on a single trek page (default false)
+---
+
+import type { Batch } from '../lib/strapi';
+
+interface Props {
+  batches: Batch[];
+  trekName: string;
+  trekSlug: string;
+  showTrekColumn?: boolean;
+}
+
+const { batches, trekName, trekSlug, showTrekColumn = false } = Astro.props;
+
+const formatDate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+---
+<div class="overflow-x-auto rounded-2xl border var(--color-border-bright) bg-var(--color-surface-deep)/80 backdrop-blur-md">
+  <table class="w-full text-left text-sm border-collapse font-mono">
+    <thead class="bg-var(--color-surface-deep)/90 text-[10px] uppercase tracking-wider text-var(--color-text-dim) border-b var(--color-divider) font-mono">
+      <tr>
+        {showTrekColumn && (
+          <th class="py-3.5 px-4 font-semibold">Expedition</th>
+        )}
+        <th class="py-3.5 px-4 font-semibold">Dates</th>
+        <th class="py-3.5 px-4 font-semibold">Seats</th>
+        <th class="py-3.5 px-4 font-semibold text-right">Price</th>
+        <th class="py-3.5 px-4 font-semibold text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y var(--color-divider) font-mono">
+      {batches.length === 0 ? (
+        <tr>
+          <td colspan={showTrekColumn ? 5 : 4} class="py-6 px-4 text-center text-var(--color-text-dim)">
+            No open fixed departures currently. Contact us for custom private group dates!
+          </td>
+        </tr>
+      ) : (
+        batches.map((batch) => {
+          const seatsLeft = batch.seatsTotal - batch.seatsBooked;
+          const isFull = batch.status === 'full' || seatsLeft === 0;
+          return (
+            <tr class="hover:bg-var(--color-surface-hover)/5 transition-colors">
+              {showTrekColumn && (
+                <td class="py-4 px-4 font-medium text-var(--color-text-primary)">
+                  <a href={`/treks/${batch.trekSlug}`} class="hover:text-var(--color-brand) transition-colors">
+                    {batch.trekName || trekName}
+                  </a>
+                </td>
+              )}
+              <td class="py-4 px-4 text-var(--color-text-muted) text-xs">
+                {formatDate(batch.startDate)} - {formatDate(batch.endDate)}
+              </td>
+              <td class="py-4 px-4">
+                {isFull ? (
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-var(--color-error-surface) text-var(--color-error) border var(--color-error-border)">
+                    Full
+                  </span>
+                ) : seatsLeft <= 5 ? (
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-var(--color-warning-surface) text-var(--color-warning) border var(--color-warning-border)">
+                    Only {seatsLeft} seat{seatsLeft === 1 ? '' : 's'} left
+                  </span>
+                ) : (
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-var(--color-success-surface) text-var(--color-success) border var(--color-success-border)">
+                    Available ({seatsLeft} seats)
+                  </span>
+                )}
+              </td>
+              <td class="py-4 px-4 font-bold text-var(--color-brand) text-right">
+                ₹{batch.pricePerPersonINR.toLocaleString('en-IN')}
+              </td>
+              <td class="py-4 px-4 text-right">
+                {isFull ? (
+                  <span class="text-xs text-var(--color-text-muted)/40 font-semibold px-3 py-1.5">Sold Out</span>
+                ) : (
+                  <a
+                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hello Holy Himalayas! I'd like to reserve seats for ${trekName} departing ${formatDate(batch.startDate)} to ${formatDate(batch.endDate)}. Please guide me on next steps.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-sm bg-var(--color-brand) hover:bg-var(--color-brand-deep) text-var(--color-text-inverse) font-bold text-[10px] uppercase tracking-wider transition-all hover:scale-105 shadow-sm"
+                  >
+                    Reserve
+                  </a>
+                )}
+              </td>
+            </tr>
+          );
+        })
+      )}
+    </tbody>
+  </table>
+</div>

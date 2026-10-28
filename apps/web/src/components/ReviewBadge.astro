@@ -1,0 +1,54 @@
+---
+// apps/web/src/components/ReviewBadge.astro
+// Google Reviews trust badge — 5.0★ rating with review count.
+// Displayed on homepage trust bar and trek detail pages.
+//
+// Props:
+//   rating — numeric rating (default 5.0)
+//   reviewCount — number of reviews (default 40)
+//   size — 'sm' | 'md' | 'lg' (default 'md')
+---
+
+interface Props {
+  rating?: number;
+  reviewCount?: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { rating = 5.0, reviewCount = 40, size = 'md' } = Astro.props;
+
+const sizeConfig = {
+  sm: { text: 'text-xs', star: 'w-4 h-4', gap: 'gap-1' },
+  md: { text: 'text-sm', star: 'w-5 h-5', gap: 'gap-1.5' },
+  lg: { text: 'text-base', star: 'w-6 h-6', gap: 'gap-2' },
+};
+
+const { text: textSize, star: starSize, gap: starGap } = sizeConfig[size];
+
+// Generate filled stars based on rating
+const fullStars = Math.floor(rating);
+const hasHalfStar = rating % 1 >= 0.5;
+const emptyStars = 5 - Math.ceil(rating);
+---
+<div class="inline-flex items-center var(--starGap) text-var(--color-brand)">
+  {/* Filled stars */}
+  {[...Array(fullStars)].map((_, i) => (
+    <svg class="{starSize} text-var(--color-brand)" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+    </svg>
+  ))}
+  {/* Half star */}
+  {hasHalfStar && (
+    <svg class="{starSize} text-var(--color-brand)" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12.532 14.667L8.332 14.983 6.343 10.38l5.014-.672 1.93-5.57 1.93 5.57 5.014.672-2.009 4.601-4.198-.316z" />
+    </svg>
+  ))}
+  {/* Empty stars */}
+  {[...Array(emptyStars)].map((_, i) => (
+    <svg class="{starSize} text-var(--color-text-muted)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+    </svg>
+  ))}
+  <span class="text-{textSize} font-mono font-bold text-var(--color-text-primary) ml-1.5">{rating.toFixed(1)}</span>
+  <span class="text-{textSize} text-var(--color-text-dim) font-mono ml-1">({reviewCount} reviews)</span>
+</div>
