@@ -555,6 +555,9 @@ const homepageFaqs = [
             <input type="text" name="company" tabindex="-1" autocomplete="off" />
           </div>
 
+          <!-- Hidden trekSlug, synced from the selected trek option's data-slug -->
+          <input type="hidden" name="trekSlug" id="formTrekSlug" />
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label for="formName" class="block text-xs font-mono font-bold text-[#94A3B8] uppercase tracking-wider mb-2">
@@ -720,6 +723,17 @@ const homepageFaqs = [
     const formName = document.getElementById('formName') as HTMLInputElement;
     const formMobile = document.getElementById('formMobile') as HTMLInputElement;
     const formTrek = document.getElementById('formTrek') as HTMLSelectElement;
+    const formTrekSlug = document.getElementById('formTrekSlug') as HTMLInputElement;
+
+    function syncTrekSlug() {
+      if (!formTrek || !formTrekSlug) return;
+      const selected = formTrek.options[formTrek.selectedIndex];
+      formTrekSlug.value = selected?.dataset.slug || '';
+    }
+
+    // Initialize and keep slug in sync with trek selection
+    syncTrekSlug();
+    formTrek?.addEventListener('change', syncTrekSlug);
     const formGroup = document.getElementById('formGroup') as HTMLSelectElement;
     const formDates = document.getElementById('formDates') as HTMLInputElement;
     const waPreviewBox = document.getElementById('waPreviewBox');
