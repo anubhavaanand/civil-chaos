@@ -46,15 +46,19 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('2. Selecting a batch pre-fills dates in booking dialog', async ({ page }) => {
-    const batchBtn = await waitForBookingTrigger(page);
-    const hasTrigger = await batchBtn.count() > 0;
+    // Target batch buttons specifically (they carry data-dates), not the
+    // sticky-bar trigger which has no data-dates attribute.
+    const batchBtn = page.locator('.open-booking-trigger[data-dates]').first();
+    const count = await batchBtn.count();
 
-    if (!hasTrigger) {
+    if (count === 0) {
       await expect(page.locator('body')).toContainText('No treks available');
       return;
     }
 
     const dates = await batchBtn.getAttribute('data-dates');
+    expect(dates).toBeTruthy();
+
     await batchBtn.click();
 
     const banner = page.locator('#selected-batch-banner');
