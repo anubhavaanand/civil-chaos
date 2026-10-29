@@ -1,0 +1,11 @@
+---
+interface Props extends astroHTML.JSX.ImgHTMLAttributes {
+  src: string;
+  alt: string;
+  widths?: number[];
+  quality?: number;
+}
+
+const { widths: _widths, quality: _quality, ...imgProps } = Astro.props as Props;
+---
+<img {...imgProps} />
