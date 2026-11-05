@@ -3,95 +3,66 @@ import { z } from 'astro:schema';
 import { SITE_CONFIG } from '../config/site';
 import { fetchStrapi } from '../lib/strapi';
 
-// ---------------------------------------------------------------------------
-// IP rate limit: 3 booking submissions per minute per IP (per BOOKING_FLOW.md)
-// In-memory token bucket, keyed by client IP. Prototype-acceptable; shared
-// state across edge nodes is not required for Phase 1. Cloudflare dashboard
-// rate-limiting rules are the recommended production backstop.
-// ---------------------------------------------------------------------------
+const ipBuckets = new Map<string, { count: number; resetAt: number }>();
 
-interface RateBucket { tokens: number; last: number; }
-const rateBuckets = new Map<string, RateBucket>();
-const RATE_CAP = 3;
-const RATE_PER_MIN = 3;
-const MS_PER_MIN = 60_000;
-
-function clientIP(context: any): string {
-  return (
-    context?.clientAddress ??
-    context?.request?.headers?.get('cf-connecting-ip') ??
-    context?.request?.headers?.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-    'unknown'
-  );
-}
-
-function rateLimit(ip: string): { allowed: boolean; retryAfterSec: number } {
+function isRateLimited(ip: string): boolean {
   const now = Date.now();
-  let b = rateBuckets.get(ip);
-  if (!b) {
-    b = { tokens: RATE_CAP, last: now };
-    rateBuckets.set(ip, b);
+  const bucket = ipBuckets.get(ip);
+  if (!bucket || now > bucket.resetAt) {
+    ipBuckets.set(ip, { count: 1, resetAt: now + 60_000 });
+    return false;
   }
-  // Refill tokens at RATE_PER_MIN per minute, capped at RATE_CAP.
-  b.tokens = Math.min(RATE_CAP, b.tokens + ((now - b.last) / MS_PER_MIN) * RATE_PER_MIN);
-  b.last = now;
-
-  if (b.tokens < 1) {
-    const waitMs = Math.ceil(((1 - b.tokens) / RATE_PER_MIN) * MS_PER_MIN);
-    return { allowed: false, retryAfterSec: Math.max(1, Math.ceil(waitMs / 1000)) };
-  }
-  b.tokens -= 1;
-  return { allowed: true, retryAfterSec: 0 };
+  bucket.count += 1;
+  return bucket.count > 3;
 }
 
 export const server = {
-  // 1. Direct WhatsApp Booking Request Handler with Honeypot Anti-Bot Filter
   booking: defineAction({
     accept: 'form',
     input: z.object({
       trekName: z.string().min(2),
       trekSlug: z.string().min(2),
+      batchId: z.string().optional(),
       batchDates: z.string().optional(),
+      packageName: z.string().optional(),
       customerName: z.string().min(2, "Name must be at least 2 characters"),
       phone: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid 10-digit Indian mobile number (e.g. 9876543210)"),
       email: z.string().email("Invalid email address").or(z.literal('')).optional(),
-      groupSize: z.coerce.number().min(1).max(15).default(1),
+      groupSize: z.coerce.number().min(1).max(30).default(1),
       preferredDates: z.string().optional(),
       bookingType: z.enum(['whatsapp_inquiry', 'token_deposit']).default('whatsapp_inquiry'),
       message: z.string().optional(),
-      company: z.string().optional() // Honeypot field (must remain empty)
+      company: z.string().optional() // Honeypot field
     }),
     handler: async (input, context) => {
-      // IP rate limit: max 3 submissions per minute per IP.
-      const ip = clientIP(context);
-      const limit = rateLimit(ip);
-      if (!limit.allowed) {
-        return {
-          ok: false,
-          error: 'Too many booking requests. Please try again shortly.',
-          status: 429,
-          retryAfter: limit.retryAfterSec
-        };
+      if (input.company && input.company.trim() !== '') {
+        return { ok: false, error: 'Bot submission rejected.' };
       }
 
-      // Honeypot check for bots
-      if (input.company && input.company.trim() !== '') {
-        return {
-          ok: false,
-          error: 'Bot submission rejected.'
-        };
+      const clientIp = context.clientAddress || 'unknown';
+      if (isRateLimited(clientIp)) {
+        return { ok: false, error: 'Too many requests. Please wait a minute or message us directly on WhatsApp.' };
       }
 
       const agencyWhatsappPhone = SITE_CONFIG.phoneRaw;
       const datesText = input.batchDates || input.preferredDates || 'Flexible Dates';
+      const pkgText = input.packageName || 'Standard Basecamp Package';
 
-      const messageText = `Hi! I want to reserve *${input.trekName}* (${datesText}) for ${input.groupSize} trekker(s).\n- Name: ${input.customerName}\n- Mobile: ${input.phone}\n- Booking Type: ${input.bookingType === 'token_deposit' ? '₹2,000 Token Deposit Reservation' : 'Direct Inquiry'}${input.email ? `\n- Email: ${input.email}` : ''}${input.message ? `\n- Note: ${input.message}` : ''}`;
+      const messageText =
+        `Namaste Dream of The Holy Himalayas!\n\n` +
+        `I want to reserve *${input.trekName}*:\n` +
+        `• Package Tier: ${pkgText}\n` +
+        `• Departure Window: ${datesText}\n` +
+        `• Group Size: ${input.groupSize} climber(s)\n` +
+        `• Name: ${input.customerName}\n` +
+        `• Mobile: +91 ${input.phone}` +
+        (input.email ? `\n• Email: ${input.email}` : '') +
+        (input.message ? `\n• Notes: ${input.message}` : '');
 
       const whatsappUrl = `https://wa.me/${agencyWhatsappPhone}?text=${encodeURIComponent(messageText)}`;
 
-      // Asynchronously record into Strapi CMS CRM (fail-soft, non-blocking)
       try {
-        fetchStrapi('/booking-requests', {
+        await fetchStrapi('/booking-requests', {
           method: 'POST',
           body: JSON.stringify({
             data: {
@@ -99,15 +70,16 @@ export const server = {
               phone: input.phone,
               email: input.email || undefined,
               groupSize: input.groupSize,
-              preferredDates: datesText,
+              preferredDates: `${datesText} | ${pkgText}`,
               message: input.message || undefined,
               status: 'new',
+              sourceIp: clientIp,
               honeypot: input.company || ''
             }
           })
-        }).catch(() => {});
+        });
       } catch {
-        // Continue silently if CMS is offline
+        // Fail-soft: user still receives the direct WhatsApp deep link
       }
 
       return {
@@ -115,12 +87,12 @@ export const server = {
         whatsappUrl,
         customerName: input.customerName,
         trekName: input.trekName,
-        bookingType: input.bookingType
+        packageName: pkgText,
+        datesText
       };
     }
   }),
 
-  // 2. Razorpay Tokenized Partial Booking Deposit Order (Phase 2 Ready)
   createDepositOrder: defineAction({
     accept: 'json',
     input: z.object({
@@ -131,7 +103,6 @@ export const server = {
       depositAmountINR: z.number().default(2000)
     }),
     handler: async (input) => {
-      // Razorpay order creation (mock order for Phase 1 / Phase 2 integration)
       const orderId = `order_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
       return {
         ok: true,
@@ -147,7 +118,6 @@ export const server = {
     }
   }),
 
-  // 3. Razorpay Webhook Event Processor (payment.captured / payment.failed)
   handleRazorpayWebhook: defineAction({
     accept: 'json',
     input: z.object({
@@ -156,7 +126,7 @@ export const server = {
         payment: z.object({
           entity: z.object({
             id: z.string(),
-            amount: z.number(), // in paise
+            amount: z.number(),
             currency: z.string(),
             status: z.string(),
             method: z.string().optional(),
@@ -169,33 +139,25 @@ export const server = {
     handler: async (input) => {
       const { event, payload } = input;
       const payment = payload.payment.entity;
-
       if (event === 'payment.captured') {
-        const gstRate = 0.05; // 5% SAC 9985
+        const gstRate = 0.05;
         const totalINR = payment.amount / 100;
         const baseAmount = Math.round(totalINR / (1 + gstRate));
         const gstAmount = totalINR - baseAmount;
-
         return {
           ok: true,
           status: 'confirmed',
           paymentId: payment.id,
           receiptNumber: `INV-${Date.now()}`,
-          financials: {
-            totalINR,
-            baseAmountINR: baseAmount,
-            gstAmountINR: gstAmount,
-            sacCode: '9985'
-          }
-        };
-      } else {
-        return {
-          ok: false,
-          status: 'failed',
-          paymentId: payment.id,
-          reason: payment.error_description || 'Payment rejected by bank.'
+          financials: { totalINR, baseAmountINR: baseAmount, gstAmountINR: gstAmount, sacCode: '9985' }
         };
       }
+      return {
+        ok: false,
+        status: 'failed',
+        paymentId: payment.id,
+        reason: payment.error_description || 'Payment rejected by bank.'
+      };
     }
   })
 };

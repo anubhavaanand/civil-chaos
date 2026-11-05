@@ -250,6 +250,8 @@ interface SeedTrek {
   inclusions?: string[];
   exclusions?: string[];
   faqs?: FAQItem[];
+  packages?: PackageTier[];
+  batches?: Batch[];
   howToReach?: Partial<Trek['howToReach']>;
   description?: string;
 }
@@ -313,6 +315,8 @@ function enrich(trek: Trek): Trek {
     inclusions: trek.inclusions.length ? trek.inclusions : toStringList(seed.inclusions),
     exclusions: trek.exclusions.length ? trek.exclusions : toStringList(seed.exclusions),
     faqs: trek.faqs.length ? trek.faqs : (seed.faqs ?? []),
+    packages: trek.packages.length ? trek.packages : (seed.packages ?? []),
+    batches: trek.batches.length ? trek.batches : (seed.batches ?? []),
     description: trek.description || (seed.description ?? ''),
     // commuteDetails can hold live richtext from Strapi, so only the seed fills
     // it when normalizeTrek has nothing real to offer.

@@ -1,24 +1,36 @@
 ---
 import { actions } from 'astro:actions';
 import type { Trek } from '../lib/strapi';
+import { SITE_CONFIG } from '../config/site';
 
 interface Props {
   trek: Trek;
 }
 
 const { trek } = Astro.props;
+const packages = trek.packages && trek.packages.length > 0
+  ? trek.packages
+  : [
+      {
+        id: 'default-base',
+        name: `Basecamp Package (${trek.startPoint.split(',')[0]})`,
+        priceINR: trek.fromPrice,
+        description: 'Includes tents, all meals on trail, forest permits, and NIM/WFR guide.',
+        features: []
+      }
+    ];
 ---
 
 <dialog
   id="booking-dialog"
-  class="fixed inset-0 z-50 m-auto w-full max-w-lg rounded-3xl border-0 bg-transparent p-4 text-white shadow-2xl backdrop:bg-[#050505]/85 backdrop:backdrop-blur-md transition-all duration-300 starting:opacity-0 starting:scale-95 open:opacity-100 open:scale-100 closed:opacity-0 closed:scale-95"
+  class="fixed inset-0 z-50 m-auto w-full max-w-lg rounded-3xl border-0 bg-transparent p-4 text-white shadow-2xl backdrop:bg-[#050505]/85 backdrop:backdrop-blur-md"
 >
-  <div class="double-bezel-outer shadow-2xl shadow-black/60">
-    <div class="double-bezel-inner relative p-6 md:p-8 bg-[#0a0f18]/95 backdrop-blur-2xl">
-      <!-- Close Button -->
+  <div class="double-bezel-outer shadow-2xl shadow-black/80">
+    <div class="double-bezel-inner relative p-6 md:p-8 bg-[#0B111E] border border-white/15">
       <button
+        type="button"
         id="close-dialog-btn"
-        class="btn-tactile absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-[#0a0f18]/5 text-ink-dim hover:border-glacier/30 hover:bg-glacier/10 hover:text-white transition-colors"
+        class="btn-tactile absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-ink-dim hover:border-[#00F2FE] hover:text-white transition-colors cursor-pointer"
         aria-label="Close booking modal"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -26,19 +38,27 @@ const { trek } = Astro.props;
         </svg>
       </button>
 
-      <div class="mb-6">
-        <span class="inline-flex items-center gap-2 rounded-full bg-glacier/10 border border-glacier/30 px-3 py-1 text-[10px] font-bold text-glacier uppercase font-mono tracking-widest mb-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-glacier animate-pulse"></span>
-          Instant Booking Request
+      <div class="mb-5">
+        <span class="inline-flex items-center gap-2 rounded-full bg-[#00F2FE]/15 border border-[#00F2FE]/30 px-3 py-1 text-[10px] font-bold text-[#00F2FE] uppercase font-mono tracking-widest mb-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#00F2FE] animate-pulse"></span>
+          Direct Mautar Basecamp Reservation
         </span>
         <h3 class="font-display text-2xl font-bold text-white">Reserve {trek.name}</h3>
-        <p class="text-xs text-ink-dim mt-1 font-mono">Tier: ₹{trek.fromPrice.toLocaleString('en-IN')} per climber / All permits included</p>
+        <p class="text-xs text-[#94A3B8] mt-1 font-mono">
+          Zero middlemen &middot; Recorded in Strapi CRM &amp; confirmed via WhatsApp
+        </p>
       </div>
 
-      <!-- Form -->
-      <form id="booking-form" method="POST" action={actions.booking} class="space-y-4">
+      <form
+        id="booking-form"
+        method="POST"
+        action={actions.booking}
+        data-wa-phone={SITE_CONFIG.phoneRaw}
+        class="space-y-4"
+      >
         <input type="hidden" name="trekName" value={trek.name} />
         <input type="hidden" name="trekSlug" value={trek.slug} />
+        <input type="hidden" id="modal-batch-id" name="batchId" value="" />
         <input type="hidden" id="modal-batch-dates" name="batchDates" value="" />
 
         <!-- Honeypot Field for Bots -->
@@ -46,46 +66,76 @@ const { trek } = Astro.props;
           <input type="text" name="company" tabindex="-1" autocomplete="off" />
         </div>
 
-        <!-- Batch Date Display -->
-        <div id="selected-batch-banner" class="hidden rounded-xl border border-glacier/30 bg-glacier/10 p-3 text-xs font-semibold text-glacier flex justify-between items-center">
-          <span>Staging Window: <strong id="selected-dates-text"></strong></span>
+        <!-- Selected Batch Banner -->
+        <div id="selected-batch-banner" class="hidden rounded-xl border border-[#00F2FE]/40 bg-[#00F2FE]/10 p-3 text-xs font-mono font-semibold text-[#00F2FE] flex justify-between items-center">
+          <span>Departure Batch: <strong id="selected-dates-text"></strong></span>
           <button type="button" id="clear-batch-btn" class="text-xs underline text-white/80 hover:text-white cursor-pointer">Change</button>
         </div>
 
-        <!-- Customer Name -->
+        <!-- Strapi-Seeded Package Tier Selection -->
         <div>
-          <label for="customerName" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Your Full Name *</label>
-          <input
-            type="text"
-            id="customerName"
-            name="customerName"
-            required
-            placeholder="e.g. Rahul Sharma"
-            class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
-          />
-        </div>
-
-        <!-- Phone Number -->
-        <div>
-          <label for="phone" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Indian Mobile Number *</label>
-          <div class="relative">
-            <span class="absolute left-3.5 top-2.5 text-sm font-mono text-ink-dim">+91</span>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              pattern="^[6-9]\\d{9}$"
-              placeholder="9876543210"
-              class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 pl-14 pr-4 py-2.5 text-sm font-mono text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
-            />
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-[#cbd5e1] mb-1.5 font-mono">
+            Select Package Tier (Seeded from Strapi) *
+          </label>
+          <div class="space-y-2">
+            {packages.map((pkg, idx) => (
+              <label class="flex items-start justify-between gap-3 p-3 rounded-xl border border-white/15 bg-[#05080F] hover:border-[#00F2FE]/60 cursor-pointer transition">
+                <span class="flex items-start gap-2.5">
+                  <input
+                    type="radio"
+                    name="packageName"
+                    value={`${pkg.name} (₹${pkg.priceINR.toLocaleString('en-IN')})`}
+                    checked={idx === 0}
+                    class="mt-1 accent-[#00F2FE]"
+                  />
+                  <span>
+                    <strong class="block text-xs font-display font-bold text-white">{pkg.name}</strong>
+                    <span class="block text-[11px] text-[#94A3B8] leading-snug mt-0.5">{pkg.description}</span>
+                  </span>
+                </span>
+                <span class="font-mono text-sm font-bold text-[#00F2FE] shrink-0">
+                  ₹{pkg.priceINR.toLocaleString('en-IN')}
+                </span>
+              </label>
+            ))}
           </div>
         </div>
 
-        <!-- Group Size & Flexible Dates -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- Customer Name & Mobile -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label for="groupSize" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Climbers *</label>
+            <label for="customerName" class="block text-[11px] font-semibold uppercase tracking-wider text-[#cbd5e1] mb-1 font-mono">Full Name *</label>
+            <input
+              type="text"
+              id="customerName"
+              name="customerName"
+              required
+              placeholder="e.g. Rahul Sharma"
+              class="w-full rounded-xl border border-white/20 bg-[#05080F] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#00F2FE] focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="phone" class="block text-[11px] font-semibold uppercase tracking-wider text-[#cbd5e1] mb-1 font-mono">10-Digit Mobile *</label>
+            <div class="relative">
+              <span class="absolute left-3 top-2.5 text-sm font-mono text-[#94A3B8]">+91</span>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                pattern="^[6-9]\d{9}$"
+                placeholder="9876543210"
+                class="w-full rounded-xl border border-white/20 bg-[#05080F] pl-12 pr-3.5 py-2.5 text-sm font-mono text-white placeholder-slate-500 focus:border-[#00F2FE] focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Group Size & Preferred Dates -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="groupSize" class="block text-[11px] font-semibold uppercase tracking-wider text-[#cbd5e1] mb-1 font-mono">Climbers *</label>
             <input
               type="number"
               id="groupSize"
@@ -94,46 +144,41 @@ const { trek } = Astro.props;
               max="15"
               value="1"
               required
-              class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm font-mono text-white focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+              class="w-full rounded-xl border border-white/20 bg-[#05080F] px-3.5 py-2.5 text-sm font-mono text-white focus:border-[#00F2FE] focus:outline-none"
             />
           </div>
           <div>
-            <label for="preferredDates" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Target Window</label>
+            <label for="preferredDates" class="block text-[11px] font-semibold uppercase tracking-wider text-[#cbd5e1] mb-1 font-mono">Target Month / Dates</label>
             <input
               type="text"
               id="preferredDates"
               name="preferredDates"
-              placeholder="e.g. October 2026"
-              class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+              placeholder="e.g. Nov 2026"
+              class="w-full rounded-xl border border-white/20 bg-[#05080F] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#00F2FE] focus:outline-none"
             />
           </div>
         </div>
 
-        <!-- Optional Message -->
         <div>
-          <label for="message" class="block text-[11px] font-semibold uppercase tracking-wider text-ink-dim mb-1 font-mono">Special Directives or Acclimatization Notes</label>
+          <label for="message" class="block text-[11px] font-semibold uppercase tracking-wider text-[#cbd5e1] mb-1 font-mono">Notes (Gear Rental / Pickup)</label>
           <textarea
             id="message"
             name="message"
             rows="2"
-            placeholder="Offloading requirements, medical background, dietary preferences..."
-            class="w-full rounded-xl border border-white/15 bg-[#0a0f18]/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-glacier focus:bg-[#050505] focus:outline-none focus:ring-1 focus:ring-glacier"
+            placeholder="Offloading, dietary notes, pickup point..."
+            class="w-full rounded-xl border border-white/20 bg-[#05080F] px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:border-[#00F2FE] focus:outline-none"
           ></textarea>
         </div>
 
-        <!-- Action Response Feedback -->
-        <div id="booking-feedback" class="hidden text-xs font-medium text-[#FB7185] p-2.5 rounded-lg bg-[#FB7185]/10 border border-[#FB7185]/20"></div>
+        <div id="booking-feedback" class="hidden text-xs font-mono p-3 rounded-xl border"></div>
 
-        <!-- Submit Button -->
         <button
           type="submit"
           id="submit-booking-btn"
-          class="btn-tactile w-full flex items-center justify-center gap-2 rounded-xl bg-[#00f2fe] py-3.5 text-sm font-bold text-[#050505] shadow-lg lens-edge hover:shadow-xl transition-all cursor-pointer uppercase tracking-wider font-mono"
+          class="btn-tactile w-full flex items-center justify-center gap-2 rounded-xl bg-[#00F2FE] hover:bg-[#00b4d8] py-3.5 text-sm font-bold text-[#050505] shadow-lg transition-all cursor-pointer uppercase tracking-wider font-mono"
         >
-          <span>Dispatch Booking Request</span>
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
+          <span>Confirm &amp; Dispatch via WhatsApp</span>
+          <span aria-hidden="true">&rarr;</span>
         </button>
       </form>
     </div>
@@ -145,18 +190,30 @@ const { trek } = Astro.props;
     const dialog = document.getElementById('booking-dialog');
     const closeBtn = document.getElementById('close-dialog-btn');
     const triggers = document.querySelectorAll('.open-booking-trigger');
+    const batchIdInput = document.getElementById('modal-batch-id');
     const batchInput = document.getElementById('modal-batch-dates');
     const batchBanner = document.getElementById('selected-batch-banner');
     const batchText = document.getElementById('selected-dates-text');
     const clearBatchBtn = document.getElementById('clear-batch-btn');
+    const form = document.getElementById('booking-form');
+    const feedback = document.getElementById('booking-feedback');
 
     triggers.forEach((trigger) => {
       trigger.addEventListener('click', () => {
         const dates = trigger.getAttribute('data-dates');
-        if (dates) {
+        const batchId = trigger.getAttribute('data-batch-id') || '';
+        const pkgName = trigger.getAttribute('data-package-name');
+        if (dates && batchInput && batchText && batchBanner) {
           batchInput.value = dates;
+          if (batchIdInput) batchIdInput.value = batchId;
           batchText.textContent = dates;
           batchBanner.classList.remove('hidden');
+        }
+        if (pkgName && form) {
+          const radios = form.querySelectorAll('input[name="packageName"]');
+          radios.forEach((r) => {
+            if (r.value.includes(pkgName)) r.checked = true;
+          });
         }
         if (dialog) dialog.showModal();
       });
@@ -164,37 +221,80 @@ const { trek } = Astro.props;
 
     closeBtn?.addEventListener('click', () => dialog?.close());
 
-    // Light dismiss on backdrop click
     dialog?.addEventListener('click', (e) => {
       const rect = dialog.getBoundingClientRect();
-      const isInDialog = (
+      const isInDialog =
         rect.top <= e.clientY &&
         e.clientY <= rect.top + rect.height &&
         rect.left <= e.clientX &&
-        e.clientX <= rect.left + rect.width
-      );
+        e.clientX <= rect.left + rect.width;
       if (!isInDialog) dialog.close();
     });
 
     clearBatchBtn?.addEventListener('click', () => {
-      batchInput.value = '';
-      batchBanner.classList.add('hidden');
+      if (batchInput) batchInput.value = '';
+      if (batchIdInput) batchIdInput.value = '';
+      batchBanner?.classList.add('hidden');
     });
-
-    // Handle form submit redirect to WhatsApp URL
-    const form = document.getElementById('booking-form');
-    const feedback = document.getElementById('booking-feedback');
 
     form?.addEventListener('submit', async (e) => {
       const phoneInput = document.getElementById('phone');
-      const phoneVal = phoneInput?.value || '';
+      const phoneVal = phoneInput?.value?.trim() || '';
       if (!/^[6-9]\d{9}$/.test(phoneVal)) {
         e.preventDefault();
         if (feedback) {
-          feedback.textContent = 'Please enter a valid 10-digit Indian mobile number.';
+          feedback.textContent = 'Please enter a valid 10-digit Indian mobile number starting with 6-9.';
+          feedback.className = 'text-xs font-mono p-3 rounded-xl border border-[#FB7185]/40 bg-[#FB7185]/15 text-[#FB7185]';
           feedback.classList.remove('hidden');
         }
+        return;
       }
+
+      e.preventDefault();
+      const formData = new FormData(form);
+      const waPhone = form.getAttribute('data-wa-phone') || '919876543210';
+      const trekName = formData.get('trekName') || 'Himalayan Trek';
+      const pkgName = formData.get('packageName') || 'Standard Package';
+      const dates = formData.get('batchDates') || formData.get('preferredDates') || 'Flexible Dates';
+      const customerName = formData.get('customerName') || 'Climber';
+      const groupSize = formData.get('groupSize') || '1';
+      const notes = formData.get('message') || '';
+
+      const fallbackMsg =
+        `Namaste Dream of The Holy Himalayas!
+
+` +
+        `I want to reserve *${trekName}*:
+` +
+        `• Package: ${pkgName}
+` +
+        `• Dates: ${dates}
+` +
+        `• Climbers: ${groupSize}
+` +
+        `• Name: ${customerName}
+` +
+        `• Mobile: +91 ${phoneVal}` +
+        (notes ? `
+• Notes: ${notes}` : '');
+      let waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(fallbackMsg)}`;
+
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: formData });
+        if (res.ok) {
+          const data = await res.json().catch(() => null);
+          if (data?.whatsappUrl) waUrl = data.whatsappUrl;
+        }
+      } catch {
+        // Offline or static fallback uses waUrl directly
+      }
+
+      if (feedback) {
+        feedback.innerHTML = `Reservation logged! <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="underline font-bold text-[#00F2FE]">Click here if WhatsApp did not open automatically &rarr;</a>`;
+        feedback.className = 'text-xs font-mono p-3 rounded-xl border border-[#34D399]/40 bg-[#34D399]/15 text-[#34D399]';
+        feedback.classList.remove('hidden');
+      }
+      window.open(waUrl, '_blank');
     });
   });
 </script>

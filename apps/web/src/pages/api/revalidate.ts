@@ -1,5 +1,8 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
+
 /**
  * Strapi Webhook Revalidate Endpoint
  * 

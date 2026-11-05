@@ -166,28 +166,30 @@
       ],
       "packages": [
         {
-          "id": 2,
-          "documentId": "t04dn4q47lun5mk6fjxk3qkr",
-          "name": "Standard Base",
+          "id": "kuari-pass-base",
+          "name": "Basecamp Tier (Joshimath)",
           "priceINR": 9500,
-          "durationDays": 6,
-          "inclusionsOverride": null,
-          "isPopular": false,
-          "createdAt": "2026-09-15T14:46:18.640Z",
-          "updatedAt": "2026-09-15T14:46:18.640Z",
-          "publishedAt": "2026-09-15T14:46:18.742Z"
+          "description": "Ex-Joshimath: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Joshimath Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
         },
         {
-          "id": 4,
-          "documentId": "yi30yd3ps66eyb6itugfz90z",
-          "name": "With Transport",
+          "id": "kuari-pass-transit",
+          "name": "With Transit (Rishikesh)",
           "priceINR": 11800,
-          "durationDays": 6,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:46:19.647Z",
-          "updatedAt": "2026-09-15T14:46:19.647Z",
-          "publishedAt": "2026-09-15T14:46:19.690Z"
+          "description": "Includes round-trip basecamp transport (Rishikesh) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Rishikesh)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -324,16 +326,30 @@
       ],
       "packages": [
         {
-          "id": 6,
-          "documentId": "yhfbqygggppjnsz11234wfq7",
-          "name": "Sankri to Sankri",
+          "id": "kedarkantha-base",
+          "name": "Basecamp Tier (Sankri)",
           "priceINR": 8500,
-          "durationDays": 5,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:46:26.484Z",
-          "updatedAt": "2026-09-15T14:46:26.484Z",
-          "publishedAt": "2026-09-15T14:46:26.555Z"
+          "description": "Ex-Sankri: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Sankri Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "kedarkantha-transit",
+          "name": "With Transit (Dehradun)",
+          "priceINR": 10700,
+          "description": "Includes round-trip basecamp transport (Dehradun) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Dehradun)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -457,16 +473,30 @@
       ],
       "packages": [
         {
-          "id": 8,
-          "documentId": "cj3vlp1ztdy3sjh5p6dswxya",
-          "name": "Manali to Manali",
+          "id": "hampta-pass-base",
+          "name": "Basecamp Tier (Jobra / Manali)",
           "priceINR": 11000,
-          "durationDays": 5,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:46:28.523Z",
-          "updatedAt": "2026-09-15T14:46:28.523Z",
-          "publishedAt": "2026-09-15T14:46:28.566Z"
+          "description": "Ex-Jobra / Manali: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Jobra / Manali Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "hampta-pass-transit",
+          "name": "With Transit (Manali + Chandratal SUV)",
+          "priceINR": 13500,
+          "description": "Includes round-trip basecamp transport (Manali + Chandratal SUV) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Manali + Chandratal SUV)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -598,16 +628,30 @@
       ],
       "packages": [
         {
-          "id": 10,
-          "documentId": "gx4h4e0qakfg1jvcmebp2tz4",
-          "name": "Kathgodam to Kathgodam",
+          "id": "brahmatal-base",
+          "name": "Basecamp Tier (Lohajung)",
           "priceINR": 9500,
-          "durationDays": 6,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:46:30.385Z",
-          "updatedAt": "2026-09-15T14:46:30.385Z",
-          "publishedAt": "2026-09-15T14:46:30.426Z"
+          "description": "Ex-Lohajung: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Lohajung Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "brahmatal-transit",
+          "name": "With Transit (Kathgodam / Haldwani)",
+          "priceINR": 11900,
+          "description": "Includes round-trip basecamp transport (Kathgodam / Haldwani) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Kathgodam / Haldwani)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -751,16 +795,30 @@
       ],
       "packages": [
         {
-          "id": 12,
-          "documentId": "ofp6kearamk2ka103xkzvx1z",
-          "name": "Haridwar to Haridwar",
+          "id": "kedarnath-shrine-base",
+          "name": "Basecamp Tier (Gaurikund)",
           "priceINR": 6500,
-          "durationDays": 3,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:47:51.885Z",
-          "updatedAt": "2026-09-15T14:47:51.885Z",
-          "publishedAt": "2026-09-15T14:47:51.945Z"
+          "description": "Ex-Gaurikund: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Gaurikund Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "kedarnath-shrine-transit",
+          "name": "With Transit (Rishikesh / Haridwar)",
+          "priceINR": 8700,
+          "description": "Includes round-trip basecamp transport (Rishikesh / Haridwar) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Rishikesh / Haridwar)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -928,16 +986,30 @@
       ],
       "packages": [
         {
-          "id": 14,
-          "documentId": "qe71oegep8q1e7053n24h513",
-          "name": "Haridwar to Haridwar",
+          "id": "valley-of-flowers-base",
+          "name": "Basecamp Tier (Govindghat)",
           "priceINR": 10500,
-          "durationDays": 6,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:47:55.806Z",
-          "updatedAt": "2026-09-15T14:47:55.806Z",
-          "publishedAt": "2026-09-15T14:47:55.865Z"
+          "description": "Ex-Govindghat: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Govindghat Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "valley-of-flowers-transit",
+          "name": "With Transit (Rishikesh / Haridwar)",
+          "priceINR": 12900,
+          "description": "Includes round-trip basecamp transport (Rishikesh / Haridwar) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Rishikesh / Haridwar)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -1103,16 +1175,30 @@
       ],
       "packages": [
         {
-          "id": 16,
-          "documentId": "o15wbvf6q0egsaup38q1k8fs",
-          "name": "Gangotri to Gangotri",
+          "id": "gaumukh-tapovan-base",
+          "name": "Basecamp Tier (Gangotri)",
           "priceINR": 15500,
-          "durationDays": 8,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:47:59.612Z",
-          "updatedAt": "2026-09-15T14:47:59.612Z",
-          "publishedAt": "2026-09-15T14:47:59.652Z"
+          "description": "Ex-Gangotri: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Gangotri Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "gaumukh-tapovan-transit",
+          "name": "With Transit (Dehradun / Uttarkashi)",
+          "priceINR": 18300,
+          "description": "Includes round-trip basecamp transport (Dehradun / Uttarkashi) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Dehradun / Uttarkashi)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -1278,16 +1364,30 @@
       ],
       "packages": [
         {
-          "id": 18,
-          "documentId": "bpq9uepwgl2iq0z10h2ajzjv",
-          "name": "Sankri to Yamunotri",
+          "id": "bali-pass-base",
+          "name": "Basecamp Tier (Sankri)",
           "priceINR": 19500,
-          "durationDays": 8,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:48:02.497Z",
-          "updatedAt": "2026-09-15T14:48:02.497Z",
-          "publishedAt": "2026-09-15T14:48:02.563Z"
+          "description": "Ex-Sankri: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Sankri Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "bali-pass-transit",
+          "name": "With Transit (Dehradun to Yamunotri Return)",
+          "priceINR": 22700,
+          "description": "Includes round-trip basecamp transport (Dehradun to Yamunotri Return) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Dehradun to Yamunotri Return)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -1477,16 +1577,30 @@
       ],
       "packages": [
         {
-          "id": 20,
-          "documentId": "tpmsafzh05tq4gpw6vc5d8xn",
-          "name": "Kasol to Kaza Expedition",
+          "id": "pin-parvati-base",
+          "name": "Basecamp Tier (Barshaini)",
           "priceINR": 28500,
-          "durationDays": 11,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:48:05.119Z",
-          "updatedAt": "2026-09-15T14:48:05.119Z",
-          "publishedAt": "2026-09-15T14:48:05.168Z"
+          "description": "Ex-Barshaini: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Barshaini Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "pin-parvati-transit",
+          "name": "With Transit (Kasol to Kaza Spiti SUV)",
+          "priceINR": 32500,
+          "description": "Includes round-trip basecamp transport (Kasol to Kaza Spiti SUV) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Kasol to Kaza Spiti SUV)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {
@@ -1633,16 +1747,30 @@
       ],
       "packages": [
         {
-          "id": 22,
-          "documentId": "z8qnkh8pcxqpsom8hb7t07hq",
-          "name": "Manali to Manali",
+          "id": "bhrigu-lake-base",
+          "name": "Basecamp Tier (Gulaba)",
           "priceINR": 5500,
-          "durationDays": 4,
-          "inclusionsOverride": null,
-          "isPopular": true,
-          "createdAt": "2026-09-15T14:48:07.981Z",
-          "updatedAt": "2026-09-15T14:48:07.981Z",
-          "publishedAt": "2026-09-15T14:48:08.037Z"
+          "description": "Ex-Gulaba: All-inclusive trek, alpine tents, nutritious meals, permits, NIM/WFR guide & medical kit.",
+          "features": [
+            "Reporting at Gulaba Basecamp",
+            "4-Season alpine tents & sleeping bags",
+            "All hot vegetarian mountain meals",
+            "Forest permits, oxygen & oximeter checks"
+          ],
+          "isPopular": false
+        },
+        {
+          "id": "bhrigu-lake-transit",
+          "name": "With Transit (Manali Base Hotel + Transfers)",
+          "priceINR": 7300,
+          "description": "Includes round-trip basecamp transport (Manali Base Hotel + Transfers) plus all trek inclusions, permits & gear.",
+          "features": [
+            "Round-trip shared SUV/Tempo (Manali Base Hotel + Transfers)",
+            "Basecamp homestay/hotel night included",
+            "4-Season alpine tents & sleeping bags",
+            "Forest permits, oxygen & NIM/WFR guide"
+          ],
+          "isPopular": true
         }
       ],
       "seo": {

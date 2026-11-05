@@ -3,37 +3,17 @@ import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
-// Cloudflare Pages deployment: output 'static' with adapter for server endpoints
-// The @astrojs/node adapter enables server functions (actions, API routes) on Cloudflare
 export default defineConfig({
   site: 'https://dreamoftheholyhimalayas.com',
   output: 'hybrid',
   adapter: cloudflare({
     imageService: 'cloudflare',
   }),
-
   integrations: [sitemap()],
-
   vite: {
     plugins: [tailwindcss()],
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('maplibre-gl')) {
-              return 'maplibre';
-            }
-            if (id.includes('three')) {
-              return 'three';
-            }
-          }
-        }
-      }
-    }
   },
   build: {
-    // Generate sitemap and optimize for production
     inlineStylesheets: 'auto',
   },
 });

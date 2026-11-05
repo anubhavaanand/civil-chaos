@@ -26,3 +26,5 @@ pnpm-debug.log*
 # test artifacts
 apps/web/test-results/
 playwright-report/
+# Superdesign init artifacts
+.superdesign/

@@ -59,3 +59,17 @@ Detailed specs live in `/docs/*.md`; this file only summarizes and sets guardrai
 Frontend and CMS are both live. The catalog renders ten treks across Garhwal and Himachal
 Pradesh with itineraries, elevation profiles, batch calendars and logistics. Editorial content
 is managed entirely in Strapi. See the README for the platform overview.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as markdown files in `.scratch/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The skills speak in terms of five canonical triage roles, mapped to label strings in this repo's tracker. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+single-context (one GLOSSARY.md at the repo root, with architecture decisions in docs/adr/). See `docs/agents/domain.md`.
