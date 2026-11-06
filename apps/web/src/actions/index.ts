@@ -3,6 +3,9 @@ import { z } from 'astro:schema';
 import { SITE_CONFIG } from '../config/site';
 import { fetchStrapi } from '../lib/strapi';
 
+// NOTE: This in-memory rate limit Map is per-process and bypassable on
+// distributed hosts (Cloudflare Pages + Render run multiple worker processes).
+// Phase 2 should replace with Redis/distributed rate limiting.
 const ipBuckets = new Map<string, { count: number; resetAt: number }>();
 
 function isRateLimited(ip: string): boolean {
@@ -39,7 +42,11 @@ export const server = {
         return { ok: false, error: 'Bot submission rejected.' };
       }
 
-      const clientIp = context.clientAddress || 'unknown';
+      const forwardedFor = context.request.headers.get('x-forwarded-for');
+      const clientIp = forwardedFor?.split(',')[0]?.trim()
+        || context.request.headers.get('cf-connecting-ip')
+        || context.clientAddress
+        || 'unknown';
       if (isRateLimited(clientIp)) {
         return { ok: false, error: 'Too many requests. Please wait a minute or message us directly on WhatsApp.' };
       }
@@ -61,26 +68,24 @@ export const server = {
 
       const whatsappUrl = `https://wa.me/${agencyWhatsappPhone}?text=${encodeURIComponent(messageText)}`;
 
-      try {
-        await fetchStrapi('/booking-requests', {
-          method: 'POST',
-          body: JSON.stringify({
-            data: {
-              customerName: input.customerName,
-              phone: input.phone,
-              email: input.email || undefined,
-              groupSize: input.groupSize,
-              preferredDates: `${datesText} | ${pkgText}`,
-              message: input.message || undefined,
-              status: 'new',
-              sourceIp: clientIp,
-              honeypot: input.company || ''
-            }
-          })
-        });
-      } catch {
-        // Fail-soft: user still receives the direct WhatsApp deep link
-      }
+      // Fail-soft: if Strapi is unreachable, user still receives the direct WhatsApp deep link.
+      // fetchStrapi does not throw on network error; it returns an error-shaped response.
+      await fetchStrapi('/booking-requests', {
+        method: 'POST',
+        body: JSON.stringify({
+          data: {
+            customerName: input.customerName,
+            phone: input.phone,
+            email: input.email || undefined,
+            groupSize: input.groupSize,
+            preferredDates: `${datesText} | ${pkgText}`,
+            message: input.message || undefined,
+            status: 'new',
+            sourceIp: clientIp,
+            honeypot: input.company || ''
+          }
+        })
+      });
 
       return {
         ok: true,
@@ -107,7 +112,7 @@ export const server = {
       return {
         ok: true,
         orderId,
-        amountPaise: input.depositAmountINR * 100,
+        amountPaise: Math.round(input.depositAmountINR * 100),
         currency: 'INR',
         notes: {
           trekSlug: input.trekSlug,
