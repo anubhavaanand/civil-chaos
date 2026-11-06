@@ -375,6 +375,28 @@ export async function getTrekBySlug(slug: string): Promise<Trek | undefined> {
   return snapshotTreks().find((t) => t.slug === slug);
 }
 
+export interface FAQItemStrapi {
+  question: string;
+  answer: string;
+  isPublished: boolean;
+  order: number;
+}
+
+export async function getFaqs(): Promise<FAQItemStrapi[]> {
+  const data = await fetchStrapi<{ data: FAQItemStrapi[] }>(
+    '/faqs?filters[isPublished][$eq]=true&sort=order:asc&pagination[pageSize]=50'
+  );
+  if (data?.data) {
+    return data.data.map((item) => ({
+      question: item.question,
+      answer: typeof item.answer === 'string' ? item.answer : '',
+      isPublished: item.isPublished,
+      order: item.order,
+    }));
+  }
+  return [];
+}
+
 export async function getOpenBatches(trekSlug?: string): Promise<Batch[]> {
   const endpoint = trekSlug
     ? `/batches?filters[trek][slug][$eq]=${trekSlug}&filters[status][$eq]=open&sort=startDate:asc`

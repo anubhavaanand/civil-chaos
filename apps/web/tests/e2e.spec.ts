@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { mockStrapiAPI } from './mock-strapi';
 
 test.describe('Catalog Page', () => {
   test.beforeEach(async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/treks/');
     await page.waitForLoadState('networkidle');
   });
@@ -51,6 +53,7 @@ test.describe('Catalog Page', () => {
 
 test.describe('Trek Detail Page', () => {
   test.beforeEach(async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/treks/kedarkantha/');
     await page.waitForLoadState('networkidle');
   });
@@ -98,18 +101,21 @@ test.describe('Trek Detail Page', () => {
 
 test.describe('Region Pages', () => {
   test('garhwal region loads with treks', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/regions/garhwal/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('h1')).toContainText('Garhwal');
   });
 
   test('himachal region loads with treks', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/regions/himachal/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('h1')).toContainText('Himachal');
   });
 
   test('region page shows upcoming departures', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/regions/garhwal/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('text=Upcoming Departures')).toBeVisible();
@@ -118,7 +124,9 @@ test.describe('Region Pages', () => {
 
 test.describe('Error Pages', () => {
   test('500 page shows WhatsApp CTA', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/500');
+    await page.waitForLoadState('networkidle');
     await expect(page.locator('h1')).toContainText('TEMPORARILY CLOSED');
     await expect(page.locator('text=WhatsApp Basecamp')).toBeVisible();
   });
@@ -126,6 +134,7 @@ test.describe('Error Pages', () => {
 
 test.describe('Accessibility', () => {
   test.skip('skip link is focusable and works', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -140,6 +149,7 @@ test.describe('Accessibility', () => {
   });
 
   test('focus rings are visible on interactive elements', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/treks/');
     await page.waitForLoadState('networkidle');
 
@@ -151,6 +161,7 @@ test.describe('Accessibility', () => {
 
 test.describe('Map Component', () => {
   test('map section exists on homepage', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('#interactive-map')).toBeVisible();
@@ -158,6 +169,7 @@ test.describe('Map Component', () => {
   });
 
   test('map has region filter chips', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('[data-region="all"]')).toBeVisible();
@@ -167,6 +179,7 @@ test.describe('Map Component', () => {
   });
 
   test('map has noscript fallback', async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     const noscript = page.locator('noscript');
@@ -176,6 +189,7 @@ test.describe('Map Component', () => {
 
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
+    await mockStrapiAPI(page);
     await page.goto('/');
     await page.waitForLoadState('networkidle');
   });

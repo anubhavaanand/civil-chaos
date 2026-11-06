@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { mockStrapiAPI } from './mock-strapi';
 
 const TREK_SLUG = 'kedarkantha';
 const MAX_RETRIES = 3;
@@ -20,10 +21,15 @@ async function waitForBookingTrigger(page: any, retries = MAX_RETRIES): Promise<
   return page.locator('.open-booking-trigger').first();
 }
 
+async function gotoWithMock(page: any, url: string) {
+  await mockStrapiAPI(page);
+  await page.goto(url);
+  await page.waitForLoadState('networkidle');
+}
+
 test.describe('Booking Workflow E2E', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`/treks/${TREK_SLUG}`);
-    await page.waitForLoadState('networkidle');
+    await gotoWithMock(page, `/treks/${TREK_SLUG}`);
   });
 
   test('1. Opens booking dialog from trek detail page', async ({ page }) => {
@@ -46,8 +52,6 @@ test.describe('Booking Workflow E2E', () => {
   });
 
   test('2. Selecting a batch pre-fills dates in booking dialog', async ({ page }) => {
-    // Target batch buttons specifically (they carry data-dates), not the
-    // sticky-bar trigger which has no data-dates attribute.
     const batchBtn = page.locator('.open-booking-trigger[data-dates]').first();
     const count = await batchBtn.count();
 
@@ -182,6 +186,6 @@ test.describe('Booking Workflow E2E', () => {
 
     await page.click('#clear-batch-btn');
 
-    await expect(banner).toBeHidden();
+    await expect(banner).not.toBeVisible();
   });
 });

@@ -230,6 +230,70 @@ async function main() {
     console.warn('! Site Settings notice:', siteRes.error);
   }
 
+  // 4. Seed FAQs (homepage Field Briefing)
+  console.log('\n--- Step 4: Seeding Homepage FAQs ---');
+  const FAQS = [
+    {
+      question: 'What happens if weather closes the route?',
+      answer: 'If unpassable weather closes a route, you reschedule to any future departure with zero penalty. Weather is the mountain\'s decision, never a charge on yours.',
+      isPublished: true,
+      order: 1
+    },
+    {
+      question: 'What is the difference between Basecamp and With Transit packages?',
+      answer: 'Every trek is seeded in Strapi with two transparent package tiers: our Basecamp Tier (report directly at the base village like Joshimath, Sankri, or Manali) and our With Transit Tier (includes round-trip SUV/Tempo pickup & drop from Rishikesh, Dehradun, or Kathgodam).',
+      isPublished: true,
+      order: 2
+    },
+    {
+      question: 'Who leads the expeditions?',
+      answer: 'Every expedition leader is a native of Mautar trained at the Nehru Institute of Mountaineering (NIM) and holds international Wilderness First Responder (WFR) certification.',
+      isPublished: true,
+      order: 3
+    },
+    {
+      question: 'How large is each batch?',
+      answer: 'Batches are strictly capped at 12–15 trekkers to preserve trail intimacy, safety ratios, and the environmental sanctity of the routes.',
+      isPublished: true,
+      order: 4
+    },
+    {
+      question: 'How is acclimatization and medical safety handled on the trail?',
+      answer: 'We carry medical-grade oxygen canisters and pulse oximeters, with twice-daily acclimatization audits and evacuation protocols coordinated with regional mountain stations.',
+      isPublished: true,
+      order: 5
+    },
+    {
+      question: 'How do I reserve my seat?',
+      answer: 'Select any trek package or departure batch below to log your request in our Strapi CRM and launch a pre-filled WhatsApp confirmation directly with our Mautar basecamp.',
+      isPublished: true,
+      order: 6
+    }
+  ];
+
+  const existingFaqsRes = await apiRequest('/faqs?pagination[pageSize]=50', 'GET');
+  const existingFaqQuestions = new Set();
+  if (existingFaqsRes.ok && Array.isArray(existingFaqsRes.data)) {
+    for (const f of existingFaqsRes.data) {
+      existingFaqQuestions.add(f.question);
+    }
+  }
+
+  for (const faq of FAQS) {
+    if (existingFaqQuestions.has(faq.question)) {
+      continue;
+    }
+    const res = await apiRequest('/faqs', 'POST', {
+      ...faq,
+      publishedAt: new Date().toISOString()
+    });
+    if (res.ok) {
+      console.log(`✓ Seeded FAQ: ${faq.question}`);
+    } else {
+      console.warn(`! FAQ creation notice: ${faq.question}`, res.error);
+    }
+  }
+
   console.log('\n====================================================');
   console.log('✓ Seeding Completed Successfully!');
   console.log('====================================================\n');

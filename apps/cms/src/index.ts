@@ -1,6 +1,6 @@
 import type { Core } from '@strapi/strapi';
 
-const CATALOG_MODELS = ['trek', 'batch', 'package', 'region', 'site-setting'];
+const CATALOG_MODELS = ['trek', 'batch', 'package', 'region', 'site-setting', 'faq'];
 
 async function resolveSlug(strapi: Core.Strapi, model: string, entry: any): Promise<string | undefined> {
   if (entry?.slug) return entry.slug;
@@ -104,6 +104,8 @@ export default {
           'api::package.package.find',
           'api::package.package.findOne',
           'api::site-setting.site-setting.find',
+          'api::faq.faq.find',
+          'api::faq.faq.findOne',
         ];
 
         for (const action of requiredActions) {
