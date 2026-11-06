@@ -23,6 +23,9 @@ const packages = trek.packages && trek.packages.length > 0
 
 <dialog
   id="booking-dialog"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="booking-dialog-title"
   class="fixed inset-0 z-50 m-auto w-full max-w-lg rounded-3xl border-0 bg-transparent p-4 text-white shadow-2xl backdrop:bg-[#050505]/85 backdrop:backdrop-blur-md"
 >
   <div class="double-bezel-outer shadow-2xl shadow-black/80">
@@ -43,7 +46,7 @@ const packages = trek.packages && trek.packages.length > 0
           <span class="w-1.5 h-1.5 rounded-full bg-[#00F2FE] animate-pulse"></span>
           Direct Mautar Basecamp Reservation
         </span>
-        <h3 class="font-display text-2xl font-bold text-white">Reserve {trek.name}</h3>
+        <h3 id="booking-dialog-title" class="font-display text-2xl font-bold text-white">Reserve {trek.name}</h3>
         <p class="text-xs text-[#94A3B8] mt-1 font-mono">
           Zero middlemen &middot; Recorded in Strapi CRM &amp; confirmed via WhatsApp
         </p>
@@ -190,6 +193,7 @@ const packages = trek.packages && trek.packages.length > 0
     const dialog = document.getElementById('booking-dialog');
     const closeBtn = document.getElementById('close-dialog-btn');
     const triggers = document.querySelectorAll('.open-booking-trigger');
+  let lastFocusedElement = null;
     const batchIdInput = document.getElementById('modal-batch-id');
     const batchInput = document.getElementById('modal-batch-dates');
     const batchBanner = document.getElementById('selected-batch-banner');
@@ -200,6 +204,7 @@ const packages = trek.packages && trek.packages.length > 0
 
     triggers.forEach((trigger) => {
       trigger.addEventListener('click', () => {
+        lastFocusedElement = document.activeElement;
         const dates = trigger.getAttribute('data-dates');
         const batchId = trigger.getAttribute('data-batch-id') || '';
         const pkgName = trigger.getAttribute('data-package-name');
@@ -219,7 +224,10 @@ const packages = trek.packages && trek.packages.length > 0
       });
     });
 
-    closeBtn?.addEventListener('click', () => dialog?.close());
+    closeBtn?.addEventListener('click', () => {
+      dialog?.close();
+      if (lastFocusedElement) lastFocusedElement.focus({ preventScroll: true });
+    });
 
     dialog?.addEventListener('click', (e) => {
       const rect = dialog.getBoundingClientRect();
@@ -228,7 +236,47 @@ const packages = trek.packages && trek.packages.length > 0
         e.clientY <= rect.top + rect.height &&
         rect.left <= e.clientX &&
         e.clientX <= rect.left + rect.width;
-      if (!isInDialog) dialog.close();
+      if (!isInDialog) {
+        dialog.close();
+        if (lastFocusedElement) lastFocusedElement.focus({ preventScroll: true });
+      }
+    });
+
+    dialog?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        dialog.close();
+        if (lastFocusedElement) lastFocusedElement.focus({ preventScroll: true });
+      }
+    });
+
+    // Focus trap: keep focus inside the dialog while open
+    dialog?.addEventListener('focusin', (e) => {
+      const focusableElements = dialog.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      if (!dialog.contains(e.target)) {
+        if (first) first.focus();
+      }
+    });
+
+    dialog?.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        const focusableElements = dialog.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) return;
+        const first = focusableElements[0];
+        const last = focusableElements[focusableElements.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
 
     clearBatchBtn?.addEventListener('click', () => {
@@ -279,6 +327,10 @@ const packages = trek.packages && trek.packages.length > 0
 • Notes: ${notes}` : '');
       let waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(fallbackMsg)}`;
 
+      // Open WhatsApp first while the user gesture is fresh — popup blockers
+      // suppress window.open() called after an await'd network call.
+      window.open(waUrl, '_blank');
+
       try {
         const res = await fetch(form.action, { method: 'POST', body: formData });
         if (res.ok) {
@@ -294,7 +346,6 @@ const packages = trek.packages && trek.packages.length > 0
         feedback.className = 'text-xs font-mono p-3 rounded-xl border border-[#34D399]/40 bg-[#34D399]/15 text-[#34D399]';
         feedback.classList.remove('hidden');
       }
-      window.open(waUrl, '_blank');
     });
   });
 </script>
