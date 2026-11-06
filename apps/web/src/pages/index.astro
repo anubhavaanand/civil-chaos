@@ -681,6 +681,12 @@ const homepageFaqs = [
       });
     }
 
+    // Sync grid filter chips with hero selects (and vice versa)
+    function syncHeroSelects() {
+      if (heroRegion) heroRegion.value = activeRegion;
+      if (heroDiff) heroDiff.value = activeDiff;
+    }
+
     filterButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         filterButtons.forEach((b) => {
@@ -690,7 +696,7 @@ const homepageFaqs = [
         btn.classList.add('bg-[#00F2FE]', 'text-[#050505]');
         btn.classList.remove('bg-[#0B111E]', 'text-[#cbd5e1]');
         activeRegion = btn.getAttribute('data-region') || 'all';
-        if (heroRegion) heroRegion.value = activeRegion;
+        syncHeroSelects();
         applyFilters();
       });
     });
@@ -701,6 +707,7 @@ const homepageFaqs = [
     });
     heroRegion?.addEventListener('change', () => {
       activeRegion = heroRegion.value;
+      syncHeroSelects();
       applyFilters();
     });
     heroDiff?.addEventListener('change', () => {
@@ -750,11 +757,26 @@ const homepageFaqs = [
     waForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(waForm);
-      const name = (fd.get('customerName') as string) || 'Trekker';
+      const name = (fd.get('customerName') as string) || '';
       const phone = (fd.get('phone') as string) || '';
+      const group = parseInt((fd.get('groupSize') as string) || '1', 10);
+
+      // Client-side validation
+      if (!name || name.trim().length < 2) {
+        alert('Please enter your full name (at least 2 characters).');
+        return;
+      }
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        alert('Please enter a valid 10-digit Indian mobile number starting with 6-9.');
+        return;
+      }
+      if (isNaN(group) || group < 1 || group > 15) {
+        alert('Group size must be between 1 and 15.');
+        return;
+      }
+
       const trek = (fd.get('trekName') as string) || 'Kuari Pass Trek';
       const pkg = (fd.get('packageName') as string) || 'Basecamp Package';
-      const group = (fd.get('groupSize') as string) || '1';
       const dates = (fd.get('preferredDates') as string) || 'Flexible dates';
       const targetPhone = btnGenerateWa?.getAttribute('data-phone') || '919876543210';
 
