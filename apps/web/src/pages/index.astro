@@ -116,7 +116,7 @@ const homepageFaqs = [
           class="w-full h-full object-cover object-center"
           loading="eager"
         />
-        <div class="absolute inset-0 bg-gradient-to-r from-[#050505]/95 via-[#050505]/80 to-[#050505]/45"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#050505]/95 via-[#050505]/80 to-[#050505]/50"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/60"></div>
         <div class="absolute inset-0 bg-grid opacity-50"></div>
       </div>
@@ -677,7 +677,7 @@ const homepageFaqs = [
         const matchR = activeRegion === 'all' || r === activeRegion;
         const matchD = activeDiff === 'all' || d === activeDiff;
         const matchS = !searchQuery || s.includes(searchQuery.toLowerCase());
-        el.style.display = matchR && matchD && matchS ? 'block' : 'none';
+        el.style.display = matchR && matchD && matchS ? '' : 'none';
       });
     }
 
