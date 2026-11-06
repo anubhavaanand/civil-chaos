@@ -59,7 +59,7 @@ const touristTripSchema = {
   offers: {
     '@type': 'Offer',
     priceCurrency: 'INR',
-    price: trek.fromPrice,
+    price: trek.fromPrice ?? 0,
     availability: 'https://schema.org/InStock',
     validFrom: '2026-01-01',
   },
@@ -74,7 +74,7 @@ const productSchema = {
   offers: {
     '@type': 'Offer',
     priceCurrency: 'INR',
-    price: trek.fromPrice,
+    price: trek.fromPrice ?? 0,
     availability: 'https://schema.org/InStock',
   },
 };
@@ -90,7 +90,7 @@ const productSchema = {
   <!-- 1. Expedition Summit Hero -->
   <header class="relative min-h-[75vh] w-full overflow-hidden flex items-end bg-[#050505] pt-28 pb-16">
     <img src={trek.heroImage} alt={trek.name} class="absolute inset-0 w-full h-full object-cover opacity-80" />
-    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/75 to-[#050505]/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/75 to-[#050505]/50"></div>
 
     <div class="container mx-auto px-6 max-w-7xl relative z-20">
       <div class="flex flex-wrap items-center gap-2 text-xs font-mono mb-4">
