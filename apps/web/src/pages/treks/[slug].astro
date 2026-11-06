@@ -70,7 +70,7 @@ const productSchema = {
   '@type': 'Product',
   name: trek.name,
   description: trek.description,
-  image: trek.heroImage,
+  image: trek.heroImage || '/images/hero-himalayas.jpg',
   offers: {
     '@type': 'Offer',
     priceCurrency: 'INR',
