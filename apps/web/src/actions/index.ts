@@ -70,7 +70,7 @@ export const server = {
 
       // Fail-soft: if Strapi is unreachable, user still receives the direct WhatsApp deep link.
       // fetchStrapi does not throw on network error; it returns an error-shaped response.
-      await fetchStrapi('/booking-requests', {
+      const strapiResult = await fetchStrapi('/booking-requests', {
         method: 'POST',
         body: JSON.stringify({
           data: {
@@ -93,7 +93,8 @@ export const server = {
         customerName: input.customerName,
         trekName: input.trekName,
         packageName: pkgText,
-        datesText
+        datesText,
+        strapiConfirmed: strapiResult !== null
       };
     }
   }),

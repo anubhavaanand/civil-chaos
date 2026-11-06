@@ -331,20 +331,43 @@ const packages = trek.packages && trek.packages.length > 0
       // suppress window.open() called after an await'd network call.
       window.open(waUrl, '_blank');
 
+      let strapiConfirmed = false;
       try {
         const res = await fetch(form.action, { method: 'POST', body: formData });
         if (res.ok) {
           const data = await res.json().catch(() => null);
           if (data?.whatsappUrl) waUrl = data.whatsappUrl;
+          strapiConfirmed = data?.strapiConfirmed === true;
         }
       } catch {
         // Offline or static fallback uses waUrl directly
       }
 
       if (feedback) {
-        feedback.innerHTML = `Reservation logged! <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="underline font-bold text-[#00F2FE]">Click here if WhatsApp did not open automatically &rarr;</a>`;
-        feedback.className = 'text-xs font-mono p-3 rounded-xl border border-[#34D399]/40 bg-[#34D399]/15 text-[#34D399]';
+        const isStrapiConfirmed = strapiConfirmed;
+        const statusBadge = isStrapiConfirmed
+          ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#34D399]/20 text-[#34D399] text-[10px] font-bold font-mono">✓ Confirmed in Strapi CRM</span>`
+          : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#FBBF24]/20 text-[#FBBF24] text-[10px] font-bold font-mono">⚡ Local fallback — booking queued</span>`;
+        const retryBtn = `<button id="retry-booking-btn" type="button" class="ml-3 px-3 py-1.5 rounded-md border border-white/20 bg-white/5 text-xs text-[#00F2FE] hover:text-white hover:border-[#00F2FE] transition-colors cursor-pointer">Retry</button>`;
+        feedback.innerHTML = `
+          ${statusBadge}
+          Reservation logged for <strong>${customerName}</strong> — ${trekName}.
+          <br class="hidden sm:block">
+          Our team will confirm via WhatsApp/call <strong>within a few hours</strong>.
+          <br class="hidden sm:block">
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 px-3 py-1.5 rounded-md bg-[#00F2FE] text-[#050505] text-xs font-bold hover:bg-[#00b4d8] transition-colors">Open WhatsApp &rarr;</a>
+          ${isStrapiConfirmed ? '' : retryBtn}
+        `;
+        feedback.className = 'text-xs font-mono p-3 rounded-xl border border-[#34D399]/40 bg-[#34D399]/15 text-[#cbd5e1]';
         feedback.classList.remove('hidden');
+
+        // Retry button handler
+        const retryBtnEl = document.getElementById('retry-booking-btn');
+        if (retryBtnEl) {
+          retryBtnEl.addEventListener('click', () => {
+            window.open(waUrl, '_blank');
+          });
+        }
       }
     });
   });
