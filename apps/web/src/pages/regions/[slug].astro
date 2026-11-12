@@ -1,0 +1,214 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GlassNav from '../../components/GlassNav.astro';
+import TrekCard from '../../components/TrekCard.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppFab from '../../components/WhatsAppFab.astro';
+import { getTreks } from '../../lib/strapi';
+
+interface RegionData {
+  name: string;
+  slug: string;
+  state: string;
+  description: string;
+  bounds: [number, number, number, number];
+}
+
+const REGIONS: Record<string, RegionData> = {
+  garhwal: {
+    name: 'Garhwal Himalayas',
+    slug: 'garhwal',
+    state: 'Uttarakhand',
+    description: 'Home to sacred peaks like Nanda Devi, Trishul, and classic treks like Kuari Pass & Valley of Flowers.',
+    bounds: [78.0, 30.0, 79.9, 31.3],
+  },
+  kumaon: {
+    name: 'Kumaon Himalayas',
+    slug: 'kumaon',
+    state: 'Uttarakhand',
+    description: 'Pristine ridge treks, alpine meadows, and views of Panchachuli & Adi Kailash.',
+    bounds: [79.2, 29.3, 80.5, 30.6],
+  },
+  himachal: {
+    name: 'Himachal Pradesh',
+    slug: 'himachal',
+    state: 'Himachal Pradesh',
+    description: 'Dramatic high passes connecting Kullu valley to Spiti desert, including Hampta Pass & Pin Parvati.',
+    bounds: [76.5, 31.0, 78.5, 32.8],
+  },
+};
+
+const { slug } = Astro.params as { slug: string };
+const region = REGIONS[slug];
+
+const treks = await getTreks();
+const regionTreks = treks.filter((t) => t.regionSlug === slug || t.region === region?.name);
+
+if (!region) {
+  return new Response(null, { status: 404 });
+}
+
+const formatDate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+const upcomingDepartures = regionTreks
+  .flatMap((t) =>
+    t.batches.map((b) => ({
+      ...b,
+      trekName: t.name,
+      trekSlug: t.slug,
+    }))
+  )
+  .filter((b) => b.status === 'open')
+  .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+  .slice(0, 6);
+---
+
+<Layout
+  title={`${region.name} Treks | Dream of The Holy Himalayas`}
+  description={region.description}
+  ogImage="/images/hero/sunrise-basecamp.png"
+>
+  <GlassNav />
+
+  <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
+    <div class="max-w-7xl mx-auto px-6 py-16">
+
+      <!-- Region Header -->
+      <header class="mb-16 border-b border-white/10 pb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="h-[1px] w-8 bg-[#00f2fe]"></span>
+          <span class="text-[#00f2fe] font-mono text-xs uppercase tracking-[0.2em]">{region.state} Himalayas</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-white tracking-tight mb-3">
+          {region.name}
+        </h1>
+        <p class="text-silver text-base sm:text-lg font-light max-w-2xl">
+          {region.description}
+        </p>
+      </header>
+
+      <!-- Upcoming Departures Strip (from batches) -->
+      {upcomingDepartures.length > 0 && (
+        <section class="mb-16">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <span class="h-[1px] w-8 bg-[#00f2fe]"></span>
+              <span class="text-[#00f2fe] font-mono text-xs uppercase tracking-[0.2em]">Upcoming Departures</span>
+            </div>
+            <a
+              href="/treks/"
+              class="text-xs font-mono text-[#00f2fe] hover:text-[#00f2fe]/80 transition-colors uppercase tracking-wider"
+            >
+              View all {regionTreks.length} treks →
+            </a>
+          </div>
+
+          <div class="overflow-x-auto pb-4 no-scrollbar">
+            <table class="w-full text-left text-sm border-collapse">
+              <thead class="bg-[#050505]/90 text-[10px] uppercase tracking-wider text-[#00f2fe] border-b border-white/10 font-mono sticky top-0">
+                <tr>
+                  <th class="py-3 px-4 font-semibold">Expedition</th>
+                  <th class="py-3 px-4 font-semibold">Dates</th>
+                  <th class="py-3 px-4 font-semibold">Seats</th>
+                  <th class="py-3 px-4 font-semibold text-right">Price</th>
+                  <th class="py-3 px-4 font-semibold text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5 font-mono">
+                {upcomingDepartures.map((batch) => {
+                  const seatsLeft = batch.seatsTotal - batch.seatsBooked;
+                  const isFull = batch.status === 'full' || seatsLeft === 0;
+                  return (
+                    <tr class="hover:bg-[#0a0f18]/5 transition-colors">
+                      <td class="py-4 px-4 font-medium text-[#F8FAFC]">
+                        <a href={`/treks/${batch.trekSlug}`} class="hover:text-[#00f2fe] transition-colors">
+                          {batch.trekName}
+                        </a>
+                      </td>
+                      <td class="py-4 px-4 text-[#94A3B8] text-xs">
+                        {formatDate(batch.startDate)} - {formatDate(batch.endDate)}
+                      </td>
+                      <td class="py-4 px-4">
+                        {isFull ? (
+                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#FB7185]/10 text-[#FB7185] border border-[#FB7185]/20">
+                            Full
+                          </span>
+                        ) : (
+                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#00f2fe]/10 text-[#00f2fe] border border-[#00f2fe]/30">
+                            {seatsLeft} seat{seatsLeft === 1 ? '' : 's'} left
+                          </span>
+                        )}
+                      </td>
+                      <td class="py-4 px-4 font-bold text-[#00f2fe] text-right">
+                        ₹{batch.pricePerPersonINR.toLocaleString('en-IN')}
+                      </td>
+                      <td class="py-4 px-4 text-right">
+                        {isFull ? (
+                          <span class="text-xs text-[#94A3B8]/40 font-semibold px-3 py-1.5">Sold Out</span>
+                        ) : (
+                          <a
+                            href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hello Holy Himalayas! I'd like to reserve seats for ${batch.trekName} departing ${formatDate(batch.startDate)}. Please guide me on next steps.`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-sm bg-[#00f2fe] hover:bg-[#0a0f18] text-[#F9FAFB] font-bold text-[10px] uppercase tracking-wider transition-all hover:scale-105 shadow-sm"
+                          >
+                            Reserve
+                          </a>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      <!-- Trek Cards -->
+      <section id="treks">
+        <div class="flex items-center justify-between mb-10">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="h-[1px] w-8 bg-[#00f2fe]"></span>
+              <span class="text-[#00f2fe] font-mono text-xs uppercase tracking-[0.2em]">Expeditions in {region.name}</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight">
+              {regionTreks.length} Trek{regionTreks.length === 1 ? '' : 's'}
+            </h2>
+          </div>
+        </div>
+
+        {regionTreks.length === 0 ? (
+          <div class="text-center py-20 rounded-2xl border border-white/10 bg-[#0a0f18]/60 p-8 mt-6">
+            <div class="w-12 h-12 rounded-full bg-[#0a0f18]/5 border border-white/10 flex items-center justify-center mx-auto text-silver mb-4">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white mb-2">No Treks in This Region Yet</h3>
+            <p class="text-sm text-ink-dim mb-6 max-w-md mx-auto">New expeditions are being scouted. Check back soon or explore other regions.</p>
+            <a href="/treks/" class="btn-tactile bg-[#00f2fe] text-[#050505] font-bold font-mono px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
+              View All Treks
+            </a>
+          </div>
+        ) : (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {regionTreks.map((trek) => (
+              <div class="trek-item-wrapper transition-all duration-300">
+                <TrekCard trek={trek} />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+    </div>
+  </main>
+
+  <WhatsAppFab />
+  <Footer />
+</Layout>

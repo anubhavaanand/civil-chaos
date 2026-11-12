@@ -56,6 +56,13 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, SITE_
     <slot name="head" />
   </head>
   <body class="bg-slate-950 text-ink font-body min-h-screen">
+    <!-- Skip to main content link (WCAG 2.2 AA) -->
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-[#00f2fe] focus:text-[#050505] focus:rounded focus:font-bold focus:text-xs focus:uppercase focus:tracking-widest"
+    >
+      Skip to main content
+    </a>
     <!-- Aave-style refraction filter: referenced by .glass-refract layers.
          Displacement map encodes bend direction per channel; neutral core
          rgb(128,128,0) leaves most pixels unmoved. Decorative layers only. -->

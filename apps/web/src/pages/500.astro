@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassNav from '../components/GlassNav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Route Closed | Dream of The Holy Himalayas"
+  description="Something went wrong on our end. Browse our Himalayan trekking expeditions or contact us directly on WhatsApp."
+  ogImage="/images/hero/sunrise-basecamp.png"
+>
+  <GlassNav />
+
+  <main class="pt-28 pb-24 bg-[#050505] min-h-screen text-ink font-body">
+    <div class="max-w-3xl mx-auto px-6 py-16 text-center">
+
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+        <span class="text-[#00f2fe] font-mono text-xs tracking-widest uppercase font-bold">Route Closed</span>
+        <span class="h-[2px] w-8 bg-[#00f2fe]"></span>
+      </div>
+
+      <p class="font-display text-7xl sm:text-8xl font-black text-[#00f2fe] tracking-tight leading-none">500</p>
+
+      <h1 class="mt-6 text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
+        THIS TRAIL IS TEMPORARILY CLOSED
+      </h1>
+
+      <p class="mt-4 text-silver text-sm sm:text-base font-light max-w-xl mx-auto">
+        Something went wrong on our end — the mountain hasn't moved, but our server has a momentary blip.
+        Refresh the page or browse our expedition catalog below. All ten treks are still available.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/treks/"
+          class="btn-tactile inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#00f2fe] text-[#050505] font-bold uppercase tracking-wider text-sm"
+        >
+          View Expedition Catalog
+        </a>
+        <a
+          href="/"
+          class="btn-tactile inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/10 bg-[#0a0f18]/80 text-ink font-bold uppercase tracking-wider text-sm hover:border-[#00f2fe]/40 transition-colors"
+        >
+          Return to Basecamp
+        </a>
+        <a
+          href="https://wa.me/919876543210?text=Hi!%20I%20encountered%20an%20error%20on%20the%20website.%20Can%20you%20help%20me%20with%20a%20booking?"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 bg-transparent text-ink font-bold uppercase tracking-wider text-sm hover:border-[#00f2fe]/40 transition-colors"
+        >
+          WhatsApp Basecamp
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
